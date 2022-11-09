@@ -1,7 +1,7 @@
 # OCDbgAnalysis
 Tools to help with logs analysis
 
-In an new Pharo9.0 64 bit image, do this:
+To install everything from scratch, in an new Pharo9.0 64 bit image do this:
 
 ```Smalltalk
 Metacello new
