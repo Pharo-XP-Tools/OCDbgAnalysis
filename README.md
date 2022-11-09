@@ -22,4 +22,4 @@ Metacello new
     
 "Manually load the package"
 ((IceRepository repositories detect: [ :r| r name = 'OCDbgAnalysis' ]) workingCopy packages detect: [:p| p package = 'OCDbgAnalysis' ]) load.
-```Smalltalk
+```
