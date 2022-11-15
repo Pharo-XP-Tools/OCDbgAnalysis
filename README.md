@@ -25,3 +25,14 @@ Metacello new
     workingCopy packages detect: [:p| p package = 'OCDbgAnalysis' ])
     load.
 ```
+
+Example:
+
+```Smalltalk
+|data tutorial tutorialTime|
+"use the absolute path to your data file"
+data := OCDbgExampleCode loadDataFromPath: '/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000'.
+tutorial:= (data ocdSelectTasksEnding  at:2) task.
+tutorialTime := tutorial endTime - tutorial startTime.
+ "0:00:13:47.212501"
+```
