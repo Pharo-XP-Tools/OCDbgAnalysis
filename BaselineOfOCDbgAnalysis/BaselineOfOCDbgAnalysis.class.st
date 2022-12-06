@@ -56,5 +56,10 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
         self
                 "ensureDownloadedData;
                 ensureExtractedData"
-'
+'.
+	"JSON tools from our fork"
+	Metacello new
+		repository: 'github://Pharo-XP-Tools/NeoJSON/repository';
+		baseline: 'NeoJSON';
+		load
 ]
