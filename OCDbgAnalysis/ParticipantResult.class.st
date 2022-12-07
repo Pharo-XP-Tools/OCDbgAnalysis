@@ -25,6 +25,18 @@ ParticipantResult class >> newFromData: aCollection [
 	^ result
 ]
 
+{ #category : #'as yet unclassified' }
+ParticipantResult class >> resultsCollectionFromFiles: aCollection [
+
+	| allParticipantsResult |
+	allParticipantsResult := OrderedCollection new.
+	aCollection do: [ :filePathString | 
+		allParticipantsResult add:
+			(self newFromData: (OCDbgEvents loadDataFromPath: filePathString)).
+		self flag: 'add gc collect here if neede' ].
+	^ allParticipantsResult
+]
+
 { #category : #accessing }
 ParticipantResult >> tasks [
 

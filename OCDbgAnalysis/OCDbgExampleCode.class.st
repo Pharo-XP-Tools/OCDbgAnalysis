@@ -4,7 +4,7 @@ Class {
 	#classInstVars : [
 		'exampleDataPath'
 	],
-	#category : #OCDbgAnalysis
+	#category : #'OCDbgAnalysis-Events'
 }
 
 { #category : #accessing }
@@ -29,15 +29,11 @@ OCDbgExampleCode class >> listEventsForATaskExample [
 	startedTasks := events ocdSelectTasksStarting collect: [ :e | e task ].
 	"Find the task uuid of the tutorial"
 	taskUuid := (startedTasks detect: [ :t | t title = 'Tutorial' ]) uuid.
-	^ OCDbgEventFilters selectTasksEvents: taskUuid inCollection: events
+	^ OCDbgEvents selectTasksEvents: taskUuid inCollection: events
 ]
 
 { #category : #'as yet unclassified' }
 OCDbgExampleCode class >> loadDataFromPath: aString [
-"Note that this method removes duplicated uuid"
-	^ (((EREventTool default unpackAll: aString asFileReference) key 
-		    collect: [ :e | e safeUnpackedData ]) flattened
-		   asOrderedCollection sort: [ :a :b | a dateTime < b dateTime ])
-		  ocdSelectUnique
-	"'/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000'"
+
+	^ OCDbgEvents loadDataFromPath: aString
 ]

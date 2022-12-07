@@ -3,17 +3,17 @@ Extension { #name : #OrderedCollection }
 { #category : #'*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectTasksEnding [
 
-	^ OCDbgEventFilters selectTasksEnding: self
+	^ OCDbgEvents selectTasksEnding: self
 ]
 
 { #category : #'*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectTasksStarting [
 
-	^ OCDbgEventFilters selectTasksStarts: self
+	^ OCDbgEvents selectTasksStarts: self
 ]
 
 { #category : #'*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectUnique [
 
-	^ OCDbgEventFilters selectUnique: self
+	^ OCDbgEvents selectUnique: self
 ]

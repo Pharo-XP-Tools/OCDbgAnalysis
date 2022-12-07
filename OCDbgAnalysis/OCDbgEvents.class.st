@@ -1,11 +1,11 @@
 Class {
-	#name : #OCDbgEventFilters,
+	#name : #OCDbgEvents,
 	#superclass : #Object,
-	#category : #OCDbgAnalysis
+	#category : #'OCDbgAnalysis-Events'
 }
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> findTaskEndIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
+OCDbgEvents class >> findTaskEndIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
 
 	aNumber to: aCollection size do: [ :i | 
 		| ev |
@@ -16,7 +16,7 @@ OCDbgEventFilters class >> findTaskEndIndexFor: aTaskUUID inCollection: aCollect
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> findTaskStartIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
+OCDbgEvents class >> findTaskStartIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
 
@@ -29,7 +29,7 @@ OCDbgEventFilters class >> findTaskStartIndexFor: aTaskUUID inCollection: aColle
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> findWindowClosedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
+OCDbgEvents class >> findWindowClosedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
 
@@ -42,7 +42,7 @@ OCDbgEventFilters class >> findWindowClosedtIndexFor: windowID inCollection: aCo
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> findWindowOpenedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
+OCDbgEvents class >> findWindowOpenedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
 
@@ -55,25 +55,35 @@ OCDbgEventFilters class >> findWindowOpenedtIndexFor: windowID inCollection: aCo
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectBrowseContext: aCollection [
+OCDbgEvents class >> loadDataFromPath: aString [
+"Note that this method removes duplicated uuid"
+	^ (((EREventTool default unpackAll: aString asFileReference) key 
+		    collect: [ :e | e safeUnpackedData ]) flattened
+		   asOrderedCollection sort: [ :a :b | a dateTime < b dateTime ])
+		  ocdSelectUnique
+	"'/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000'"
+]
+
+{ #category : #'as yet unclassified' }
+OCDbgEvents class >> selectBrowseContext: aCollection [
 
 	^ aCollection select: [ :each | each class = DSBrowseContextRecord ]
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectFullBrowse: aCollection [
+OCDbgEvents class >> selectFullBrowse: aCollection [
 
 	^ aCollection select: [ :each | each class = DSFullBrowseRecord ]
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectTasksEnding: aCollection [
+OCDbgEvents class >> selectTasksEnding: aCollection [
 
 	^ aCollection select: [ :each | each class = DSEndingTaskRecord ]
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectTasksEvents: aTaskUUID inCollection: aCollection [
+OCDbgEvents class >> selectTasksEvents: aTaskUUID inCollection: aCollection [
 
 	| taskStartIndex taskEndingIndex |
 	"This method assumes that aCollection is sorted by time"
@@ -90,13 +100,13 @@ OCDbgEventFilters class >> selectTasksEvents: aTaskUUID inCollection: aCollectio
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectTasksStarts: aCollection [
+OCDbgEvents class >> selectTasksStarts: aCollection [
 
 ^ aCollection select: [ :each| each class=DSStartTaskRecord]
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectUnique: aCollection [
+OCDbgEvents class >> selectUnique: aCollection [
 
 	| rememberedIDs newCollection |
 	newCollection := OrderedCollection new.
@@ -109,13 +119,13 @@ OCDbgEventFilters class >> selectUnique: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectWindowClosed: aCollection [
+OCDbgEvents class >> selectWindowClosed: aCollection [
 
 	^ aCollection select: [ :each | each class = DSWindowClosedRecord  ]
 ]
 
 { #category : #'as yet unclassified' }
-OCDbgEventFilters class >> selectWindowOpened: aCollection [
+OCDbgEvents class >> selectWindowOpened: aCollection [
 
 	^ aCollection select: [ :each | each class = DSWindowOpenedRecord ]
 ]
