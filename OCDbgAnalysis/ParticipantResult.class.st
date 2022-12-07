@@ -7,6 +7,12 @@ Class {
 	#category : #'OCDbgAnalysis-ExportModel'
 }
 
+{ #category : #accessing }
+ParticipantResult class >> neoJsonMapping: mapper [
+	mapper for: self do: [ :mapping |
+		mapping mapInstVars: #(tasks)]
+]
+
 { #category : #'instance creation' }
 ParticipantResult class >> newFromData: aCollection [
 

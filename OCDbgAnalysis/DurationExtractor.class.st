@@ -1,17 +1,17 @@
 Class {
-	#name : #TimeExtractor,
+	#name : #DurationExtractor,
 	#superclass : #MetricExtractor,
 	#category : #'OCDbgAnalysis-Metrics'
 }
 
 { #category : #api }
-TimeExtractor >> extract [
+DurationExtractor >> extract [
 
 	^ task endTime - task startTime
 ]
 
 { #category : #'as yet unclassified' }
-TimeExtractor >> targetField [
+DurationExtractor >> targetField [
 
-	^ #time
+	^ #duration
 ]

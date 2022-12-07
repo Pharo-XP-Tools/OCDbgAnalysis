@@ -10,12 +10,14 @@ Class {
 }
 
 { #category : #comparing }
-OCDbgJSONTestObject >> = another [
+OCDbgJSONTestObject >> = anObject [
 
-	another == self ifTrue: [ ^ true ].
-	another a = a ifFalse: [ ^ false ].
-	another b = b ifFalse: [ ^ false ].
-	^ another c = c
+	anObject == self ifTrue: [ ^ true ].
+	self class = anObject class
+		ifFalse: [ ^ false ].
+	anObject a = a ifFalse: [ ^ false ].
+	anObject b = b ifFalse: [ ^ false ].
+	^ anObject c = c
 ]
 
 { #category : #accessing }

@@ -2,16 +2,37 @@ Class {
 	#name : #TaskStats,
 	#superclass : #Object,
 	#instVars : [
-		'time',
 		'correctness',
 		'breakpointsInstalled',
 		'breakpointsHit',
 		'stepsInDebugger',
 		'inspectingObjects',
-		'debuggerOpenings'
+		'debuggerOpenings',
+		'duration'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
+
+{ #category : #accessing }
+TaskStats class >> neoJsonMapping: mapper [
+"#time . #correctness . #breakpointsInstalled . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
+	mapper for: self do: [ :mapping |
+		mapping mapInstVars: #(correctness).
+		(mapping mapInstVar: #duration ) valueSchema: Duration	.
+		"(mapping mapInstVar: #points) valueSchema: #ArrayOfPoints.
+		(mapping mapInstVar: #bytes) valueSchema: ByteArray "].
+	"mapper for: DateAndTime customDo: [ :mapping |
+		mapping decoder: [ :string | DateAndTime fromString: string ].
+		mapping encoder: [ :dateAndTime | dateAndTime printString ] ]."
+	mapper for: Duration  customDo: [ :mapping |
+		mapping decoder: [ :string | Duration fromString: string ].
+		mapping encoder: [ :dur | dur printString ] ].
+	"mapper for: #ArrayOfPoints customDo: [ :mapping |
+		mapping listOfElementSchema: Point ].  
+	mapper mapAllInstVarsFor: Point.
+	mapper for: ByteArray customDo: [ :mapping |
+		mapping listOfType: ByteArray ]"
+]
 
 { #category : #'instance creation' }
 TaskStats class >> newForTask: task fromData: aCollection [
@@ -78,6 +99,18 @@ TaskStats >> debuggerOpenings: anObject [
 ]
 
 { #category : #accessing }
+TaskStats >> duration [
+
+	^ duration
+]
+
+{ #category : #accessing }
+TaskStats >> duration: anObject [
+
+	duration := anObject
+]
+
+{ #category : #accessing }
 TaskStats >> inspectingObjects [
 
 	^ inspectingObjects
@@ -99,16 +132,4 @@ TaskStats >> stepsInDebugger [
 TaskStats >> stepsInDebugger: anObject [
 
 	stepsInDebugger := anObject
-]
-
-{ #category : #accessing }
-TaskStats >> time [
-
-	^ time
-]
-
-{ #category : #accessing }
-TaskStats >> time: anObject [
-
-	time := anObject
 ]
