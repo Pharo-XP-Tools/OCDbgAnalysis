@@ -26,9 +26,16 @@ Metacello new
     load.
 ```
 
-Example:
+Examples:
+```Smalltalk
+"Exampel 1: From log files to JSON"
+(ParticipantResult resultsCollectionFromFiles: { 
+   '/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000' . 
+   '/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000' }) asJSON
+```
 
 ```Smalltalk
+"Exampel 2: Obtaining a task completion time"
 |data tutorial tutorialTime|
 "use the absolute path to your data file"
 data := OCDbgExampleCode loadDataFromPath: '/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000'.
