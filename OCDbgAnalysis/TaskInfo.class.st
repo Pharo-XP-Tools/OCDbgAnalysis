@@ -2,9 +2,7 @@ Class {
 	#name : #TaskInfo,
 	#superclass : #Object,
 	#instVars : [
-		'title',
-		'index',
-		'dstask'
+		'title'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -16,21 +14,14 @@ TaskInfo class >> neoJsonMapping: mapper [
 
 	mapper
 		for: self
-		do: [ :mapping | mapping mapInstVars: #( title index ) ]
+		do: [ :mapping | mapping mapInstVars: #( title ) ]
 ]
 
 { #category : #'instance creation' }
 TaskInfo class >> newForTask: dstask fromData: aCollection [
 
-	"task is DSTask"
-
-	| tasks index |
-	tasks := (aCollection ocdSelectTasksEnding sorted: [ :t1 :t2 | 
-		          t1 dateTime < t2 dateTime ]) collect: [ :ds | ds task ].
-	index := tasks find: dstask.
 	^ self new
 		  title: dstask title;
-		  index: index;
 		  yourself
 ]
 
@@ -42,30 +33,6 @@ TaskInfo >> = anObject [
 	self title = anObject title ifFalse: [ ^ false ].
 	self index = anObject index ifFalse: [ ^ false ].
 	^ true
-]
-
-{ #category : #accessing }
-TaskInfo >> dstask [
-
-	^ dstask
-]
-
-{ #category : #accessing }
-TaskInfo >> dstask: anObject [
-
-	dstask := anObject
-]
-
-{ #category : #accessing }
-TaskInfo >> index [
-
-	^ index
-]
-
-{ #category : #accessing }
-TaskInfo >> index: anObject [
-
-	index := anObject
 ]
 
 { #category : #accessing }

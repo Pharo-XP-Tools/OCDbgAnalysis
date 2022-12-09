@@ -2,23 +2,30 @@ Class {
 	#name : #TaskStats,
 	#superclass : #Object,
 	#instVars : [
-		'correctness',
-		'breakpointsInstalled',
+		'breakpointsAdded',
+		'breakpointsRemoved',
 		'breakpointsHit',
-		'stepsInDebugger',
+		'ocBreakpointsAdded',
+		'ocBreakpointsRemoved',
+		'ocBreakpointsHit',
+		'stepActions',
 		'inspectingObjects',
 		'debuggerOpenings',
 		'duration',
-		'taskInfo'
+		'taskInfo',
+		'testSucess',
+		'testSucessRaw',
+		'manualRevisionSuccess',
+		'order'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
 
 { #category : #accessing }
 TaskStats class >> neoJsonMapping: mapper [
-"#time . #correctness . #breakpointsInstalled . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
+"#time . #correctness . #breakpointsAdded . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
 	mapper for: self do: [ :mapping |
-		mapping mapInstVars: #(correctness taskInfo).
+		mapping mapInstVars: #(taskInfo breakpointsAdded breakpointsHit breakpointsRemoved ocBreakpointsAdded ocBreakpointsHit ocBreakpointsRemoved stepActions order).
 		(mapping mapInstVar: #duration ) valueSchema: Duration	.
 		"(mapping mapInstVar: #points) valueSchema: #ArrayOfPoints.
 		(mapping mapInstVar: #bytes) valueSchema: ByteArray "].
@@ -65,6 +72,18 @@ TaskStats >> = anObject [
 ]
 
 { #category : #accessing }
+TaskStats >> breakpointsAdded [
+
+	^ breakpointsAdded
+]
+
+{ #category : #accessing }
+TaskStats >> breakpointsAdded: anObject [
+
+	breakpointsAdded := anObject
+]
+
+{ #category : #accessing }
 TaskStats >> breakpointsHit [
 
 	^ breakpointsHit
@@ -77,27 +96,15 @@ TaskStats >> breakpointsHit: anObject [
 ]
 
 { #category : #accessing }
-TaskStats >> breakpointsInstalled [
+TaskStats >> breakpointsRemoved [
 
-	^ breakpointsInstalled
+	^ breakpointsRemoved
 ]
 
 { #category : #accessing }
-TaskStats >> breakpointsInstalled: anObject [
+TaskStats >> breakpointsRemoved: anObject [
 
-	breakpointsInstalled := anObject
-]
-
-{ #category : #accessing }
-TaskStats >> correctness [
-
-	^ correctness
-]
-
-{ #category : #accessing }
-TaskStats >> correctness: anObject [
-
-	correctness := anObject
+	breakpointsRemoved := anObject
 ]
 
 { #category : #accessing }
@@ -137,15 +144,75 @@ TaskStats >> inspectingObjects: anObject [
 ]
 
 { #category : #accessing }
-TaskStats >> stepsInDebugger [
+TaskStats >> manualRevisionSuccess [
 
-	^ stepsInDebugger
+	^ manualRevisionSuccess
 ]
 
 { #category : #accessing }
-TaskStats >> stepsInDebugger: anObject [
+TaskStats >> manualRevisionSuccess: anObject [
 
-	stepsInDebugger := anObject
+	manualRevisionSuccess := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsAdded [
+
+	^ ocBreakpointsAdded
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsAdded: anObject [
+
+	ocBreakpointsAdded := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsHit [
+
+	^ ocBreakpointsHit
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsHit: anObject [
+
+	ocBreakpointsHit := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsRemoved [
+
+	^ ocBreakpointsRemoved
+]
+
+{ #category : #accessing }
+TaskStats >> ocBreakpointsRemoved: anObject [
+
+	ocBreakpointsRemoved := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> order [
+
+	^ order
+]
+
+{ #category : #accessing }
+TaskStats >> order: anObject [
+
+	order := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> stepActions [
+
+	^ stepActions
+]
+
+{ #category : #accessing }
+TaskStats >> stepActions: anObject [
+
+	stepActions := anObject
 ]
 
 { #category : #accessing }
@@ -158,4 +225,28 @@ TaskStats >> taskInfo [
 TaskStats >> taskInfo: anObject [
 
 	taskInfo := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> testSucess [
+
+	^ testSucess
+]
+
+{ #category : #accessing }
+TaskStats >> testSucess: anObject [
+
+	testSucess := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> testSucessRaw [
+
+	^ testSucessRaw
+]
+
+{ #category : #accessing }
+TaskStats >> testSucessRaw: anObject [
+
+	testSucessRaw := anObject
 ]

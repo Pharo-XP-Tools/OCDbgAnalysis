@@ -2,7 +2,7 @@ Class {
 	#name : #ParticipantInfo,
 	#superclass : #Object,
 	#instVars : [
-		'uuid',
+		'id',
 		'startDateTime'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
@@ -12,7 +12,7 @@ Class {
 ParticipantInfo class >> neoJsonMapping: mapper [
 
 	mapper for: self do: [ :mapping | 
-		(mapping mapInstVar: #uuid) valueSchema: UUID.
+		(mapping mapInstVar: #id) valueSchema: UUID.
 		(mapping mapInstVar: #startDateTime) valueSchema: DateAndTime ].
 	mapper for: UUID customDo: [ :mapping | 
 		mapping decoder: [ :string | UUID fromString: string ].
@@ -32,6 +32,18 @@ ParticipantInfo >> = anObject [
 ]
 
 { #category : #accessing }
+ParticipantInfo >> id [
+
+	^ id
+]
+
+{ #category : #accessing }
+ParticipantInfo >> id: anObject [
+
+	id := anObject
+]
+
+{ #category : #accessing }
 ParticipantInfo >> startDateTime [
 
 	^ startDateTime
@@ -41,16 +53,4 @@ ParticipantInfo >> startDateTime [
 ParticipantInfo >> startDateTime: anObject [
 
 	startDateTime := anObject
-]
-
-{ #category : #accessing }
-ParticipantInfo >> uuid [
-
-	^ uuid
-]
-
-{ #category : #accessing }
-ParticipantInfo >> uuid: anObject [
-
-	uuid := anObject
 ]

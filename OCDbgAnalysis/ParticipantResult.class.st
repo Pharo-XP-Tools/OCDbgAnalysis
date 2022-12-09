@@ -27,6 +27,22 @@ ParticipantResult class >> newFromData: aCollection [
 	^ result
 ]
 
+{ #category : #'instance creation' }
+ParticipantResult class >> newFromData: aCollection withUserID: userId [
+
+	| result dstasks taskStats |
+	result := self new.
+	dstasks := aCollection ocdSelectTasksEnding collect: [ :e | e task ].
+	taskStats := dstasks collect: [ :dst | 
+		             TaskStats newForTask: dst fromData: aCollection ].
+	result tasks: taskStats.
+	result participant: (ParticipantInfo new
+			 id: userId;
+			 yourself).
+
+	^ result
+]
+
 { #category : #'as yet unclassified' }
 ParticipantResult class >> resultsCollectionFromFiles: aCollection [
 
