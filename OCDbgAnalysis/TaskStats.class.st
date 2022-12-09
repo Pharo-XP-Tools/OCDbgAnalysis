@@ -8,7 +8,8 @@ Class {
 		'stepsInDebugger',
 		'inspectingObjects',
 		'debuggerOpenings',
-		'duration'
+		'duration',
+		'taskInfo'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -17,7 +18,7 @@ Class {
 TaskStats class >> neoJsonMapping: mapper [
 "#time . #correctness . #breakpointsInstalled . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
 	mapper for: self do: [ :mapping |
-		mapping mapInstVars: #(correctness).
+		mapping mapInstVars: #(correctness taskInfo).
 		(mapping mapInstVar: #duration ) valueSchema: Duration	.
 		"(mapping mapInstVar: #points) valueSchema: #ArrayOfPoints.
 		(mapping mapInstVar: #bytes) valueSchema: ByteArray "].
@@ -25,8 +26,9 @@ TaskStats class >> neoJsonMapping: mapper [
 		mapping decoder: [ :string | DateAndTime fromString: string ].
 		mapping encoder: [ :dateAndTime | dateAndTime printString ] ]."
 	mapper for: Duration  customDo: [ :mapping |
+		self flag: 'the encoding format should match the expected ones from the client (the people reading the json, and therefore, the format expected by the library that consumes the json'.
 		mapping decoder: [ :string | Duration fromString: string ].
-		mapping encoder: [ :dur | dur printString ] ].
+		mapping encoder: [ :dur | dur printString ""] ].
 	"mapper for: #ArrayOfPoints customDo: [ :mapping |
 		mapping listOfElementSchema: Point ].  
 	mapper mapAllInstVarsFor: Point.
@@ -47,7 +49,19 @@ TaskStats class >> newForTask: task fromData: aCollection [
 		taskStats
 			writeSlotNamed: extractor targetField
 			value: extractor extract ].
+	taskStats taskInfo: (TaskInfo newForTask: task fromData: aCollection).
 	^ taskStats
+]
+
+{ #category : #comparing }
+TaskStats >> = anObject [
+
+	self == anObject ifTrue: [ ^ true ].
+	self class == anObject class ifFalse: [ ^ false ].
+	self class slotNames do: [ :each | 
+		(self readSlotNamed: each) = (anObject readSlotNamed: each) 
+			ifFalse: [ ^ false ] ].
+	^ true
 ]
 
 { #category : #accessing }
@@ -132,4 +146,16 @@ TaskStats >> stepsInDebugger [
 TaskStats >> stepsInDebugger: anObject [
 
 	stepsInDebugger := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> taskInfo [
+
+	^ taskInfo
+]
+
+{ #category : #accessing }
+TaskStats >> taskInfo: anObject [
+
+	taskInfo := anObject
 ]
