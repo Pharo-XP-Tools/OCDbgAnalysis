@@ -203,6 +203,16 @@ TaskStats >> order: anObject [
 	order := anObject
 ]
 
+{ #category : #printing }
+TaskStats >> printOn: aStream [
+
+	aStream << taskInfo title.
+	aStream space.
+	aStream << ' ('.
+	duration printOn: aStream.
+	aStream << ')'
+]
+
 { #category : #accessing }
 TaskStats >> stepActions [
 
