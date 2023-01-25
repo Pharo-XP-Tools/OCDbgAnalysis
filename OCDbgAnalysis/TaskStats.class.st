@@ -16,7 +16,8 @@ Class {
 		'testSucess',
 		'testSucessRaw',
 		'manualRevisionSuccess',
-		'order'
+		'order',
+		'answer'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
