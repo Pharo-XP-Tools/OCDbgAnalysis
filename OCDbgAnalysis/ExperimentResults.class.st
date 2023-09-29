@@ -23,9 +23,20 @@ ExperimentResults class >> extractResults: dataPath [
 ExperimentResults >> extractResultsFromPath: dataPath [
 
 	participantResults := dataPath entries collect: [ :dir | 
-		                      ParticipantResult newFromData:
-			                      (OCDbgExampleCode loadDataFromPath: dir) ].
+		                      | data result |
+		                      data := OCDbgExampleCode loadDataFromPath: dir.
+		                      result := ParticipantResult newFromData: data.
+		                      result participant surveys:
+			                      (self extractSurveysFromData: data).
+		                      self halt.
+		                      result ].
 	^ self
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> extractSurveysFromData: data [
+
+	^ data select: [ :e | e class = DSSurveyRecord ]
 ]
 
 { #category : #accessing }

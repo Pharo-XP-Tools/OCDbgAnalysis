@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'id',
-		'startDateTime'
+		'startDateTime',
+		'surveys'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -53,4 +54,16 @@ ParticipantInfo >> startDateTime [
 ParticipantInfo >> startDateTime: anObject [
 
 	startDateTime := anObject
+]
+
+{ #category : #accessing }
+ParticipantInfo >> surveys [
+
+	^ surveys
+]
+
+{ #category : #accessing }
+ParticipantInfo >> surveys: anObject [
+
+	surveys := anObject
 ]
