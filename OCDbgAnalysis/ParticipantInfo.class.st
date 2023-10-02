@@ -2,8 +2,6 @@ Class {
 	#name : #ParticipantInfo,
 	#superclass : #Object,
 	#instVars : [
-		'id',
-		'startDateTime',
 		'surveys'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
@@ -30,30 +28,6 @@ ParticipantInfo >> = anObject [
 	self class == anObject class ifFalse: [ ^ false ].
 	self startDateTime = anObject startDateTime ifFalse: [ ^ false ].
 	^ self uuid = anObject uuid
-]
-
-{ #category : #accessing }
-ParticipantInfo >> id [
-
-	^ id
-]
-
-{ #category : #accessing }
-ParticipantInfo >> id: anObject [
-
-	id := anObject
-]
-
-{ #category : #accessing }
-ParticipantInfo >> startDateTime [
-
-	^ startDateTime
-]
-
-{ #category : #accessing }
-ParticipantInfo >> startDateTime: anObject [
-
-	startDateTime := anObject
 ]
 
 { #category : #accessing }
