@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'participantResults',
-		'emails'
+		'emails',
+		'treatmentTasks',
+		'controlTasks'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -32,6 +34,27 @@ ExperimentResults >> addPersonalDataSurvey: aDSSurveyRecord [
 	aDSSurveyRecord ifNil: [ ^ self ].
 	self addEmail: aDSSurveyRecord survey questions third answer.
 	aDSSurveyRecord survey questions third answer: nil
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> collectControlTasksFrom: participants [
+
+	controlTasks := ControlTasks new.
+	participants do: [ :p | controlTasks addTaskStats: p tasks first ]
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> collectTasksForAnalysis [
+
+	self collectControlTasksFrom: participantResults.
+	self collectTreatmentTasksFrom: participantResults
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> collectTreatmentTasksFrom: participants [
+
+	treatmentTasks := TreatmentTasks new.
+	participants do: [ :p | treatmentTasks addTaskStats: p tasks last ]
 ]
 
 { #category : #accessing }
