@@ -65,6 +65,11 @@ ParticipantResult >> = anObject [
 ]
 
 { #category : #accessing }
+ParticipantResult >> ocBreakpointsAdded [
+	^participant ocBreakpointsAdded 
+]
+
+{ #category : #accessing }
 ParticipantResult >> participant [
 
 	^ participant
