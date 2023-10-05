@@ -64,6 +64,22 @@ ParticipantResult >> = anObject [
 	^ self tasks = anObject tasks
 ]
 
+{ #category : #'as yet unclassified' }
+ParticipantResult >> controlTaskInfos [
+
+	| task str |
+	task := tasks first.
+	({ 'Lights Out'. 'Ammolite' } includes: task taskInfo title) 
+		ifFalse: [ ^ 'No data' ].
+	str := WriteStream on: String new.
+	str << '('.
+	str << task taskInfo title.
+	str << ')'.
+	str space.
+	str << task duration printString.
+	^ str contents
+]
+
 { #category : #accessing }
 ParticipantResult >> ocBreakpointsAdded [
 	^participant ocBreakpointsAdded 
@@ -91,4 +107,20 @@ ParticipantResult >> tasks [
 ParticipantResult >> tasks: anObject [
 
 	tasks := anObject
+]
+
+{ #category : #'as yet unclassified' }
+ParticipantResult >> treatmentTaskInfos [
+
+	| task str |
+	task := tasks last.
+	({ 'Lights Out'. 'Ammolite' } includes: task taskInfo title) 
+		ifFalse: [ ^ 'No data' ].
+	str := WriteStream on: String new.
+	str << '('.
+	str << task taskInfo title.
+	str << ')'.
+	str space.
+	str << task duration printString.
+	^ str contents
 ]
