@@ -101,12 +101,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 { #category : #'as yet unclassified' }
 OCREDataAnalysisPresenter >> plot: aTasksResults [
 
-	| boxPlot1 |
-	boxPlot1 := RSViolinPlot data: {
-			            { 6. 8. 7. 5. 7. 11. 9 }.
-			            { 2. 2. 2. 3. 3. 12. 4. 2. 4. 2. 2. 2. 6. 2. 2. 8. 2. 5.
-			            9. 2. 2. 2. 2. 2 } }.
-	violins := boxPlot1 asPresenter.
+	| transformBlock dataViolins |
+	transformBlock := [ :data| data collect: [:duration| duration minutes + (duration seconds/60) asFloat  ]  ].
+	dataViolins := RSViolinPlot data: {
+			            (transformBlock value: aTasksResults controlData).
+			            (transformBlock value: aTasksResults treatmentData) }.
+	violins := dataViolins asPresenter.
 	self layout: self defaultLayout
 ]
 
