@@ -5,7 +5,9 @@ Class {
 		'name',
 		'controlAvg',
 		'treatmentAvg',
-		'ratio'
+		'ratio',
+		'controlData',
+		'treatmentData'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -20,6 +22,18 @@ TasksResults >> controlAvg [
 TasksResults >> controlAvg: anObject [
 
 	controlAvg := anObject
+]
+
+{ #category : #accessing }
+TasksResults >> controlData [
+
+	^ controlData
+]
+
+{ #category : #accessing }
+TasksResults >> controlData: data [
+	controlData := data.
+	controlAvg := data average
 ]
 
 { #category : #accessing }
@@ -56,4 +70,16 @@ TasksResults >> treatmentAvg [
 TasksResults >> treatmentAvg: anObject [
 
 	treatmentAvg := anObject
+]
+
+{ #category : #accessing }
+TasksResults >> treatmentData [
+
+	^ treatmentData
+]
+
+{ #category : #accessing }
+TasksResults >> treatmentData: data [
+	treatmentData := data.
+	treatmentAvg  := data average
 ]
