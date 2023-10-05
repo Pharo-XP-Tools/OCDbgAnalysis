@@ -41,7 +41,7 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 	"Note that the repository of the next baseline is not in the Pharo-XP-Tools github"
 	Metacello new
 		baseline: 'DebuggingSpy';
-		repository: 'github://StevenCostiou/DebuggingSpy';
+		repository: 'github://Pharo-XP-Tools/DebuggingSpy';
 		load.
 
 	Metacello new
@@ -58,8 +58,8 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
                 ensureExtractedData"
 '.
 	"JSON tools from our fork"
-	Metacello new
+	"Metacello new
 		repository: 'github://Pharo-XP-Tools/NeoJSON/repository';
 		baseline: 'NeoJSON';
-		load
+		load"
 ]
