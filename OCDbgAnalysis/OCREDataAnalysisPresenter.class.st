@@ -24,6 +24,20 @@ OCREDataAnalysisPresenter class >> defaultSpec [
 ]
 
 { #category : #specs }
+OCREDataAnalysisPresenter >> defaultLayout [
+
+	^ SpPanedLayout newLeftToRight
+		  positionOfSlider: 50 percent;
+		  add: (SpPanedLayout newTopToBottom
+				   positionOfSlider: 25 percent;
+				   add: tasksTable;
+				   add: participantsTable;
+				   yourself);
+		  add: SpBoxLayout newTopToBottom;
+		  yourself
+]
+
+{ #category : #specs }
 OCREDataAnalysisPresenter >> defaultSpec [
 
 	^ SpPanedLayout newLeftToRight
