@@ -62,4 +62,9 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 		repository: 'github://Pharo-XP-Tools/NeoJSON/repository';
 		baseline: 'NeoJSON';
 		load"
+		
+	[Metacello new
+    baseline: 'Roassal3';
+    repository: 'github://ObjectProfile/Roassal3';
+    load: 'Full' ] on: MCMergeOrLoadWarning do: [:warning | warning load ]
 ]
