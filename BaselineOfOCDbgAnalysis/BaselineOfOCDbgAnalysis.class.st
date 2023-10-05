@@ -21,7 +21,7 @@ BaselineOfOCDbgAnalysis >> postload: loader package: packageSpec [
 		 contents:
 			 '"inspect this, but use the path to your downloaded data file"
 OCDbgExampleCode loadDataFromPath: ''/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000''';
-		 yourself) openWithSpec
+		 yourself) open
 ]
 
 { #category : #actions }
