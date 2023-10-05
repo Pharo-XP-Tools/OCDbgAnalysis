@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'tasksTable',
 		'participantsTable',
-		'experiment'
+		'experiment',
+		'violins'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -33,7 +34,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 				   add: tasksTable;
 				   add: participantsTable;
 				   yourself);
-		  add: SpBoxLayout newTopToBottom;
+		  add: violins;
 		  yourself
 ]
 
@@ -77,6 +78,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 yourself).
 			
 	tasksTable items: experiment buildTaskResults.
+	tasksTable transmitDo: [ :task| self plot: task ].
 	
  
 	participantsTable := self newTable.
@@ -91,7 +93,21 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself).	
 			
-	participantsTable items: experiment participantResults 
+	participantsTable items: experiment participantResults.
+	
+	violins := self newRoassal.
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> plot: aTasksResults [
+
+	| boxPlot1 |
+	boxPlot1 := RSViolinPlot data: {
+			            { 6. 8. 7. 5. 7. 11. 9 }.
+			            { 2. 2. 2. 3. 3. 12. 4. 2. 4. 2. 2. 2. 6. 2. 2. 8. 2. 5.
+			            9. 2. 2. 2. 2. 2 } }.
+	violins := boxPlot1 asPresenter.
+	self layout: self defaultLayout
 ]
 
 { #category : #initialization }
