@@ -10,6 +10,20 @@ Class {
 }
 
 { #category : #specs }
+OCREDataAnalysisPresenter class >> defaultSpec [
+
+		^ SpPanedLayout newLeftToRight
+		  positionOfSlider: 50 percent;
+		  add: (SpPanedLayout newTopToBottom
+				   positionOfSlider: 25 percent;
+				   add: #tasksTable;
+				   add: #participantsTable;
+				   yourself);
+		  add: SpBoxLayout newTopToBottom;
+		  yourself
+]
+
+{ #category : #specs }
 OCREDataAnalysisPresenter >> defaultSpec [
 
 	^ SpPanedLayout newLeftToRight
@@ -29,35 +43,35 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	tasksTable := self newTable.
 	tasksTable addColumn: ((SpStringTableColumn
 			  title: 'Task'
-			  evaluated: [ :item | item taskName ])
+			  evaluated: [ :item | item name ])
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
 			  title: 'Control average time'
-			  evaluated: [ :item | item controlAverageTime printString ])
+			  evaluated: [ :item | item controlAvg printString ])
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
 			  title: 'Treatment average time'
-			  evaluated: [ :item | item treatmentAverageTime printString ])
+			  evaluated: [ :item | item treatmentAvg printString ])
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
 			  title: 'Ratio'
-			  evaluated: [ :item | item timeRatio ])
+			  evaluated: [ :item | item ratio printString ])
 			 sortFunction: nil;
 			 yourself).
 			
 	tasksTable items: experiment buildTaskResults.
 	
-
+ 
 	participantsTable := self newTable.
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
 			 sortFunction: nil;
 			 yourself).
-	tasksTable addColumn: ((SpStringTableColumn
+	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Treatment'
 			  evaluated: [ :item | item treatmentTaskInfos ])
 			 sortFunction: nil;

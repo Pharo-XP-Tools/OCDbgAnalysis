@@ -36,6 +36,26 @@ ExperimentResults >> addPersonalDataSurvey: aDSSurveyRecord [
 	aDSSurveyRecord survey questions third answer: nil
 ]
 
+{ #category : #'data analysis' }
+ExperimentResults >> buildTaskResults [
+	
+	|t1 t2|
+	self collectTasksForAnalysis.
+	t1 := TasksResults new.
+	t1 name: (controlTasks t1 first taskInfo title).
+	t1 controlAvg: (controlTasks t1 collect:[:t| t duration]) average.
+	t1 treatmentAvg: (treatmentTasks t1 collect:[:t| t duration]) average.
+	t1 ratio: ((t1 controlAvg / t1 treatmentAvg) asFloat truncateTo: 0.000001).
+	
+	t2 := TasksResults new.
+	t2 name: (controlTasks t2 first taskInfo title).
+	t2 controlAvg: (controlTasks t2 collect:[:t| t duration]) average.
+	t2 treatmentAvg: (treatmentTasks t2 collect:[:t| t duration]) average.
+	t2 ratio: ((t2 controlAvg asNanoSeconds / t2 treatmentAvg asNanoSeconds) asFloat truncateTo: 0.000001).
+	
+	^ { t1. t2 }
+]
+
 { #category : #'data extraction' }
 ExperimentResults >> collectControlTasksFrom: participants [
 
