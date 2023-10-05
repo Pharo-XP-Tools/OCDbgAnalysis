@@ -55,9 +55,10 @@ TasksResults >> ratio [
 ]
 
 { #category : #accessing }
-TasksResults >> ratio: anObject [
+TasksResults >> ratio: aFloat [
 
-	ratio := anObject
+	
+	ratio := ((aFloat - 1) roundTo: 0.0001) * 100
 ]
 
 { #category : #accessing }

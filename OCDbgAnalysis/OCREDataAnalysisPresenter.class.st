@@ -72,8 +72,19 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
-			  title: 'Ratio'
-			  evaluated: [ :item | item ratio printString ])
+			  title: 'Treatment/Control speed change' 
+			  evaluated: [ :item | 
+				|stringValue|
+				stringValue := 
+				String streamContents: [ :str| 					
+					item ratio > 0 ifTrue:[str << '+'].
+					str << item ratio printString
+					 ] limitedTo:  6.
+				String streamContents: [ :str| 					
+					str << stringValue.
+					str << '%'
+					 ]
+				 ])
 			 sortFunction: nil;
 			 yourself).
 			
