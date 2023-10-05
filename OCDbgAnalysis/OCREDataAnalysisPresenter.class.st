@@ -102,10 +102,17 @@ OCREDataAnalysisPresenter >> initializePresenters [
 OCREDataAnalysisPresenter >> plot: aTasksResults [
 
 	| transformBlock dataViolins |
-	transformBlock := [ :data| data collect: [:duration| duration minutes + (duration seconds/60) asFloat  ]  ].
+	transformBlock := [ :data |
+	                  data collect: [ :duration |
+		                  duration minutes + (duration seconds / 60) asFloat ] ].
 	dataViolins := RSViolinPlot data: {
-			            (transformBlock value: aTasksResults controlData).
-			            (transformBlock value: aTasksResults treatmentData) }.
+			               (transformBlock value: aTasksResults controlData).
+			               (transformBlock value: aTasksResults treatmentData) }.
+	dataViolins xTickLabels: {
+			('Control (' , aTasksResults controlData size printString
+			 , ' points)').
+			('Treatment (' , aTasksResults treatmentData size printString
+			 , ' points)') }.
 	violins := dataViolins asPresenter.
 	self layout: self defaultLayout
 ]
