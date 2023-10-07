@@ -150,7 +150,7 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 			('Treatment (' , aTasksResults treatmentData size printString
 			 , ' points)') }.
 	dataViolins title:
-			              'Time to understand the bug (in min)'.
+			              'Time to finish the task (in min)'.
 	violins := dataViolins asPresenter.
 	self layout: self defaultLayout
 ]
