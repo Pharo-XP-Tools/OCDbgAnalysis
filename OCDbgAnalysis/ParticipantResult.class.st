@@ -3,7 +3,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'tasks',
-		'participant'
+		'participant',
+		'controlScore',
+		'treatmentScore'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -64,6 +66,18 @@ ParticipantResult >> = anObject [
 	^ self tasks = anObject tasks
 ]
 
+{ #category : #accessing }
+ParticipantResult >> controlScore [
+
+	^ controlScore
+]
+
+{ #category : #accessing }
+ParticipantResult >> controlScore: anObject [
+
+	controlScore := anObject
+]
+
 { #category : #'as yet unclassified' }
 ParticipantResult >> controlTaskInfos [
 
@@ -78,6 +92,18 @@ ParticipantResult >> controlTaskInfos [
 	str space.
 	str << task duration printString.
 	^ str contents
+]
+
+{ #category : #testing }
+ParticipantResult >> dataChecked [
+	^controlScore notNil and:[treatmentScore notNil]
+]
+
+{ #category : #testing }
+ParticipantResult >> isParticipationValid [
+
+	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks last taskInfo title)
+		  and: [ tasks last isValid ]
 ]
 
 { #category : #accessing }
@@ -97,6 +123,15 @@ ParticipantResult >> participant: anObject [
 	participant := anObject
 ]
 
+{ #category : #printing }
+ParticipantResult >> printCorrectness [
+
+	^ String streamContents: [ :str |
+		  str << controlScore printString.
+		  str << ':'.
+		  str << treatmentScore printString ]
+]
+
 { #category : #accessing }
 ParticipantResult >> tasks [
 
@@ -107,6 +142,18 @@ ParticipantResult >> tasks [
 ParticipantResult >> tasks: anObject [
 
 	tasks := anObject
+]
+
+{ #category : #accessing }
+ParticipantResult >> treatmentScore [
+
+	^ treatmentScore
+]
+
+{ #category : #accessing }
+ParticipantResult >> treatmentScore: anObject [
+
+	treatmentScore := anObject
 ]
 
 { #category : #'as yet unclassified' }
