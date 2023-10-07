@@ -5,7 +5,8 @@ Class {
 		'tasksTable',
 		'participantsTable',
 		'experiment',
-		'violins'
+		'violins',
+		'experience'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -34,7 +35,11 @@ OCREDataAnalysisPresenter >> defaultLayout [
 				   add: tasksTable;
 				   add: participantsTable;
 				   yourself);
-		  add: violins;
+		  add: (SpPanedLayout newTopToBottom
+				   positionOfSlider: 50 percent;
+				   add: violins;
+				   add: experience;
+				   yourself);
 		  yourself
 ]
 
@@ -103,13 +108,33 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			  evaluated: [ :item | item treatmentTaskInfos ])
 			 sortFunction: nil;
 			 yourself).	
+				
+		participantsTable addColumn: ((SpStringTableColumn
+			  title: 'Valid'
+			  evaluated: [ :item | item isParticipationValid ifTrue:['yes'] ifFalse:['no'] ])
+			displayColor: [ :item| item isParticipationValid  ifTrue:[Color green muchDarker] ifFalse:[Color red] ];
+			width: 40;
+			 sortFunction: nil;
+			 yourself).	
+				
+			participantsTable addColumn:(
+
+	 OCDbgLinkTableColumn new 
+		title: 'Correctness';
+		evaluated: [ :item | 
+			item dataChecked ifTrue:[item printCorrectness] ifFalse:['Needs check'] ];
+		action: [ :item |  self checkData: item ];
+	displayColor: [ :item| item dataChecked  ifTrue:[Color blue darker] ifFalse:[Color red] ];
+		yourself).
+				
 			
 	participantsTable items: experiment participantResults.
 	
 	violins := self newRoassal.
+	self plotExperienceBarChart
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #charts }
 OCREDataAnalysisPresenter >> plot: aTasksResults [
 
 	| transformBlock dataViolins |
@@ -124,12 +149,34 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 			 , ' points)').
 			('Treatment (' , aTasksResults treatmentData size printString
 			 , ' points)') }.
+	dataViolins title:
+			              'Time to understand the bug (in min)'.
 	violins := dataViolins asPresenter.
 	self layout: self defaultLayout
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotExperienceBarChart [
+
+	| dataLabels data |
+	experience := self newRoassal.
+	dataLabels := { '< 1'. '1-2 years'. '3-5 years'. '6-10 years'.
+	              'More than 10' }.
+	data := OrderedCollection new.
+	dataLabels do: [ :l |
+		data add: (experiment participantsExperience count: [ :e | e = l ]) ].
+	dataLabels := { '<1'. '1-2'. '3-5'. '6-10'. '>10' }.
+	experience := RSBarPlotNew new
+		              data: data;
+		              xTickLabels: dataLabels;
+		              title:
+			              'Participants development experience (in years)';
+		              asPresenter
 ]
 
 { #category : #initialization }
 OCREDataAnalysisPresenter >> setModelBeforeInitialization: anExperimentResult [
 
-	experiment := anExperimentResult
+	experiment := anExperimentResult.
+	experiment collectDeveloperExperience
 ]
