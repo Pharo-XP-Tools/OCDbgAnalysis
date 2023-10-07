@@ -5,7 +5,8 @@ Class {
 		'participantResults',
 		'emails',
 		'treatmentTasks',
-		'controlTasks'
+		'controlTasks',
+		'participantsExperience'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -61,6 +62,28 @@ ExperimentResults >> collectControlTasksFrom: participants [
 
 	controlTasks := ControlTasks new.
 	participants do: [ :p | controlTasks addTaskStats: p tasks first ]
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> collectDeveloperExperience [
+
+	participantsExperience := OrderedCollection new.
+	(participantResults collect: [ :r | r participant surveys ]) do: [
+		:surveys |
+		| demographicSurvey |
+		demographicSurvey := surveys
+			                     detect: [ :s |
+			                     s survey title = 'Demographic information' ]
+			                     ifNone: [ nil ].
+		demographicSurvey ifNotNil: [ :s |
+			| xp |
+			xp := s survey answers
+				      detect: [ :a |
+					      a title
+					      =
+					      'How many years of programming experience do you have with Pharo?' ]
+				      ifNone: [ nil ].
+			xp ifNotNil: [ participantsExperience add: xp answer answer] ] ]
 ]
 
 { #category : #'data extraction' }
@@ -120,4 +143,10 @@ ExperimentResults >> participantResults [
 ExperimentResults >> participantResults: anObject [
 
 	participantResults := anObject
+]
+
+{ #category : #accessing }
+ExperimentResults >> participantsExperience [
+
+	^ participantsExperience
 ]
