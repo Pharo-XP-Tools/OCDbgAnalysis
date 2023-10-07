@@ -18,7 +18,8 @@ Class {
 		'manualRevisionSuccess',
 		'order',
 		'answer',
-		'events'
+		'events',
+		'valid'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -145,6 +146,12 @@ TaskStats >> inspectingObjects: anObject [
 	inspectingObjects := anObject
 ]
 
+{ #category : #testing }
+TaskStats >> isValid [
+
+	^ valid ifNil: [ valid := true ]
+]
+
 { #category : #accessing }
 TaskStats >> manualRevisionSuccess [
 
@@ -155,6 +162,11 @@ TaskStats >> manualRevisionSuccess [
 TaskStats >> manualRevisionSuccess: anObject [
 
 	manualRevisionSuccess := anObject
+]
+
+{ #category : #api }
+TaskStats >> notValid [
+	valid := false
 ]
 
 { #category : #accessing }

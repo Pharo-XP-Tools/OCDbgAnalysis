@@ -6,6 +6,9 @@ Class {
 
 { #category : #adding }
 TreatmentTasks >> addTaskStats: aTaskStat [
-	aTaskStat ocBreakpointsAdded > 0 ifFalse:[^self].
-	super addTaskStats: aTaskStat 
+
+	aTaskStat ocBreakpointsAdded > 0 ifFalse: [
+		aTaskStat notValid.
+		^ self ].
+	super addTaskStats: aTaskStat
 ]
