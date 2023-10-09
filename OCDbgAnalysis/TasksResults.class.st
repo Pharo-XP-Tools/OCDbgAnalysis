@@ -7,10 +7,23 @@ Class {
 		'treatmentAvg',
 		'ratio',
 		'controlData',
-		'treatmentData'
+		'treatmentData',
+		'averageDebuggingActionsCount'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
+
+{ #category : #accessing }
+TasksResults >> averageDebuggingActionsCount [
+
+	^ averageDebuggingActionsCount
+]
+
+{ #category : #accessing }
+TasksResults >> averageDebuggingActionsCount: anObject [
+
+	averageDebuggingActionsCount := anObject
+]
 
 { #category : #accessing }
 TasksResults >> controlAvg [

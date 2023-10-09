@@ -40,7 +40,10 @@ ExperimentResults >> addPersonalDataSurvey: aDSSurveyRecord [
 { #category : #'data analysis' }
 ExperimentResults >> buildTaskResults [
 	
-	|t1 t2|
+	|t1 t2 debuggingActionCount|
+	debuggingActionCount := [ :results|  (results collect: [:next|	
+	(DSRecordHistory on: next events) countDebugActions ]) average asFloat rounded].
+
 	self collectTasksForAnalysis.
 	t1 := TasksResults new.
 	t1 name: (controlTasks t1 first taskInfo title).
@@ -48,11 +51,14 @@ ExperimentResults >> buildTaskResults [
 	t1 treatmentData: (treatmentTasks t1 collect:[:t| t duration]).
 	t1 ratio: ((t1 controlAvg / t1 treatmentAvg) asFloat truncateTo: 0.000001).
 	
+	t1 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t1).  (debuggingActionCount value: treatmentTasks t1).  }.
+	
 	t2 := TasksResults new.
 	t2 name: (controlTasks t2 first taskInfo title).
 	t2 controlData: (controlTasks t2 collect:[:t| t duration]).
 	t2 treatmentData: (treatmentTasks t2 collect:[:t| t duration]).
 	t2 ratio: ((t2 controlAvg asNanoSeconds / t2 treatmentAvg asNanoSeconds) asFloat truncateTo: 0.000001).
+		t2 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t2).  (debuggingActionCount value: treatmentTasks t2).  }.
 	
 	^ { t1. t2 }
 ]

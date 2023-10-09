@@ -135,6 +135,12 @@ TaskStats >> duration: anObject [
 ]
 
 { #category : #accessing }
+TaskStats >> events [
+
+	^ events
+]
+
+{ #category : #accessing }
 TaskStats >> inspectingObjects [
 
 	^ inspectingObjects
