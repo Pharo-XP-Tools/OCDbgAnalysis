@@ -134,6 +134,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	self plotExperienceBarChart
 ]
 
+{ #category : #initialization }
+OCREDataAnalysisPresenter >> initializeWindow: aWindowPresenter [
+
+	aWindowPresenter title: 'Experimental results'
+]
+
 { #category : #charts }
 OCREDataAnalysisPresenter >> plot: aTasksResults [
 
