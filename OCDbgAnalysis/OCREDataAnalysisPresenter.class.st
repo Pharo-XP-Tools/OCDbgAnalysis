@@ -27,6 +27,26 @@ OCREDataAnalysisPresenter class >> defaultSpec [
 ]
 
 { #category : #specs }
+OCREDataAnalysisPresenter >> checkData: aParticipantResult [
+
+	aParticipantResult isParticipationValid ifFalse: [ ^ self ].
+	(OCREParticipantValidationPresenter on: aParticipantResult)
+		experimentResultsBrowser: self;
+		open
+]
+
+{ #category : #specs }
+OCREDataAnalysisPresenter >> correctnessColorFor: participant [
+
+	participant isParticipationValid ifFalse: [ ^ Color black ].
+
+	participant dataChecked ifTrue: [ ^ Color blue darker ].
+
+
+	^ Color red
+]
+
+{ #category : #specs }
 OCREDataAnalysisPresenter >> defaultLayout [
 
 	^ SpPanedLayout newLeftToRight
@@ -62,9 +82,8 @@ OCREDataAnalysisPresenter >> defaultSpec [
 OCREDataAnalysisPresenter >> initializePresenters [
 
 	tasksTable := self newTable.
-	tasksTable addColumn: ((SpStringTableColumn
-			  title: 'Task'
-			  evaluated: [ :item | item name ])
+	tasksTable addColumn:
+		((SpStringTableColumn title: 'Task' evaluated: [ :item | item name ])
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
@@ -78,26 +97,24 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself).
 	tasksTable addColumn: ((SpStringTableColumn
-			  title: 'Treatment/Control speed change' 
-			  evaluated: [ :item | 
-				|stringValue|
-				stringValue := 
-				String streamContents: [ :str| 					
-					item ratio > 0 ifTrue:[str << '+'].
-					str << item ratio printString
-					 ] limitedTo:  6.
-				String streamContents: [ :str| 					
-					str << stringValue.
-					str << '%'
-					 ]
-				 ])
+			  title: 'Treatment/Control speed change'
+			  evaluated: [ :item |
+				  | stringValue |
+				  stringValue := String
+					                 streamContents: [ :str |
+						                 item ratio > 0 ifTrue: [ str << '+' ].
+						                 str << item ratio printString ]
+					                 limitedTo: 6.
+				  String streamContents: [ :str |
+						  str << stringValue.
+						  str << '%' ] ])
 			 sortFunction: nil;
 			 yourself).
-			
+
 	tasksTable items: experiment buildTaskResults.
-	tasksTable transmitDo: [ :task| self plotChartsForTask: task ].
-	
- 
+	tasksTable transmitDo: [ :task | self plotChartsForTask: task ].
+
+
 	participantsTable := self newTable.
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
@@ -108,29 +125,31 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			  title: 'Treatment'
 			  evaluated: [ :item | item treatmentTaskInfos ])
 			 sortFunction: nil;
-			 yourself).	
-				
-		participantsTable addColumn: ((SpStringTableColumn
-			  title: 'Valid'
-			  evaluated: [ :item | item isParticipationValid ifTrue:['yes'] ifFalse:['no'] ])
-			displayColor: [ :item| item isParticipationValid  ifTrue:[Color green muchDarker] ifFalse:[Color red] ];
-			width: 40;
-			 sortFunction: nil;
-			 yourself).	
-				
-			participantsTable addColumn:(
+			 yourself).
 
-	 OCDbgLinkTableColumn new 
-		title: 'Correctness';
-		evaluated: [ :item | 
-			item dataChecked ifTrue:[item printCorrectness] ifFalse:['Needs check'] ];
-		action: [ :item |  self checkData: item ];
-	displayColor: [ :item| item dataChecked  ifTrue:[Color blue darker] ifFalse:[Color red] ];
-		yourself).
-				
-			
+	participantsTable addColumn:
+		((SpStringTableColumn title: 'Valid' evaluated: [ :item |
+				  item isParticipationValid
+					  ifTrue: [ 'yes' ]
+					  ifFalse: [ 'no' ] ])
+			 displayColor: [ :item |
+				 item isParticipationValid
+					 ifTrue: [ Color green muchDarker ]
+					 ifFalse: [ Color red ] ];
+			 width: 40;
+			 sortFunction: nil;
+			 yourself).
+
+	participantsTable addColumn: (OCDbgLinkTableColumn new
+			 title: 'Correctness';
+			 evaluated: [ :item | self printCorrectnessFor: item ];
+			 action: [ :item | self checkData: item ];
+			 displayColor: [ :item | self correctnessColorFor: item ];
+			 yourself).
+
+
 	participantsTable items: experiment participantResults.
-	
+
 	violins := self newRoassal.
 	debugActions := self newRoassal.
 	self plotExperienceBarChart
@@ -199,6 +218,14 @@ OCREDataAnalysisPresenter >> plotExperienceBarChart [
 		              title:
 			              'Participants development experience (in years)';
 		              asPresenter
+]
+
+{ #category : #specs }
+OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
+
+	participant isParticipationValid ifFalse: [ ^ 'N/A' ].
+	participant dataChecked ifTrue: [^participant printCorrectness ].
+	^ 'Needs check'
 ]
 
 { #category : #initialization }
