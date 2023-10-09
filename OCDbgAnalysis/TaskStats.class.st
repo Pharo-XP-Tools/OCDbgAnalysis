@@ -76,6 +76,11 @@ TaskStats >> = anObject [
 ]
 
 { #category : #accessing }
+TaskStats >> answer [
+	^ answer
+]
+
+{ #category : #accessing }
 TaskStats >> breakpointsAdded [
 
 	^ breakpointsAdded
@@ -109,6 +114,17 @@ TaskStats >> breakpointsRemoved [
 TaskStats >> breakpointsRemoved: anObject [
 
 	breakpointsRemoved := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> correctness [
+	^correctness 
+]
+
+{ #category : #accessing }
+TaskStats >> correctness: aBoolean [
+
+	correctness := aBoolean
 ]
 
 { #category : #accessing }

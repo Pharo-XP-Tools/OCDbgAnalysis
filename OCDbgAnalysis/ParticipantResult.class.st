@@ -96,7 +96,11 @@ ParticipantResult >> controlTaskInfos [
 
 { #category : #testing }
 ParticipantResult >> dataChecked [
-	^controlScore notNil and:[treatmentScore notNil]
+
+	controlScore := tasks first correctness.
+	treatmentScore := tasks last correctness.
+
+	^ controlScore notNil and: [ treatmentScore notNil ]
 ]
 
 { #category : #testing }
@@ -127,9 +131,9 @@ ParticipantResult >> participant: anObject [
 ParticipantResult >> printCorrectness [
 
 	^ String streamContents: [ :str |
-		  str << controlScore printString.
-		  str << ':'.
-		  str << treatmentScore printString ]
+		  str << (controlScore ifTrue:['1'] ifFalse:['0']).
+		  str << ' | '.
+		  str << (treatmentScore ifTrue:['1'] ifFalse:['0']) ]
 ]
 
 { #category : #accessing }
