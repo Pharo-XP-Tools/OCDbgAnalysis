@@ -13,13 +13,14 @@ Class {
 		'debuggerOpenings',
 		'duration',
 		'taskInfo',
-		'testSucess',
-		'testSucessRaw',
 		'manualRevisionSuccess',
 		'order',
 		'answer',
 		'events',
-		'valid'
+		'valid',
+		'testSuccess',
+		'correctness',
+		'testSuccessRaw'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -258,25 +259,25 @@ TaskStats >> taskInfo: anObject [
 ]
 
 { #category : #accessing }
-TaskStats >> testSucess [
+TaskStats >> testSuccess [
 
-	^ testSucess
+	^ testSuccess
 ]
 
 { #category : #accessing }
-TaskStats >> testSucess: anObject [
+TaskStats >> testSuccess: anObject [
 
-	testSucess := anObject
+	testSuccess := anObject
 ]
 
 { #category : #accessing }
-TaskStats >> testSucessRaw [
+TaskStats >> testSuccessRaw [
 
-	^ testSucessRaw
+	^ testSuccessRaw
 ]
 
 { #category : #accessing }
-TaskStats >> testSucessRaw: anObject [
+TaskStats >> testSuccessRaw: anObject [
 
-	testSucessRaw := anObject
+	testSuccessRaw := anObject
 ]

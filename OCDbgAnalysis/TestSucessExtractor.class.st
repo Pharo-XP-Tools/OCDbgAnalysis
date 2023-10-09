@@ -19,5 +19,5 @@ TestSucessExtractor >> extract [
 { #category : #api }
 TestSucessExtractor >> targetField [
 
-	^ #testSucess
+	^ #testSuccess
 ]
