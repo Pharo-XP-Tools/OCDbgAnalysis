@@ -32,8 +32,8 @@ OCREDataAnalysisPresenter >> defaultLayout [
 		  positionOfSlider: 50 percent;
 		  add: (SpPanedLayout newTopToBottom
 				   positionOfSlider: 25 percent;
-				   add: tasksTable;
-				   add: participantsTable;
+				   add: (SpBoxLayout newTopToBottom add: 'Tasks' expand: false fill: false; add: tasksTable; yourself);
+				   add: (SpBoxLayout newTopToBottom add: 'Participants' expand: false fill: false; add: participantsTable; yourself);
 				   yourself);
 		  add: (SpPanedLayout newTopToBottom
 				   positionOfSlider: 50 percent;
