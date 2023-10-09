@@ -6,7 +6,8 @@ Class {
 		'participantsTable',
 		'experiment',
 		'violins',
-		'experience'
+		'experience',
+		'debugActions'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -37,7 +38,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 				   yourself);
 		  add: (SpPanedLayout newTopToBottom
 				   positionOfSlider: 50 percent;
-				   add: violins;
+				   add: (SpBoxLayout newLeftToRight add: violins; add: debugActions; yourself);
 				   add: experience;
 				   yourself);
 		  yourself
@@ -94,7 +95,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 yourself).
 			
 	tasksTable items: experiment buildTaskResults.
-	tasksTable transmitDo: [ :task| self plot: task ].
+	tasksTable transmitDo: [ :task| self plotChartsForTask: task ].
 	
  
 	participantsTable := self newTable.
@@ -131,6 +132,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable items: experiment participantResults.
 	
 	violins := self newRoassal.
+	debugActions := self newRoassal.
 	self plotExperienceBarChart
 ]
 
@@ -157,8 +159,27 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 			 , ' points)') }.
 	dataViolins title:
 			              'Time to finish the task (in min)'.
-	violins := dataViolins asPresenter.
+	violins := dataViolins asPresenter
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
+
+	self plot: aTaskResult.
+	self plotDebugActionsCount: aTaskResult.
 	self layout: self defaultLayout
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotDebugActionsCount: aTasksResults [
+
+	debugActions := self newRoassal.
+	debugActions := RSBarPlotNew new
+		                data: aTasksResults averageDebuggingActionsCount;
+		                xTickLabels: { 'Control'. 'Treatment' };
+		                title:
+			                'Debug actions count';
+		                asPresenter
 ]
 
 { #category : #charts }
