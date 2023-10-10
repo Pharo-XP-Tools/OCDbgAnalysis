@@ -117,6 +117,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 	participantsTable := self newTable.
 	participantsTable addColumn: ((SpStringTableColumn
+			  title: 'XP Date'
+			  evaluated: [ :item | item dateStarted asLocalStringYMDHM])
+				width: 100 ;
+			 sortFunction: [:a :b| (a dateStarted asNanoSeconds) - (b dateStarted asNanoSeconds)];
+			 yourself).
+	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
 			 sortFunction: nil;
@@ -126,6 +132,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			  evaluated: [ :item | item treatmentTaskInfos ])
 			 sortFunction: nil;
 			 yourself).
+	participantsTable contextMenu: self menu.
 
 	participantsTable addColumn:
 		((SpStringTableColumn title: 'Valid' evaluated: [ :item |
@@ -159,6 +166,16 @@ OCREDataAnalysisPresenter >> initializePresenters [
 OCREDataAnalysisPresenter >> initializeWindow: aWindowPresenter [
 
 	aWindowPresenter title: 'Experimental results'
+]
+
+{ #category : #specs }
+OCREDataAnalysisPresenter >> menu [
+
+	^ self newMenu addItem: [ :anItem |
+		  anItem
+			  name: 'inspect';
+			  iconName: #glamorousInspect;
+			  action: [ participantsTable selectedItem inspect ] ]
 ]
 
 { #category : #charts }

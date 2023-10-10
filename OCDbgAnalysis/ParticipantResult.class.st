@@ -103,6 +103,11 @@ ParticipantResult >> dataChecked [
 	^ controlScore notNil and: [ treatmentScore notNil ]
 ]
 
+{ #category : #'as yet unclassified' }
+ParticipantResult >> dateStarted [
+	^tasks first events first dateTime 
+]
+
 { #category : #testing }
 ParticipantResult >> isParticipationValid [
 
