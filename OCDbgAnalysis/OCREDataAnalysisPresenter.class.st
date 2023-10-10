@@ -209,7 +209,7 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 OCREDataAnalysisPresenter >> plotDebugActionsCount: aTasksResults [
 
 	debugActions := self newRoassal.
-	debugActions := RSBarPlotNew new
+	debugActions := RSViolinPlot  new
 		                data: aTasksResults averageDebuggingActionsCount;
 		                xTickLabels: { 'Control'. 'Treatment' };
 		                title:

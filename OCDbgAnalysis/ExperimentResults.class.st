@@ -42,7 +42,7 @@ ExperimentResults >> buildTaskResults [
 	
 	|t1 t2 debuggingActionCount|
 	debuggingActionCount := [ :results|  (results collect: [:next|	
-	(DSRecordHistory on: next events) countDebugActions ]) average asFloat rounded].
+	(DSRecordHistory on: next events) countDebugActions ]) "average asFloat rounded"].
 
 	self collectTasksForAnalysis.
 	t1 := TasksResults new.
