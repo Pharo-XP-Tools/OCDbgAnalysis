@@ -120,7 +120,6 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			  title: 'XP Date'
 			  evaluated: [ :item | item dateStarted asLocalStringYMDHM])
 				width: 100 ;
-			 sortFunction: [:a :b| (a dateStarted asNanoSeconds) - (b dateStarted asNanoSeconds)];
 			 yourself).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
@@ -155,7 +154,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 yourself).
 
 
-	participantsTable items: experiment participantResults.
+	participantsTable items: (experiment participantResults sort: [:a :b| a dateStarted > b dateStarted]).
 
 	violins := self newRoassal.
 	debugActions := self newRoassal.
