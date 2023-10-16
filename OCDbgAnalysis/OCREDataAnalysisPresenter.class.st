@@ -170,11 +170,20 @@ OCREDataAnalysisPresenter >> initializeWindow: aWindowPresenter [
 { #category : #specs }
 OCREDataAnalysisPresenter >> menu [
 
-	^ self newMenu addItem: [ :anItem |
-		  anItem
-			  name: 'inspect';
-			  iconName: #glamorousInspect;
-			  action: [ participantsTable selectedItem inspect ] ]
+	^ self newMenu
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'Fix data';
+				  iconName: #configuration;
+				  action: [
+					  (OCRETaskSorcererPresenter on: participantsTable selectedItem)
+						  open ] ];
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'inspect';
+				  iconName: #glamorousInspect;
+				  action: [ participantsTable selectedItem inspect ] ];
+		  yourself
 ]
 
 { #category : #charts }
