@@ -5,7 +5,8 @@ Class {
 		'tasks',
 		'participant',
 		'controlScore',
-		'treatmentScore'
+		'treatmentScore',
+		'rawData'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -26,6 +27,7 @@ ParticipantResult class >> newFromData: aCollection [
 		             TaskStats newForTask: dst fromData: aCollection ].
 	result tasks: taskStats.
 	result participant: ParticipantInfo new.
+	result rawData: aCollection.
 	^ result
 ]
 
@@ -139,6 +141,18 @@ ParticipantResult >> printCorrectness [
 		  str << (controlScore ifTrue:['1'] ifFalse:['0']).
 		  str << ' | '.
 		  str << (treatmentScore ifTrue:['1'] ifFalse:['0']) ]
+]
+
+{ #category : #accessing }
+ParticipantResult >> rawData [
+
+	^ rawData
+]
+
+{ #category : #accessing }
+ParticipantResult >> rawData: anObject [
+
+	rawData := anObject
 ]
 
 { #category : #accessing }
