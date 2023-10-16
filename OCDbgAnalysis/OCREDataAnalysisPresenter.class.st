@@ -183,7 +183,7 @@ OCREDataAnalysisPresenter >> menu [
 				  name: 'Fix data';
 				  iconName: #configuration;
 				  action: [
-					  (OCRETaskSorcererPresenter on: participantsTable selectedItem)
+					  (OCRETaskSorcererPresenter on: participantsTable selectedItem) experimentResultsBrowser:  self;
 						  open ] ];
 		  addItem: [ :anItem |
 			  anItem
