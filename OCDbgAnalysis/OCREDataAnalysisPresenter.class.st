@@ -7,7 +7,8 @@ Class {
 		'experiment',
 		'violins',
 		'experience',
-		'debugActions'
+		'debugActions',
+		'buttonBar'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -49,17 +50,29 @@ OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 { #category : #specs }
 OCREDataAnalysisPresenter >> defaultLayout [
 
-	^ SpPanedLayout newLeftToRight
-		  positionOfSlider: 50 percent;
-		  add: (SpPanedLayout newTopToBottom
-				   positionOfSlider: 25 percent;
-				   add: (SpBoxLayout newTopToBottom add: 'Tasks' expand: false fill: false; add: tasksTable; yourself);
-				   add: (SpBoxLayout newTopToBottom add: 'Participants' expand: false fill: false; add: participantsTable; yourself);
-				   yourself);
-		  add: (SpPanedLayout newTopToBottom
+	^ SpBoxLayout newTopToBottom
+		  add: buttonBar expand: false fill: false;
+		  add: (SpPanedLayout newLeftToRight
 				   positionOfSlider: 50 percent;
-				   add: (SpBoxLayout newLeftToRight add: violins; add: debugActions; yourself);
-				   add: experience;
+				   add: (SpPanedLayout newTopToBottom
+						    positionOfSlider: 25 percent;
+						    add: (SpBoxLayout newTopToBottom
+								     add: 'Tasks' expand: false fill: false;
+								     add: tasksTable;
+								     yourself);
+						    add: (SpBoxLayout newTopToBottom
+								     add: 'Participants' expand: false fill: false;
+								     add: participantsTable;
+								     yourself);
+						    yourself);
+				   add: (SpPanedLayout newTopToBottom
+						    positionOfSlider: 50 percent;
+						    add: (SpBoxLayout newLeftToRight
+								     add: violins;
+								     add: debugActions;
+								     yourself);
+						    add: experience;
+						    yourself);
 				   yourself);
 		  yourself
 ]
@@ -125,8 +138,8 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable := self newTable.
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'XP Date'
-			  evaluated: [ :item | item dateStarted asLocalStringYMDHM])
-				width: 100 ;
+			  evaluated: [ :item | item dateStarted asLocalStringYMDHM ])
+			 width: 100;
 			 yourself).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
@@ -161,11 +174,28 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 yourself).
 
 
-	participantsTable items: (experiment participantResults sort: [:a :b| a dateStarted > b dateStarted]).
+	participantsTable items:
+		(experiment participantResults sort: [ :a :b |
+			 a dateStarted > b dateStarted ]).
 
 	violins := self newRoassal.
 	debugActions := self newRoassal.
-	self plotExperienceBarChart
+	self plotExperienceBarChart.
+
+	buttonBar := self newButtonBar.
+	buttonBar
+		placeAtStart;
+		add: (self newButton
+				 icon: (self application iconNamed: #smallDoIt);
+				 action: [ self reload ];
+				 label: 'Reload data';
+				 yourself);
+		add: (self newButton
+				 icon: (self application iconNamed: #glamorousFolder);
+				 action: [ self chooseAndLoad ];
+				 label: 'Choose dir.';
+				 yourself)
+	"We want to place them at the end (as is often used in dialogs)"
 ]
 
 { #category : #initialization }
