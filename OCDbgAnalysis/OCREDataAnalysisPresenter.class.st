@@ -78,6 +78,13 @@ OCREDataAnalysisPresenter >> defaultSpec [
 		  yourself
 ]
 
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> doAnalysis [
+	experiment collectTasksForAnalysis.
+	experiment collectDeveloperExperience.
+	self update
+]
+
 { #category : #initialization }
 OCREDataAnalysisPresenter >> initializePresenters [
 
