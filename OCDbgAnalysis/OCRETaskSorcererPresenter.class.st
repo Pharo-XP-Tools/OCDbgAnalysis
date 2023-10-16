@@ -7,7 +7,8 @@ Class {
 		'taskNames',
 		'rawData',
 		'newTaskData',
-		'buttonBar'
+		'buttonBar',
+		'experimentResultsBrowser'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -23,6 +24,12 @@ OCRETaskSorcererPresenter >> defaultLayout [
 				   yourself);
 		  add: buttonBar expand: false fill: false;
 		  yourself
+]
+
+{ #category : #accessing }
+OCRETaskSorcererPresenter >> experimentResultsBrowser: anObject [
+
+	experimentResultsBrowser := anObject
 ]
 
 { #category : #'accessing - model' }
@@ -51,7 +58,13 @@ OCRETaskSorcererPresenter >> initializePresenters [
 	rawData items: participantResult rawData.
 	rawData contextMenu: self rawDataMenu.
 
-	newTaskData := self newList.
+	newTaskData := self newTable.
+	newTaskData addColumn: ((SpStringTableColumn title: 'Element' evaluated: [ :item | item key ])
+			 sortFunction: nil;
+			 yourself).
+			newTaskData addColumn: ((SpStringTableColumn title: 'Value' evaluated: [ :item | item value ])
+			 sortFunction: nil;
+			 yourself).
 	newTaskData items: #().
 	newTaskData contextMenu: self newTaskDataMenu.	
 	
@@ -81,6 +94,31 @@ OCRETaskSorcererPresenter >> newTaskDataMenu [
 			  action: [ newTaskData selectedItem inspect ] ]
 ]
 
+{ #category : #'as yet unclassified' }
+OCRETaskSorcererPresenter >> proposeFixForTask: aPhexTask events: events finishHistory: finishHistory [ 
+	|answer transaction|
+	"Find where to insert the task"
+	"Show the modifications in the new task list"
+	taskEnding := DSEndingTaskRecord new.
+	taskEnding dateTime: finishHistory first dateTime.
+	taskEnding record: aPhexTask.
+	aPhexTask endTime: taskEnding dateTime.
+	answer := (finishHistory select:[:e| { "DSClipboardPasteRecord. "DSClipboardCopyRecord } includes: e class] )last clipboardText. 
+	aPhexTask answer: (PhexTaskAnswer new contents: answer; yourself). 
+	transaction := TaskFixingProposition new.
+	transaction endingTask: taskEnding.
+	transaction insertionPoint: finishHistory last.
+	taskEnding := transaction.
+	newTaskData items: { 'Ending time'->aPhexTask endTime. 
+	'Total time'->(events first dateTime - aPhexTask endTime) abs.
+	'Answer'-> aPhexTask answer contents.
+	'Inserted after'->transaction  insertionPoint.
+	}
+	
+	
+	"If fix is validated => insert task, recompute task stats for participant"
+]
+
 { #category : #'accessing - model' }
 OCRETaskSorcererPresenter >> rawDataMenu [
 
@@ -94,4 +132,44 @@ OCRETaskSorcererPresenter >> rawDataMenu [
 { #category : #'accessing - model' }
 OCRETaskSorcererPresenter >> setModelBeforeInitialization: aParticipantResult [
 	participantResult := aParticipantResult
+]
+
+{ #category : #'as yet unclassified' }
+OCRETaskSorcererPresenter >> tryToFixTask [
+
+	| taskName taskStart taskStartIndex taskEventsRange taskSwitchingEvent taskEvents |
+	taskName := taskNames selectedItem ifEmpty: [ ^ self ].
+	taskStart := participantResult rawData detect: [ :e |
+		             e class == DSStartTaskRecord and: [
+			             e task title = taskName ] ].
+	taskStartIndex := participantResult rawData indexOf: taskStart.
+	taskEventsRange := participantResult rawData
+		                   copyFrom: taskStartIndex + 1
+		                   to: participantResult rawData size.
+	taskSwitchingEvent := taskEventsRange
+		                      detect: [ :e |
+			                      {
+				                      DSStartTaskRecord.
+				                      DSEndingTaskRecord } includes: e class ]
+		                      ifNone: [ participantResult rawData last ].
+	taskEvents := participantResult rawData
+		              copyFrom: taskStartIndex
+		              to:
+		              (participantResult rawData indexOf: taskSwitchingEvent).
+
+	self
+		proposeFixForTask: taskStart task
+		events: taskEvents
+		finishHistory: rawData items
+]
+
+{ #category : #'as yet unclassified' }
+OCRETaskSorcererPresenter >> validateFix [
+	|dstasks taskStats|
+	participantResult rawData add: taskEnding endingTask after: taskEnding insertionPoint.
+	dstasks := participantResult rawData  ocdSelectTasksEnding collect: [ :e | e task ].
+	taskStats := dstasks collect: [ :dst | 
+		             TaskStats newForTask: dst fromData: participantResult rawData  ].
+	participantResult tasks: taskStats.
+	experimentResultsBrowser doAnalysis
 ]
