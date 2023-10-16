@@ -8,7 +8,8 @@ Class {
 		'violins',
 		'experience',
 		'debugActions',
-		'buttonBar'
+		'buttonBar',
+		'dataDir'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -34,6 +35,18 @@ OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 	(OCREParticipantValidationPresenter on: aParticipantResult)
 		experimentResultsBrowser: self;
 		open
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> chooseAndLoad [
+
+	| f |
+	f := FileDialogWindow onFileSystem: FileSystem disk.
+	self halt.
+	f open.
+	f answer ifNotNil: [ :a |
+		dataDir := a asFileReference.
+		self reload ]
 ]
 
 { #category : #specs }
@@ -288,6 +301,18 @@ OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 	participant isParticipationValid ifFalse: [ ^ 'N/A' ].
 	participant dataChecked ifTrue: [^participant printCorrectness ].
 	^ 'Needs check'
+]
+
+{ #category : #actions }
+OCREDataAnalysisPresenter >> reload [
+
+	experiment := ExperimentResults extractResults: dataDir.
+	self doAnalysis.
+	self initializePresenters.
+	tasksTable items: experiment buildTaskResults.
+	participantsTable items:
+		(experiment participantResults sort: [ :a :b |
+			 a dateStarted > b dateStarted ])
 ]
 
 { #category : #initialization }
