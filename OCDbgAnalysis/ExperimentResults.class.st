@@ -6,10 +6,25 @@ Class {
 		'emails',
 		'treatmentTasks',
 		'controlTasks',
-		'participantsExperience'
+		'participantsExperience',
+		'dataSize'
+	],
+	#classInstVars : [
+		'current'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
+
+{ #category : #accessing }
+ExperimentResults class >> current [
+	^current ifNil:[current := self new]
+]
+
+{ #category : #accessing }
+ExperimentResults class >> current: anExperiment [
+
+	current := anExperiment
+]
 
 { #category : #'as yet unclassified' }
 ExperimentResults class >> extractAndOpenResults: dataPath [
