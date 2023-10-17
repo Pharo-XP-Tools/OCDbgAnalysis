@@ -22,7 +22,7 @@ Class {
 		'correctness',
 		'testSuccessRaw',
 		'alternateDuration',
-		'finiseventsvents'
+		'rawDuration'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -76,6 +76,12 @@ TaskStats >> = anObject [
 		(self readSlotNamed: each) = (anObject readSlotNamed: each) 
 			ifFalse: [ ^ false ] ].
 	^ true
+]
+
+{ #category : #accessing }
+TaskStats >> alternateDuration [
+
+	^ alternateDuration ifNil:[self recomputeDurationWithoutTaskAnswerTime]
 ]
 
 { #category : #accessing }
@@ -253,20 +259,25 @@ TaskStats >> printOn: aStream [
 	aStream << ')'
 ]
 
+{ #category : #accessing }
+TaskStats >> rawDuration [
+
+	^ rawDuration ifNil:[rawDuration := duration]
+]
+
 { #category : #'as yet unclassified' }
 TaskStats >> recomputeDurationWithoutTaskAnswerTime [
 
 	| finishTaskEvents |
+	rawDuration := duration.
 	finishTaskEvents := events select: [ :e |
 		                    (e isKindOf: DSWindowOpenedRecord) and: [
 			                    'Finish task ' , taskInfo title , '*' match:
 				                    e windowName asString ] ].
 	finishTaskEvents isEmpty ifTrue: [
-		alternateDuration := duration.
-		^ self ].
-
-	alternateDuration := finishTaskEvents last dateTime
-	                     - events first dateTime.
+		^ alternateDuration := rawDuration ].
+	^ alternateDuration := finishTaskEvents last dateTime
+	                       - events first dateTime
 ]
 
 { #category : #accessing }
@@ -315,4 +326,14 @@ TaskStats >> testSuccessRaw [
 TaskStats >> testSuccessRaw: anObject [
 
 	testSuccessRaw := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> useConsolidatedTimes [
+	duration := self alternateDuration 
+]
+
+{ #category : #accessing }
+TaskStats >> useRawTimes [
+	duration := self rawDuration 
 ]
