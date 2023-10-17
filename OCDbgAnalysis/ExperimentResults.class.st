@@ -38,6 +38,12 @@ ExperimentResults class >> extractResults: dataPath [
 	^self new extractResultsFromPath: dataPath asFileReference 
 ]
 
+{ #category : #'as yet unclassified' }
+ExperimentResults class >> extractResultsWithProgress: dataPath [
+	
+	^self new extractResultsWithProgress: dataPath asFileReference 
+]
+
 { #category : #adding }
 ExperimentResults >> addEmail: aString [
 	self emails add: aString.
@@ -121,6 +127,14 @@ ExperimentResults >> collectTreatmentTasksFrom: participants [
 	participants do: [ :p | treatmentTasks addTaskStats: p tasks last ]
 ]
 
+{ #category : #'data extraction' }
+ExperimentResults >> dataExtractionProgress [
+
+	^ [ (participantResults size / dataSize) ]
+		  on: Error
+		  do: [ 0 ]
+]
+
 { #category : #accessing }
 ExperimentResults >> emails [
 	^ emails ifNil:[emails := OrderedCollection new]
@@ -138,6 +152,24 @@ ExperimentResults >> extractResultsFromPath: dataPath [
 			                      result participant surveys:
 				                      (self extractSurveysFromData: data).
 			                      result ].
+	^ self
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> extractResultsWithProgress: dataPath [
+
+	| dataEntries |
+	dataEntries := dataPath entries select: [ :e | e isDirectory ].
+	dataSize := dataEntries size.
+
+	participantResults := OrderedCollection new.
+	dataEntries do: [ :dir |
+		| data result |
+		data := OCDbgExampleCode loadDataFromPath: dir.
+		result := ParticipantResult newFromData: data.
+		result participant surveys: (self extractSurveysFromData: data).
+		participantResults add: result ].
+	self class current: self.
 	^ self
 ]
 

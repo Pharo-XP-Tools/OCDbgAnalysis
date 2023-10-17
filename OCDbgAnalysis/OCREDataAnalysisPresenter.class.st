@@ -9,7 +9,8 @@ Class {
 		'experience',
 		'debugActions',
 		'buttonBar',
-		'dataDir'
+		'dataDir',
+		'progress'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -42,8 +43,8 @@ OCREDataAnalysisPresenter >> chooseAndLoad [
 
 	| f |
 	f := FileDialogWindow onFileSystem: FileSystem disk.
-	self halt.
-	f open.
+	f openModal.
+	
 	f answer ifNotNil: [ :a |
 		dataDir := a asFileReference.
 		self reload ]
@@ -258,7 +259,7 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 
 { #category : #charts }
 OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
-
+aTaskResult ifNil:[^self].
 	self plot: aTaskResult.
 	self plotDebugActionsCount: aTaskResult.
 	self layout: self defaultLayout
@@ -306,13 +307,30 @@ OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 { #category : #actions }
 OCREDataAnalysisPresenter >> reload [
 
-	experiment := ExperimentResults extractResults: dataDir.
-	self doAnalysis.
-	self initializePresenters.
-	tasksTable items: experiment buildTaskResults.
-	participantsTable items:
-		(experiment participantResults sort: [ :a :b |
-			 a dateStarted > b dateStarted ])
+	experiment := ExperimentResults new.
+	progress := self newProgressBar.
+
+
+	self setProgressLayout.
+
+	progress
+		progress: [ experiment dataExtractionProgress ]
+		every: 0.1 seconds.
+	[
+	[ experiment extractResultsWithProgress: dataDir ] ensure: [
+		self setDefaultLayout.
+		self doAnalysis.
+		tasksTable items: experiment buildTaskResults.
+		participantsTable items:
+			(experiment participantResults sort: [ :a :b |
+				 a dateStarted > b dateStarted ]).
+		self update ] ] fork
+]
+
+{ #category : #specs }
+OCREDataAnalysisPresenter >> setDefaultLayout [
+
+	self layout: self defaultLayout
 ]
 
 { #category : #initialization }
@@ -320,4 +338,35 @@ OCREDataAnalysisPresenter >> setModelBeforeInitialization: anExperimentResult [
 
 	experiment := anExperimentResult.
 	experiment collectDeveloperExperience
+]
+
+{ #category : #specs }
+OCREDataAnalysisPresenter >> setProgressLayout [
+
+	self layout: (SpBoxLayout newTopToBottom
+			 add: buttonBar expand: false fill: false;
+			 add: progress height: self class toolbarHeight;
+			 add: (SpPanedLayout newLeftToRight
+					  positionOfSlider: 50 percent;
+					  add: (SpPanedLayout newTopToBottom
+							   positionOfSlider: 25 percent;
+							   add: (SpBoxLayout newTopToBottom
+									    add: 'Tasks' expand: false fill: false;
+									    add: tasksTable;
+									    yourself);
+							   add: (SpBoxLayout newTopToBottom
+									    add: 'Participants' expand: false fill: false;
+									    add: participantsTable;
+									    yourself);
+							   yourself);
+					  add: (SpPanedLayout newTopToBottom
+							   positionOfSlider: 50 percent;
+							   add: (SpBoxLayout newLeftToRight
+									    add: violins;
+									    add: debugActions;
+									    yourself);
+							   add: experience;
+							   yourself);
+					  yourself);
+			 yourself)
 ]
