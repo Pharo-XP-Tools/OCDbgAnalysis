@@ -171,5 +171,6 @@ OCRETaskSorcererPresenter >> validateFix [
 	taskStats := dstasks collect: [ :dst | 
 		             TaskStats newForTask: dst fromData: participantResult rawData  ].
 	participantResult tasks: taskStats.
-	experimentResultsBrowser doAnalysis
+	experimentResultsBrowser doAnalysis.
+	experimentResultsBrowser updateAllViews
 ]

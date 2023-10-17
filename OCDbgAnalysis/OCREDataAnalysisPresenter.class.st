@@ -10,7 +10,10 @@ Class {
 		'debugActions',
 		'buttonBar',
 		'dataDir',
-		'progress'
+		'progress',
+		'participantsToolbar',
+		'alternateDurationButton',
+		'rawDurationButton'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -27,6 +30,26 @@ OCREDataAnalysisPresenter class >> defaultSpec [
 				   yourself);
 		  add: SpBoxLayout newTopToBottom;
 		  yourself
+]
+
+{ #category : #initialization }
+OCREDataAnalysisPresenter >> buildParticipantsToolbar [
+
+	participantsToolbar := self newToolbar.
+	alternateDurationButton := self newToolbarToggleButton.
+	rawDurationButton := self newToolbarToggleButton.
+	rawDurationButton state: true.
+	
+	participantsToolbar addItemRight: rawDurationButton.
+	participantsToolbar addItemRight:  alternateDurationButton.
+	
+	rawDurationButton associatedToggleButtons: { alternateDurationButton }.
+	
+	rawDurationButton label: 'Raw time'; icon: (self application iconNamed: #recentMessages).
+	alternateDurationButton label: 'Consolidated time'; icon: (self application iconNamed: #history).
+	
+	rawDurationButton whenActivatedDo: [ self useRawTimes ].
+	alternateDurationButton whenActivatedDo: [ self useConsolidatedTimes ].
 ]
 
 { #category : #specs }
@@ -75,7 +98,11 @@ OCREDataAnalysisPresenter >> defaultLayout [
 								     add: tasksTable;
 								     yourself);
 						    add: (SpBoxLayout newTopToBottom
-								     add: 'Participants' expand: false fill: false;
+								     add: (SpBoxLayout newLeftToRight
+										      add: 'Participants' expand: false fill: false;
+										      add: ((experiment participantResults  size printString), ' participations') expand: false fill: false;
+										      yourself)
+								     expand: false fill: false;
 								     add: participantsTable;
 								     yourself);
 						    yourself);
@@ -91,25 +118,11 @@ OCREDataAnalysisPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #specs }
-OCREDataAnalysisPresenter >> defaultSpec [
-
-	^ SpPanedLayout newLeftToRight
-		  positionOfSlider: 50 percent;
-		  add: (SpPanedLayout newTopToBottom
-				   positionOfSlider: 25 percent;
-				   add: tasksTable;
-				   add: participantsTable;
-				   yourself);
-		  add: SpBoxLayout newTopToBottom;
-		  yourself
-]
-
 { #category : #'as yet unclassified' }
 OCREDataAnalysisPresenter >> doAnalysis [
+
 	experiment collectTasksForAnalysis.
-	experiment collectDeveloperExperience.
-	self update
+	experiment collectDeveloperExperience
 ]
 
 { #category : #initialization }
@@ -168,10 +181,10 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable contextMenu: self menu.
 
 	participantsTable addColumn:
-		((SpStringTableColumn title: 'Valid' evaluated: [ :item |
+		((SpImageTableColumn title: 'Valid' evaluated: [ :item |
 				  item isParticipationValid
-					  ifTrue: [ 'yes' ]
-					  ifFalse: [ 'no' ] ])
+					  ifTrue: [ self iconNamed: #testGreen ]
+					  ifFalse: [ self iconNamed: #testRed  ] ])
 			 displayColor: [ :item |
 				 item isParticipationValid
 					 ifTrue: [ Color green muchDarker ]
@@ -208,8 +221,9 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				 icon: (self application iconNamed: #glamorousFolder);
 				 action: [ self chooseAndLoad ];
 				 label: 'Choose dir.';
-				 yourself)
-	"We want to place them at the end (as is often used in dialogs)"
+				 yourself).	
+
+	"	self buildParticipantsToolbar."
 ]
 
 { #category : #initialization }
@@ -247,6 +261,7 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 	dataViolins := RSViolinPlot data: {
 			               (transformBlock value: aTasksResults controlData).
 			               (transformBlock value: aTasksResults treatmentData) }.
+
 	dataViolins xTickLabels: {
 			('Control (' , aTasksResults controlData size printString
 			 , ' points)').
@@ -254,26 +269,29 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 			 , ' points)') }.
 	dataViolins title:
 			              'Time to finish the task (in min)'.
+	dataViolins bandwidth: 10.
 	violins := dataViolins asPresenter
 ]
 
 { #category : #charts }
 OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
-aTaskResult ifNil:[^self].
+
+	aTaskResult ifNil: [ ^ self ].
+
 	self plot: aTaskResult.
 	self plotDebugActionsCount: aTaskResult.
-	self layout: self defaultLayout
+	self setDefaultLayout
 ]
 
 { #category : #charts }
 OCREDataAnalysisPresenter >> plotDebugActionsCount: aTasksResults [
 
 	debugActions := self newRoassal.
-	debugActions := RSViolinPlot  new
+	debugActions := RSViolinPlot new
 		                data: aTasksResults averageDebuggingActionsCount;
 		                xTickLabels: { 'Control'. 'Treatment' };
-		                title:
-			                'Debug actions count';
+		                title: 'Debug actions count';
+		                bandwidth: 50;
 		                asPresenter
 ]
 
@@ -318,13 +336,8 @@ OCREDataAnalysisPresenter >> reload [
 		every: 0.1 seconds.
 	[
 	[ experiment extractResultsWithProgress: dataDir ] ensure: [
-		self setDefaultLayout.
 		self doAnalysis.
-		tasksTable items: experiment buildTaskResults.
-		participantsTable items:
-			(experiment participantResults sort: [ :a :b |
-				 a dateStarted > b dateStarted ]).
-		self update ] ] fork
+		self updateAllViews ] ] fork
 ]
 
 { #category : #specs }
@@ -369,4 +382,34 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 							   yourself);
 					  yourself);
 			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> updateAllViews [
+
+	tasksTable items: experiment buildTaskResults.
+	participantsTable items:
+		(experiment participantResults sort: [ :a :b |
+			 a dateStarted > b dateStarted ]).
+	violins := self newRoassal.
+	debugActions := self newRoassal.
+	self plotExperienceBarChart.
+
+
+	self layout: self defaultLayout
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> useConsolidatedTimes [
+
+"	TaskStats allInstances do: [ :t | t useConsolidatedTimes ].
+	self doAnalysis.
+	self updateAllViews"
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> useRawTimes [
+	"TaskStats allInstances do: [ :t | t useRawTimes ].
+	self doAnalysis.
+	self updateAllViews"
 ]
