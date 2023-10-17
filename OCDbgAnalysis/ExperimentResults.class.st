@@ -88,7 +88,11 @@ ExperimentResults >> buildTaskResults [
 ExperimentResults >> collectControlTasksFrom: participants [
 
 	controlTasks := ControlTasks new.
-	participants do: [ :p | controlTasks addTaskStats: p tasks first ]
+	participants do: [ :p | 
+			|task|
+			task := p tasks first.
+			task useConsolidatedTimes.
+			controlTasks addTaskStats: task ]
 ]
 
 { #category : #'data analysis' }
@@ -124,7 +128,11 @@ ExperimentResults >> collectTasksForAnalysis [
 ExperimentResults >> collectTreatmentTasksFrom: participants [
 
 	treatmentTasks := TreatmentTasks new.
-	participants do: [ :p | treatmentTasks addTaskStats: p tasks last ]
+	participants do: [ :p |
+		| task |
+		task := p tasks last.
+		task useConsolidatedTimes.
+		treatmentTasks addTaskStats: task ]
 ]
 
 { #category : #'data extraction' }
