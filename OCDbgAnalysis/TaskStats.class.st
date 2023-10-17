@@ -20,7 +20,9 @@ Class {
 		'valid',
 		'testSuccess',
 		'correctness',
-		'testSuccessRaw'
+		'testSuccessRaw',
+		'alternateDuration',
+		'finiseventsvents'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -61,6 +63,7 @@ TaskStats class >> newForTask: task fromData: aCollection [
 			writeSlotNamed: extractor targetField
 			value: extractor extract ].
 	taskStats taskInfo: (TaskInfo newForTask: task fromData: aCollection).
+	taskStats recomputeDurationWithoutTaskAnswerTime.
 	^ taskStats
 ]
 
@@ -248,6 +251,22 @@ TaskStats >> printOn: aStream [
 	aStream << ' ('.
 	duration printOn: aStream.
 	aStream << ')'
+]
+
+{ #category : #'as yet unclassified' }
+TaskStats >> recomputeDurationWithoutTaskAnswerTime [
+
+	| finishTaskEvents |
+	finishTaskEvents := events select: [ :e |
+		                    (e isKindOf: DSWindowOpenedRecord) and: [
+			                    'Finish task ' , taskInfo title , '*' match:
+				                    e windowName asString ] ].
+	finishTaskEvents isEmpty ifTrue: [
+		alternateDuration := duration.
+		^ self ].
+
+	alternateDuration := finishTaskEvents last dateTime
+	                     - events first dateTime.
 ]
 
 { #category : #accessing }
