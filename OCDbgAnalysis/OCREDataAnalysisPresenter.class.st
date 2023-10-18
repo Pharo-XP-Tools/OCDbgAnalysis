@@ -467,6 +467,8 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 { #category : #updating }
 OCREDataAnalysisPresenter >> updateAllViews [
 
+	|index|
+	index := tasksTable selection selectedIndex.
 	tasksTable items: experiment buildTaskResults.
 	participantsTable items:
 		(experiment participantResults sort: [ :a :b |
@@ -475,9 +477,8 @@ OCREDataAnalysisPresenter >> updateAllViews [
 	debugActions := self newRoassal.
 	self plotExperienceBarChart.
 	self plotControls.
-
-
-	self layout: self defaultLayout
+	self layout: self defaultLayout.
+	tasksTable selection selectIndexes: {index}
 ]
 
 { #category : #analysis }
