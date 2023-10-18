@@ -120,9 +120,14 @@ OCREDataAnalysisPresenter >> defaultLayout [
 
 { #category : #'as yet unclassified' }
 OCREDataAnalysisPresenter >> doAnalysis [
-
 	experiment collectTasksForAnalysis.
 	experiment collectDeveloperExperience
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> doAnalysisAndUpdate [
+	self doAnalysis.
+	self updateAllViews 
 ]
 
 { #category : #initialization }
