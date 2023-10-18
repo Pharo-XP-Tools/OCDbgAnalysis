@@ -387,8 +387,7 @@ OCREDataAnalysisPresenter >> reload [
 		every: 0.1 seconds.
 	[
 	[ experiment extractResultsWithProgress: dir] ensure: [
-		self doAnalysis.
-		self updateAllViews ] ] fork
+		self doAnalysisAndUpdate ] ] fork
 ]
 
 { #category : #specs }
