@@ -84,6 +84,11 @@ OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 	^ Color red
 ]
 
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> countParticipant: aParticipantResult [ 
+	aParticipantResult shouldCount: true
+]
+
 { #category : #specs }
 OCREDataAnalysisPresenter >> defaultLayout [
 
@@ -130,6 +135,11 @@ OCREDataAnalysisPresenter >> doAnalysisAndUpdate [
 	self updateAllViews 
 ]
 
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> dontCountParticipant: aParticipantResult [ 
+	aParticipantResult shouldCount: false
+]
+
 { #category : #initialization }
 OCREDataAnalysisPresenter >> initializePresenters [
 
@@ -168,6 +178,14 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 
 	participantsTable := self newTable.
+	participantsTable addColumn: ((SpCheckBoxTableColumn new
+			  title: ' ';
+				evaluated: [ :item | item shouldCount ])
+			  onActivation: [ :item | self countParticipant: item ];
+			onDeactivation: [ :item | self dontCountParticipant: item ];
+			width: 30;
+			yourself
+			).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'XP Date'
 			  evaluated: [ :item | item dateStarted asLocalStringYMDHM ])
@@ -189,7 +207,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 		((SpImageTableColumn title: 'Valid' evaluated: [ :item |
 				  item isParticipationValid
 					  ifTrue: [ self iconNamed: #testGreen ]
-					  ifFalse: [ self iconNamed: #testRed  ] ])
+					  ifFalse: [ self iconNamed: #testRed ] ])
 			 displayColor: [ :item |
 				 item isParticipationValid
 					 ifTrue: [ Color green muchDarker ]
@@ -218,15 +236,30 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	buttonBar
 		placeAtStart;
 		add: (self newButton
+				 icon: (self application iconNamed: #glamorousInspect);
+				 action: [ experiment inspect ];
+				 label: 'Inspect';
+				 yourself);
+		add: (self newButton
 				 icon: (self application iconNamed: #smallDoIt);
+				 action: [ self doAnalysisAndUpdate ];
+				 label: 'Analyze';
+				 yourself);
+		add: (self newButton
+				 icon: (self application iconNamed: #glamorousTable);
 				 action: [ self reload ];
-				 label: 'Reload data';
+				 label: 'Load';
 				 yourself);
 		add: (self newButton
 				 icon: (self application iconNamed: #glamorousFolder);
 				 action: [ self chooseAndLoad ];
-				 label: 'Choose dir.';
-				 yourself).	
+				 label: 'Open';
+				 yourself).
+		dataDirs := self newDropList.
+		dataDirs items: ExperimentResults dataDirs
+
+
+
 
 	"	self buildParticipantsToolbar."
 ]
