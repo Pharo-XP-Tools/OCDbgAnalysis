@@ -53,7 +53,7 @@ OCREDataAnalysisPresenter >> buildParticipantsToolbar [
 	alternateDurationButton whenActivatedDo: [ self useConsolidatedTimes ].
 ]
 
-{ #category : #specs }
+{ #category : #actions }
 OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 
 	aParticipantResult isParticipationValid ifFalse: [ ^ self ].
@@ -62,7 +62,7 @@ OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 		open
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 OCREDataAnalysisPresenter >> chooseAndLoad [
 
 	| f |
@@ -85,7 +85,7 @@ OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 	^ Color red
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #analysis }
 OCREDataAnalysisPresenter >> countParticipant: aParticipantResult [ 
 	aParticipantResult shouldCount: true
 ]
@@ -138,19 +138,19 @@ OCREDataAnalysisPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #analysis }
 OCREDataAnalysisPresenter >> doAnalysis [
 	experiment collectTasksForAnalysis.
 	experiment collectDeveloperExperience
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 OCREDataAnalysisPresenter >> doAnalysisAndUpdate [
 	self doAnalysis.
 	self updateAllViews 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #analysis }
 OCREDataAnalysisPresenter >> dontCountParticipant: aParticipantResult [ 
 	aParticipantResult shouldCount: false
 ]
@@ -464,7 +464,7 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 			 yourself)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #updating }
 OCREDataAnalysisPresenter >> updateAllViews [
 
 	tasksTable items: experiment buildTaskResults.
@@ -480,7 +480,7 @@ OCREDataAnalysisPresenter >> updateAllViews [
 	self layout: self defaultLayout
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #analysis }
 OCREDataAnalysisPresenter >> useConsolidatedTimes [
 
 "	TaskStats allInstances do: [ :t | t useConsolidatedTimes ].
@@ -488,7 +488,7 @@ OCREDataAnalysisPresenter >> useConsolidatedTimes [
 	self updateAllViews"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #analysis }
 OCREDataAnalysisPresenter >> useRawTimes [
 	"TaskStats allInstances do: [ :t | t useRawTimes ].
 	self doAnalysis.
