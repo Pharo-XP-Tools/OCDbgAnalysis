@@ -9,11 +9,11 @@ Class {
 		'experience',
 		'debugActions',
 		'buttonBar',
-		'dataDir',
 		'progress',
 		'participantsToolbar',
 		'alternateDurationButton',
-		'rawDurationButton'
+		'rawDurationButton',
+		'dataDirs'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -67,10 +67,10 @@ OCREDataAnalysisPresenter >> chooseAndLoad [
 	| f |
 	f := FileDialogWindow onFileSystem: FileSystem disk.
 	f openModal.
-	
+
 	f answer ifNotNil: [ :a |
-		dataDir := a asFileReference.
-		self reload ]
+		ExperimentResults addDataDir: a asFileReference.
+		dataDirs items: ExperimentResults dataDirs ]
 ]
 
 { #category : #specs }
@@ -324,7 +324,9 @@ OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 
 { #category : #actions }
 OCREDataAnalysisPresenter >> reload [
-
+	|dir|
+	dir := dataDirs selectedItem.
+	(dir isNil or: [dir isEmpty or: [dir exists not]]) ifTrue:[^self].
 	experiment := ExperimentResults new.
 	progress := self newProgressBar.
 
@@ -335,7 +337,7 @@ OCREDataAnalysisPresenter >> reload [
 		progress: [ experiment dataExtractionProgress ]
 		every: 0.1 seconds.
 	[
-	[ experiment extractResultsWithProgress: dataDir ] ensure: [
+	[ experiment extractResultsWithProgress: dir] ensure: [
 		self doAnalysis.
 		self updateAllViews ] ] fork
 ]
