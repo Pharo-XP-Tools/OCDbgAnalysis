@@ -6,7 +6,8 @@ Class {
 		'participant',
 		'controlScore',
 		'treatmentScore',
-		'rawData'
+		'rawData',
+		'shouldCount'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -153,6 +154,18 @@ ParticipantResult >> rawData [
 ParticipantResult >> rawData: anObject [
 
 	rawData := anObject
+]
+
+{ #category : #accessing }
+ParticipantResult >> shouldCount [
+
+	^ shouldCount ifNil: [ shouldCount := true ]
+]
+
+{ #category : #accessing }
+ParticipantResult >> shouldCount: anObject [
+
+	shouldCount := anObject
 ]
 
 { #category : #accessing }
