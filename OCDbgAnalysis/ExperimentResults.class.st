@@ -10,10 +10,17 @@ Class {
 		'dataSize'
 	],
 	#classInstVars : [
-		'current'
+		'current',
+		'dataDirs'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
+
+{ #category : #accessing }
+ExperimentResults class >> addDataDir: aDirectoryPath [
+
+	self dataDirs add: aDirectoryPath
+]
 
 { #category : #accessing }
 ExperimentResults class >> current [
@@ -24,6 +31,11 @@ ExperimentResults class >> current [
 ExperimentResults class >> current: anExperiment [
 
 	current := anExperiment
+]
+
+{ #category : #accessing }
+ExperimentResults class >> dataDirs [
+	^dataDirs ifNil:[dataDirs := OrderedCollection new]
 ]
 
 { #category : #'as yet unclassified' }
