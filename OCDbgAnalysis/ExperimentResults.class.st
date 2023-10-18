@@ -111,8 +111,8 @@ ExperimentResults >> collectControlTasksFrom: participants [
 ExperimentResults >> collectDeveloperExperience [
 
 	participantsExperience := OrderedCollection new.
-	(participantResults collect: [ :r | r participant surveys ]) do: [
-		:surveys |
+	((participantResults select: [ :p | p shouldCount ]) collect: [ :r |
+		 r participant surveys ]) do: [ :surveys |
 		| demographicSurvey |
 		demographicSurvey := surveys
 			                     detect: [ :s |
@@ -126,14 +126,15 @@ ExperimentResults >> collectDeveloperExperience [
 					      =
 					      'How many years of programming experience do you have with Pharo?' ]
 				      ifNone: [ nil ].
-			xp ifNotNil: [ participantsExperience add: xp answer answer] ] ]
+			xp ifNotNil: [ participantsExperience add: xp answer answer ] ] ]
 ]
 
 { #category : #'data extraction' }
 ExperimentResults >> collectTasksForAnalysis [
-
-	self collectControlTasksFrom: participantResults.
-	self collectTreatmentTasksFrom: participantResults
+	|dataSet|
+	dataSet := participantResults select: [ :p| p shouldCount ].
+	self collectControlTasksFrom: dataSet.
+	self collectTreatmentTasksFrom: dataSet
 ]
 
 { #category : #'data extraction' }
