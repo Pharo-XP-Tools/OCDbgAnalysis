@@ -93,7 +93,12 @@ OCREDataAnalysisPresenter >> countParticipant: aParticipantResult [
 OCREDataAnalysisPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
-		  add: buttonBar expand: false fill: false;
+		  add: (SpPanedLayout newLeftToRight
+				   positionOfSlider: 50 percent;
+				   add: dataDirs;
+				   add: buttonBar)
+				height: self class toolbarHeight + 5
+		  "expand: false fill: false padding: 10";
 		  add: (SpPanedLayout newLeftToRight
 				   positionOfSlider: 50 percent;
 				   add: (SpPanedLayout newTopToBottom
@@ -105,9 +110,15 @@ OCREDataAnalysisPresenter >> defaultLayout [
 						    add: (SpBoxLayout newTopToBottom
 								     add: (SpBoxLayout newLeftToRight
 										      add: 'Participants' expand: false fill: false;
-										      add: ((experiment participantResults  size printString), ' participations') expand: false fill: false;
+										      add:
+											      experiment participantResults size printString
+											      , ' participations'
+										      expand: false
+										      fill: false;
 										      yourself)
-								     expand: false fill: false;
+								     expand: false
+								     fill: false
+								     padding: 5;
 								     add: participantsTable;
 								     yourself);
 						    yourself);
