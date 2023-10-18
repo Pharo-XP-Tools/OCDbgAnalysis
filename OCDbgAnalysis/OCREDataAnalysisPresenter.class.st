@@ -13,7 +13,8 @@ Class {
 		'participantsToolbar',
 		'alternateDurationButton',
 		'rawDurationButton',
-		'dataDirs'
+		'dataDirs',
+		'controlsViolins'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -128,7 +129,10 @@ OCREDataAnalysisPresenter >> defaultLayout [
 								     add: violins;
 								     add: debugActions;
 								     yourself);
-						    add: experience;
+						    add: (SpBoxLayout newLeftToRight
+								     add: controlsViolins;
+								     add: experience;
+								     yourself);
 						    yourself);
 				   yourself);
 		  yourself
@@ -242,6 +246,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	violins := self newRoassal.
 	debugActions := self newRoassal.
 	self plotExperienceBarChart.
+	self plotControls.
 
 	buttonBar := self newButtonBar.
 	buttonBar
@@ -330,6 +335,31 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 	self plot: aTaskResult.
 	self plotDebugActionsCount: aTaskResult.
 	self setDefaultLayout
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotControls [
+
+	|control1 control2 transformBlock dataViolins |
+
+	control1 := tasksTable items first.
+	control2 := tasksTable items second.
+	transformBlock := [ :data |
+	                  data collect: [ :duration |
+		                  duration minutes + (duration seconds / 60) asFloat ] ].
+	dataViolins := RSViolinPlot data: {
+			               (transformBlock value: control1 controlData).
+			               (transformBlock value: control2 controlData) }.
+
+	dataViolins xTickLabels: {
+			(control1 name, '(' , control1 controlData size printString
+			 , ' points)').
+			(control2 name, '(' , control2 treatmentData size printString
+			 , ' points)') }.
+	dataViolins title:
+			              'Controls times in min'.
+	dataViolins bandwidth: 10.
+	controlsViolins := dataViolins asPresenter
 ]
 
 { #category : #charts }
@@ -444,6 +474,7 @@ OCREDataAnalysisPresenter >> updateAllViews [
 	violins := self newRoassal.
 	debugActions := self newRoassal.
 	self plotExperienceBarChart.
+	self plotControls.
 
 
 	self layout: self defaultLayout
