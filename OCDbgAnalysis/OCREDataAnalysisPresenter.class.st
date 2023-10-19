@@ -405,7 +405,7 @@ OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 OCREDataAnalysisPresenter >> reload [
 	|dir|
 	dir := dataDirs selectedItem.
-	(dir isNil or: [dir isEmpty or: [dir exists not]]) ifTrue:[^self].
+	(dir isNil or: [dir exists not]) ifTrue:[^self].
 	experiment := ExperimentResults new.
 	progress := self newProgressBar.
 
