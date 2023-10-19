@@ -21,8 +21,7 @@ In this example, we consider that the data is located in a folder whose path is 
 Execute the following code in a playground:
 ```Smalltalk
 	| rawData taskStarted taskEnded taskData history |
-	rawData := OCDbgExampleCode loadDataFromPath:
-		           'dataFolder'.
+	rawData := OCDbgExampleCode loadDataFromPath: 'dataFolder'.
 
 	taskStarted := rawData detect: [ :e | e class = DSStartTaskRecord ].
 	taskEnded := rawData detect: [ :e | e class = DSEndingTaskRecord ].
@@ -35,7 +34,7 @@ Execute the following code in a playground:
 
 This gives you a history of the user actions and interactions during this debugging session, as show below:
 
-!(Window History example.)[windowHistory.png]]
+![Window History example.](pictures/windowHistory.png)
 
 ### Working with the history
 The dictionary `windowHistory` is a history of opened windows and all user actions performed within these windows.
@@ -65,8 +64,7 @@ randomEvent dateTime inspect
 ### Possible errors
 You might encounter the following error when attempting to browse code:
 
-![[possible-error.png]]
-
+![This error may happen.](pictures/possible-error.png)
 
 Just modify this method directly in the debugger like the following, then proceed and close all debuggers. It should then be fine.
 ```Smalltalk
