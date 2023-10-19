@@ -22,7 +22,7 @@ Execute the following code in a playground:
 ```Smalltalk
 	| rawData taskStarted taskEnded taskData history |
 	rawData := OCDbgExampleCode loadDataFromPath:
-		           '/Users/steven/Documents/Research/projects/OCRE/experiment-results/run-2/data/raw/Pilot-E-User-097b27db-98b5-0d00-998c-ca2a0e3170cf53213692724000'.
+		           'dataFolder'.
 
 	taskStarted := rawData detect: [ :e | e class = DSStartTaskRecord ].
 	taskEnded := rawData detect: [ :e | e class = DSEndingTaskRecord ].
@@ -35,7 +35,7 @@ Execute the following code in a playground:
 
 This gives you a history of the user actions and interactions during this debugging session, as show below:
 
-![[windowHistory.png]]
+!(Window History example.)[windowHistory.png]]
 
 ### Working with the history
 The dictionary `windowHistory` is a history of opened windows and all user actions performed within these windows.
