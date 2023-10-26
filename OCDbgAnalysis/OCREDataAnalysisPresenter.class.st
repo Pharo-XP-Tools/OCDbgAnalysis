@@ -195,12 +195,11 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable := self newTable.
 	participantsTable addColumn: ((SpCheckBoxTableColumn new
 			  title: ' ';
-				evaluated: [ :item | item shouldCount ])
-			  onActivation: [ :item | self countParticipant: item ];
-			onDeactivation: [ :item | self dontCountParticipant: item ];
-			width: 30;
-			yourself
-			).
+			  evaluated: [ :item | item shouldCount ])
+			 onActivation: [ :item | self countParticipant: item ];
+			 onDeactivation: [ :item | self dontCountParticipant: item ];
+			 width: 30;
+			 yourself).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'XP Date'
 			  evaluated: [ :item | item dateStarted asLocalStringYMDHM ])
@@ -252,6 +251,11 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	buttonBar
 		placeAtStart;
 		add: (self newButton
+				 icon: (self application iconNamed: #references);
+				 action: [ self openDiagrams ];
+				 label: 'Diagrams';
+				 yourself);
+		add: (self newButton
 				 icon: (self application iconNamed: #glamorousInspect);
 				 action: [ experiment inspect ];
 				 label: 'Inspect';
@@ -271,8 +275,8 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				 action: [ self chooseAndLoad ];
 				 label: 'Open';
 				 yourself).
-		dataDirs := self newDropList.
-		dataDirs items: ExperimentResults dataDirs
+	dataDirs := self newDropList.
+	dataDirs items: ExperimentResults dataDirs
 
 
 
@@ -303,6 +307,33 @@ OCREDataAnalysisPresenter >> menu [
 				  iconName: #glamorousInspect;
 				  action: [ participantsTable selectedItem inspect ] ];
 		  yourself
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> openDiagrams [
+
+	| surveys dataLabels data plot |
+	surveys := experiment participantResults collect: [ :result |
+		           result participant surveys second survey answers first ].
+
+	dataLabels := surveys first choices.
+
+
+	data := OrderedCollection new.
+	dataLabels do: [ :l |
+		| count |
+		count := (surveys select: [ :s | s answer answer = l ]) size.
+		data add: count ].
+	data inspect.
+	plot := self newRoassal.
+	plot := RSBarPlotNew new
+		        data: data;
+		        yTickLabels: dataLabels;
+		        title: surveys first title;
+		        horizontal;
+		        asPresenter.
+
+	plot open
 ]
 
 { #category : #charts }

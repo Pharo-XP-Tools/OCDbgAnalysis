@@ -67,7 +67,7 @@ ExperimentResults >> addPersonalDataSurvey: aDSSurveyRecord [
 
 	aDSSurveyRecord ifNil: [ ^ self ].
 	self addEmail: aDSSurveyRecord survey questions third answer.
-	aDSSurveyRecord survey questions third answer: nil
+"	aDSSurveyRecord survey questions third answer: nil"
 ]
 
 { #category : #'data analysis' }
