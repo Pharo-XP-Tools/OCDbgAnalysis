@@ -30,6 +30,29 @@ ParticipantInfo >> = anObject [
 	^ self uuid = anObject uuid
 ]
 
+{ #category : #'as yet unclassified' }
+ParticipantInfo >> participantDeclaredExperience [
+
+	| demographicSurvey |
+	demographicSurvey := surveys
+		                     detect: [ :s |
+		                     s survey title = 'Demographic information' ]
+		                     ifNone: [ nil ].
+	demographicSurvey ifNotNil: [ :s |
+		| xp |
+		xp := s survey answers
+			      detect: [ :a |
+				      a title
+				      =
+				      'How many years of programming experience do you have with Pharo?' ]
+			      ifNone: [ nil ].
+		xp ifNotNil: [
+			^ [ xp answer answer asNumber ]
+				  on: Error
+				  do: [ -1 ] ] ].
+	^ -1
+]
+
 { #category : #accessing }
 ParticipantInfo >> surveys [
 

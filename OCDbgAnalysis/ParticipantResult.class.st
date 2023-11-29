@@ -111,6 +111,11 @@ ParticipantResult >> dateStarted [
 	^tasks first events first dateTime 
 ]
 
+{ #category : #accessing }
+ParticipantResult >> experience [
+	^participant participantDeclaredExperience
+]
+
 { #category : #testing }
 ParticipantResult >> isParticipationValid [
 

@@ -26,6 +26,18 @@ TasksResults >> averageDebuggingActionsCount: anObject [
 ]
 
 { #category : #accessing }
+TasksResults >> collectControlValues [
+
+	^ controlData collect: [ :d | d minutes + (d seconds / 60) asFloat ]
+]
+
+{ #category : #accessing }
+TasksResults >> collectTreatmentValues [
+
+	^ treatmentData collect: [ :d | d minutes + (d seconds / 60) asFloat ]
+]
+
+{ #category : #accessing }
 TasksResults >> controlAvg [
 
 	^ controlAvg

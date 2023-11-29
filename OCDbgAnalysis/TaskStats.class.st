@@ -330,7 +330,10 @@ TaskStats >> testSuccessRaw: anObject [
 
 { #category : #accessing }
 TaskStats >> useConsolidatedTimes [
-	duration := self alternateDuration 
+
+	| interruption |
+	interruption := (DSRecordHistory on: events) detectTimeDiscrepancies asSeconds.
+	duration := self alternateDuration - interruption
 ]
 
 { #category : #accessing }

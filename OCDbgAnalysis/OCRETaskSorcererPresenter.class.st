@@ -103,7 +103,7 @@ OCRETaskSorcererPresenter >> proposeFixForTask: aPhexTask events: events finishH
 	taskEnding dateTime: finishHistory first dateTime.
 	taskEnding record: aPhexTask.
 	aPhexTask endTime: taskEnding dateTime.
-	answer := (finishHistory select:[:e| { "DSClipboardPasteRecord. "DSClipboardCopyRecord } includes: e class] )last clipboardText. 
+	answer := [(finishHistory select:[:e| { "DSClipboardPasteRecord. "DSClipboardCopyRecord } includes: e class] )last clipboardText] on: Error do: ['no answer found']. 
 	aPhexTask answer: (PhexTaskAnswer new contents: answer; yourself). 
 	transaction := TaskFixingProposition new.
 	transaction endingTask: taskEnding.
