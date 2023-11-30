@@ -8,7 +8,8 @@ Class {
 		'treatmentScore',
 		'rawData',
 		'shouldCount',
-		'id'
+		'id',
+		'shortId'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -196,6 +197,11 @@ ParticipantResult >> rawData [
 ParticipantResult >> rawData: anObject [
 
 	rawData := anObject
+]
+
+{ #category : #accessing }
+ParticipantResult >> shortId [
+	^shortId ifNil:[shortId := id readStream upTo: $-; upTo: $-; upTo: $-; upTo: $-; upTo: $-]
 ]
 
 { #category : #accessing }

@@ -201,12 +201,17 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 	participantsTable := self newTable.
 	participantsTable contextMenu: self menu.
-	participantsTable addColumn: ((SpCheckBoxTableColumn new
+"	participantsTable addColumn: ((SpCheckBoxTableColumn new
 			  title: ' ';
 			  evaluated: [ :item | item shouldCount ])
 			 onActivation: [ :item | self countParticipant: item ];
 			 onDeactivation: [ :item | self dontCountParticipant: item ];
 			 width: 30;
+			 yourself)."
+		participantsTable addColumn: ((SpStringTableColumn
+			  title: 'Id'
+			  evaluated: [ :item | item shortId ])
+			 width:40;
 			 yourself).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'XP Date'
