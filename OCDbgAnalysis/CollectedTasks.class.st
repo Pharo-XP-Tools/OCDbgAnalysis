@@ -11,6 +11,7 @@ Class {
 { #category : #adding }
 CollectedTasks >> addTaskStats: aTaskStat [
 
+	aTaskStat isValid ifFalse:[^self].
 	aTaskStat taskInfo title = 'Lights Out' ifTrue: [ 
 		self t1 add: aTaskStat ].
 	aTaskStat taskInfo title = 'Ammolite' ifTrue: [ 

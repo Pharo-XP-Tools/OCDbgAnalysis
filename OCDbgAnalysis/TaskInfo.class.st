@@ -36,6 +36,11 @@ TaskInfo >> = anObject [
 ]
 
 { #category : #accessing }
+TaskInfo >> taskName [
+	self shouldBeImplemented.
+]
+
+{ #category : #accessing }
 TaskInfo >> title [
 
 	^ title

@@ -82,6 +82,16 @@ ParticipantResult >> controlScore: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+ParticipantResult >> controlTask [
+
+	| taskStat |
+	taskStat := tasks first.
+	({ 'Lights Out'. 'Ammolite' } includes: taskStat taskName) ifFalse: [
+		^ nil ].
+	^ taskStat
+]
+
+{ #category : #'as yet unclassified' }
 ParticipantResult >> controlTaskInfos [
 
 	| task str |
@@ -117,7 +127,21 @@ ParticipantResult >> experience [
 ]
 
 { #category : #testing }
+ParticipantResult >> isControlTaskValid [
+
+	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks first taskInfo title)
+		  and: [ tasks first isValid ]
+]
+
+{ #category : #testing }
 ParticipantResult >> isParticipationValid [
+
+	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks last taskInfo title)
+		  and: [ tasks last isValid ]
+]
+
+{ #category : #testing }
+ParticipantResult >> isTreatmentTaskValid [
 
 	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks last taskInfo title)
 		  and: [ tasks last isValid ]
@@ -195,6 +219,16 @@ ParticipantResult >> treatmentScore [
 ParticipantResult >> treatmentScore: anObject [
 
 	treatmentScore := anObject
+]
+
+{ #category : #'as yet unclassified' }
+ParticipantResult >> treatmentTask [
+
+	| taskStat |
+	taskStat := tasks last.
+	({ 'Lights Out'. 'Ammolite' } includes: taskStat taskName) ifFalse: [
+		^ nil ].
+	^ taskStat
 ]
 
 { #category : #'as yet unclassified' }

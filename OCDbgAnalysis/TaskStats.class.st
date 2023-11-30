@@ -22,7 +22,8 @@ Class {
 		'correctness',
 		'testSuccessRaw',
 		'alternateDuration',
-		'rawDuration'
+		'rawDuration',
+		'retainedIdleTime'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -90,6 +91,12 @@ TaskStats >> answer [
 ]
 
 { #category : #accessing }
+TaskStats >> asSeconds [
+
+	^ (DSRecordHistory on: events) collectTimeDiscrepancies
+]
+
+{ #category : #accessing }
 TaskStats >> breakpointsAdded [
 
 	^ breakpointsAdded
@@ -123,6 +130,18 @@ TaskStats >> breakpointsRemoved [
 TaskStats >> breakpointsRemoved: anObject [
 
 	breakpointsRemoved := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> calculateInterruptionTimes [
+
+	^ (DSRecordHistory on: events) detectTimeDiscrepancies
+]
+
+{ #category : #accessing }
+TaskStats >> collectTimeDiscrepancies [
+
+	^ (DSRecordHistory on: events) collectTimeDiscrepancies
 ]
 
 { #category : #accessing }
@@ -164,6 +183,11 @@ TaskStats >> duration: anObject [
 TaskStats >> events [
 
 	^ events
+]
+
+{ #category : #api }
+TaskStats >> forceValid [
+	valid := true
 ]
 
 { #category : #accessing }
@@ -281,6 +305,18 @@ TaskStats >> recomputeDurationWithoutTaskAnswerTime [
 ]
 
 { #category : #accessing }
+TaskStats >> retainedIdleTime [
+
+	^ retainedIdleTime ifNil:[retainedIdleTime := self calculateInterruptionTimes]
+]
+
+{ #category : #accessing }
+TaskStats >> retainedIdleTime: anObject [
+
+	retainedIdleTime := anObject
+]
+
+{ #category : #accessing }
 TaskStats >> stepActions [
 
 	^ stepActions
@@ -302,6 +338,11 @@ TaskStats >> taskInfo [
 TaskStats >> taskInfo: anObject [
 
 	taskInfo := anObject
+]
+
+{ #category : #accessing }
+TaskStats >> taskName [
+	^taskInfo title
 ]
 
 { #category : #accessing }
@@ -331,9 +372,7 @@ TaskStats >> testSuccessRaw: anObject [
 { #category : #accessing }
 TaskStats >> useConsolidatedTimes [
 
-	| interruption |
-	interruption := (DSRecordHistory on: events) detectTimeDiscrepancies asSeconds.
-	duration := self alternateDuration - interruption
+	duration := self alternateDuration - self retainedIdleTime asSeconds
 ]
 
 { #category : #accessing }
