@@ -1,6 +1,22 @@
 Extension { #name : #SpMorphicTableCellBuilder }
 
 { #category : #'*OCDbgAnalysis' }
+SpMorphicTableCellBuilder >> visitOCDbgActionColumn: aTableColumn [
+
+	| morph |
+	morph := (SpPluggableButtonMorph on: aTableColumn)
+		         actionBlock: [ aTableColumn action value: self item ];
+		         icon: (aTableColumn readObject: self item);
+		         label: ' ';
+		         yourself.
+
+	morph backgroundColor: Color transparent.
+	morph color: Color transparent.
+	
+	self addCellMorph: morph column: aTableColumn
+]
+
+{ #category : #'*OCDbgAnalysis' }
 SpMorphicTableCellBuilder >> visitOCDbgLinkColumn: aTableColumn [
 
 	| presenter morph |
