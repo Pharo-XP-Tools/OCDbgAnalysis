@@ -56,7 +56,6 @@ OCREDataAnalysisPresenter >> buildParticipantsToolbar [
 { #category : #actions }
 OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 
-	aParticipantResult isParticipationValid ifFalse: [ ^ self ].
 	(OCREParticipantValidationPresenter on: aParticipantResult)
 		experimentResultsBrowser: self;
 		open
@@ -155,6 +154,14 @@ OCREDataAnalysisPresenter >> dontCountParticipant: aParticipantResult [
 	aParticipantResult shouldCount: false
 ]
 
+{ #category : #actions }
+OCREDataAnalysisPresenter >> fixTime: aParticipantResults [
+
+	(OCREParticipantTimeFixerPresenter on: aParticipantResults)
+		experimentResultsBrowser: self;
+		open
+]
+
 { #category : #initialization }
 OCREDataAnalysisPresenter >> initializePresenters [
 
@@ -193,6 +200,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 
 	participantsTable := self newTable.
+	participantsTable contextMenu: self menu.
 	participantsTable addColumn: ((SpCheckBoxTableColumn new
 			  title: ' ';
 			  evaluated: [ :item | item shouldCount ])
@@ -205,28 +213,37 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			  evaluated: [ :item | item dateStarted asLocalStringYMDHM ])
 			 width: 100;
 			 yourself).
+	
+		participantsTable addColumn:
+		((SpImageTableColumn title: ' ' evaluated: [ :item |
+				  item isControlTaskValid
+					  ifTrue: [ self iconNamed: #testGreen ]
+					  ifFalse: [ self iconNamed: #testRed ] ])
+			 width: 16;
+			 sortFunction: nil;
+			 yourself).
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
 			 sortFunction: nil;
 			 yourself).
-	participantsTable addColumn: ((SpStringTableColumn
-			  title: 'Treatment'
-			  evaluated: [ :item | item treatmentTaskInfos ])
-			 sortFunction: nil;
-			 yourself).
-	participantsTable contextMenu: self menu.
+			
+
+			
+	
+
 
 	participantsTable addColumn:
-		((SpImageTableColumn title: 'Valid' evaluated: [ :item |
-				  item isParticipationValid
+		((SpImageTableColumn title: ' ' evaluated: [ :item |
+				  item isTreatmentTaskValid
 					  ifTrue: [ self iconNamed: #testGreen ]
 					  ifFalse: [ self iconNamed: #testRed ] ])
-			 displayColor: [ :item |
-				 item isParticipationValid
-					 ifTrue: [ Color green muchDarker ]
-					 ifFalse: [ Color red ] ];
-			 width: 40;
+			 width: 16;
+			 sortFunction: nil;
+			 yourself).
+		participantsTable addColumn: ((SpStringTableColumn
+			  title: 'Treatment'
+			  evaluated: [ :item | item treatmentTaskInfos ])
 			 sortFunction: nil;
 			 yourself).
 
@@ -235,8 +252,15 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 evaluated: [ :item | self printCorrectnessFor: item ];
 			 action: [ :item | self checkData: item ];
 			 displayColor: [ :item | self correctnessColorFor: item ];
+			 width: 100;
 			 yourself).
-
+		
+		participantsTable addColumn: ((OCDbgActionTableColumn title: 'Time check' 
+		evaluated: [ :item | self iconNamed: #history ])
+			action:[:p| self fixTime: p];
+			 width: 40;
+			 sortFunction: nil;
+			 yourself).
 
 	participantsTable items:
 		(experiment participantResults sort: [ :a :b |
