@@ -6,7 +6,8 @@ Class {
 		'success',
 		'participantAnswer',
 		'checkbox',
-		'title'
+		'title',
+		'valid'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -19,6 +20,7 @@ OCRETaskValidationPresenter >> defaultLayout [
 		  add: success expand: false fill: false;
 		  add: participantAnswer;
 		  add: checkbox expand: false fill: false;
+		  add: valid expand: false fill: false;
 		  yourself
 ]
 
@@ -38,7 +40,14 @@ OCRETaskValidationPresenter >> initializePresenters [
 		label: 'Correct';
 		state: (task correctness ifNil: [ false ]);
 		whenActivatedDo: [ task correctness: true ];
-		whenDeactivatedDo: [ task correctness: false ]
+		whenDeactivatedDo: [ task correctness: false ].
+		
+	valid := self newCheckBox.
+	valid
+		label: 'Valid';
+		state: (task isValid ifNil: [ true ]);
+		whenActivatedDo: [ task forceValid ];
+		whenDeactivatedDo: [ task notValid ]
 ]
 
 { #category : #initialization }
