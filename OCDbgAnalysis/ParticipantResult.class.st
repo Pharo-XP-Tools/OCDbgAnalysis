@@ -7,7 +7,8 @@ Class {
 		'controlScore',
 		'treatmentScore',
 		'rawData',
-		'shouldCount'
+		'shouldCount',
+		'id'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -124,6 +125,18 @@ ParticipantResult >> dateStarted [
 { #category : #accessing }
 ParticipantResult >> experience [
 	^participant participantDeclaredExperience
+]
+
+{ #category : #accessing }
+ParticipantResult >> id [
+
+	^ id
+]
+
+{ #category : #accessing }
+ParticipantResult >> id: anObject [
+
+	id := anObject
 ]
 
 { #category : #testing }

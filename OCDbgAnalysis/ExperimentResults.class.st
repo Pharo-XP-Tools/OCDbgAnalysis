@@ -220,6 +220,7 @@ ExperimentResults >> extractResultsWithProgress: dataPath [
 		| data result |
 		data := OCDbgExampleCode loadDataFromPath: dir.
 		result := ParticipantResult newFromData: data.
+		result id: dir reference path basename.
 		result participant surveys: (self extractSurveysFromData: data).
 		participantResults add: result ].
 	self class current: self.
