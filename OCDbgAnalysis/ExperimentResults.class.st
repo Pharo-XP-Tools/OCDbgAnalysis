@@ -157,10 +157,9 @@ ExperimentResults >> collectDeveloperExperience [
 
 { #category : #'data extraction' }
 ExperimentResults >> collectTasksForAnalysis [
-	|dataSet|
-	dataSet := participantResults select: [ :p| p shouldCount ].
-	self collectControlTasksFrom: dataSet.
-	self collectTreatmentTasksFrom: dataSet
+
+	self collectControlTasksFrom: participantResults.
+	self collectTreatmentTasksFrom: participantResults
 ]
 
 { #category : #'data extraction' }
