@@ -306,7 +306,7 @@ TaskStats >> recomputeDurationWithoutTaskAnswerTime [
 
 { #category : #accessing }
 TaskStats >> retainedIdleTime [
-
+"retainedIdleTime := nil."
 	^ retainedIdleTime ifNil:[retainedIdleTime := self calculateInterruptionTimes]
 ]
 
