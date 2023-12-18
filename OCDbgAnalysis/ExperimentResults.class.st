@@ -233,14 +233,15 @@ ExperimentResults >> emails [
 { #category : #'data extraction' }
 ExperimentResults >> extractResultsFromPath: dataPath [
 
-	participantResults := self class dataCache values.
+	participantResults := self class dataCache values asOrderedCollection.
 	(self dataEntriesFrom: dataPath) collect: [ :dir |
 		| data result |
 		data := OCDbgExampleCode loadDataFromPath: dir.
 		result := ParticipantResult newFromData: data.
 		result participant surveys: (self extractSurveysFromData: data).
-		self cache: result.
-		participantResults add: result ].
+		result tasks notEmpty ifTrue: [
+			self cache: result.
+			participantResults add: result ] ].
 	^ self
 ]
 
@@ -249,17 +250,17 @@ ExperimentResults >> extractResultsWithProgress: dataPath [
 
 	| dataEntries |
 	dataEntries := self dataEntriesFrom: dataPath.
-	dataSize := dataEntries size.
-
-	participantResults := self class dataCache values.
+	participantResults := self class dataCache values asOrderedCollection.
+	dataSize := dataEntries size + participantResults size.
 	dataEntries do: [ :dir |
 		| data result |
 		data := OCDbgExampleCode loadDataFromPath: dir.
 		result := ParticipantResult newFromData: data.
 		result id: dir reference path basename.
 		result participant surveys: (self extractSurveysFromData: data).
-		participantResults add: result.
-		self cache: result ].
+		result tasks notEmpty ifTrue: [
+			participantResults add: result.
+			self cache: result ] ].
 	self class current: self.
 	^ self
 ]

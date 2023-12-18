@@ -11,7 +11,9 @@ OCBreakpointsAddedExtractor >> extract [
 	taskEvents := OCDbgEvents
 		              selectTasksEvents: task uuid
 		              inCollection: data.
-	^ taskEvents count: [ :evt | evt class = DSBreakpointEventRecord and: [ evt objectCentric and: [ evt eventName = 'BreakpointAdded' ] ]  ]
+	^ taskEvents count: [ :evt |
+		  (evt isKindOf: DSAbstractBreakpointEventRecord) and: [
+			  evt objectCentric and: [ evt eventName = 'BreakpointAdded' ] ] ]
 ]
 
 { #category : #api }
