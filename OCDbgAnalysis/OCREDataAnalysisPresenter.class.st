@@ -14,7 +14,11 @@ Class {
 		'alternateDurationButton',
 		'rawDurationButton',
 		'dataDirs',
-		'controlsViolins'
+		'controlsViolins',
+		'meansDebugActionBars',
+		'meanTimesBars',
+		'controlsMeanTimesBars',
+		'controlsMeanDebugActionsBars'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -31,6 +35,27 @@ OCREDataAnalysisPresenter class >> defaultSpec [
 				   yourself);
 		  add: SpBoxLayout newTopToBottom;
 		  yourself
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter class >> plotMeansBarChartFor: participants [
+	|validParticipants controlData treatmentData plot|
+	validParticipants := participants select:[:p| p tasks size = 4].
+	controlData := participants collect:[:p| p tasks first duration asSeconds].
+	treatmentData := participants collect:[:p| p tasks last duration asSeconds].
+	
+
+	
+	plot := (RSBarPlot barHeights: ({controlData. treatmentData} collect: #average))
+		errors: (self basicNew confidenceIntervals: {controlData. treatmentData}).
+	plot horizontalTick
+		fromNames: #(Control Treatment).
+"	plot verticalTick
+		labelConversion: [ :val | val asFloat printShowingDecimalPlaces: 5 ]."
+	plot title: 'Mean time (in min), 95% CI.'.
+	(String streamContents:[:ws|	 controlData do:[:e| ws << e printString. ws cr ]]) inspect. 
+	(String streamContents:[:ws|	 treatmentData do:[:e| ws << e printString. ws cr ]]) inspect.
+	^plot
 ]
 
 { #category : #initialization }
@@ -71,6 +96,12 @@ OCREDataAnalysisPresenter >> chooseAndLoad [
 	f answer ifNotNil: [ :a |
 		ExperimentResults addDataDir: a asFileReference.
 		dataDirs items: ExperimentResults dataDirs ]
+]
+
+{ #category : #analysis }
+OCREDataAnalysisPresenter >> confidenceIntervals: datas [
+
+	^ datas collect: [ :data | 1.96 * (data stdev / data size sqrt) ]
 ]
 
 { #category : #specs }
@@ -126,10 +157,13 @@ OCREDataAnalysisPresenter >> defaultLayout [
 						    positionOfSlider: 50 percent;
 						    add: (SpBoxLayout newLeftToRight
 								     add: violins;
-								     add: debugActions;
+									  add: meanTimesBars;
+								     add: debugActions;								     
+									  add: meansDebugActionBars;
 								     yourself);
 						    add: (SpBoxLayout newLeftToRight
 								     add: controlsViolins;
+								     add: controlsMeanTimesBars;
 								     add: experience;
 								     yourself);
 						    yourself);
@@ -273,6 +307,10 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 	violins := self newRoassal.
 	debugActions := self newRoassal.
+	meanTimesBars := self newRoassal.
+	meansDebugActionBars := self newRoassal.
+	controlsMeanTimesBars := self newRoassal.
+	controlsMeanDebugActionsBars := self newRoassal.
 	self plotExperienceBarChart.
 	self plotControls.
 
@@ -393,6 +431,8 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 	aTaskResult ifNil: [ ^ self ].
 
 	self plot: aTaskResult.
+	self plotMeanTimesWith95IC: aTaskResult.
+	self plotMeanDebugActionsWith95IC: aTaskResult.
 	self plotDebugActionsCount: aTaskResult.
 	self setDefaultLayout
 ]
@@ -451,6 +491,49 @@ OCREDataAnalysisPresenter >> plotExperienceBarChart [
 		              title:
 			              'Participants development experience (in years)';
 		              asPresenter
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotMeanDebugActionsWith95IC: aTasksResults [
+
+	| control treatment plot|
+
+
+	control := aTasksResults averageDebuggingActionsCount first.
+	treatment := aTasksResults averageDebuggingActionsCount second.
+	
+	plot := (RSBarPlot barHeights: ({control. treatment} collect: #average))
+		errors: (self confidenceIntervals: {control. treatment}).
+	plot horizontalTick
+		fromNames: #(Control Treatment).
+"	plot verticalTick
+		labelConversion: [ :val | val asFloat printShowingDecimalPlaces: 5 ]."
+	plot title: 'Mean debug actions, 95% CI.'.
+	
+
+	meansDebugActionBars := plot asPresenter
+]
+
+{ #category : #charts }
+OCREDataAnalysisPresenter >> plotMeanTimesWith95IC: aTasksResults [
+
+	| transformBlock control treatment plot|
+	transformBlock := [ :data |
+	                  data collect: [ :duration |
+		                  duration minutes + (duration seconds / 60) asFloat ] ].
+
+	control := (transformBlock value: aTasksResults controlData).
+	treatment := (transformBlock value: aTasksResults treatmentData).
+	
+	plot := (RSBarPlot barHeights: ({control. treatment} collect: #average))
+		errors: (self confidenceIntervals: {control. treatment}).
+	plot horizontalTick
+		fromNames: #(Control Treatment).
+	
+	plot title: 'Mean time (in min), 95% CI.'.
+	
+
+	meanTimesBars := plot asPresenter
 ]
 
 { #category : #specs }
