@@ -440,7 +440,7 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 { #category : #charts }
 OCREDataAnalysisPresenter >> plotControls [
 
-	|control1 control2 transformBlock dataViolins |
+	|control1 control2 transformBlock dataViolins plot controlBar1 controlBar2|
 
 	control1 := tasksTable items first.
 	control2 := tasksTable items second.
@@ -459,7 +459,18 @@ OCREDataAnalysisPresenter >> plotControls [
 	dataViolins title:
 			              'Controls times in min'.
 	dataViolins bandwidth: 10.
-	controlsViolins := dataViolins asPresenter
+	controlsViolins := dataViolins asPresenter.
+	
+	controlBar1 :=  (transformBlock value: control1 controlData).
+	controlBar2 :=   (transformBlock value: control2 controlData) .
+	
+	plot := (RSBarPlot barHeights: ({controlBar1. controlBar2} collect: #average))
+		errors: (self confidenceIntervals: {controlBar1. controlBar2}).
+	plot horizontalTick
+		fromNames: {control1 name. control2 name}.
+	plot title: 'Mean time (in min), 95% CI.'.	
+
+	controlsMeanTimesBars := plot asPresenter
 ]
 
 { #category : #charts }

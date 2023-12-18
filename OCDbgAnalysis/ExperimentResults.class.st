@@ -11,7 +11,8 @@ Class {
 	],
 	#classInstVars : [
 		'current',
-		'dataDirs'
+		'dataDirs',
+		'dataCache'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -256,4 +257,9 @@ ExperimentResults >> participantResults: anObject [
 ExperimentResults >> participantsExperience [
 
 	^ participantsExperience
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> scatterPlots [
+	self shouldBeImplemented.
 ]
