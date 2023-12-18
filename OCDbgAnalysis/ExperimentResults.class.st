@@ -24,6 +24,12 @@ ExperimentResults class >> addDataDir: aDirectoryPath [
 ]
 
 { #category : #accessing }
+ExperimentResults class >> cache: aParticipantResult [
+
+	self dataCache at: aParticipantResult id put: aParticipantResult
+]
+
+{ #category : #accessing }
 ExperimentResults class >> current [
 	^current ifNil:[current := self new]
 ]
@@ -61,6 +67,11 @@ ExperimentResults class >> extractResults: dataPath [
 ExperimentResults class >> extractResultsWithProgress: dataPath [
 	
 	^self new extractResultsWithProgress: dataPath asFileReference 
+]
+
+{ #category : #testing }
+ExperimentResults class >> isCached: aString [ 
+	^self dataCache keys includes: aString
 ]
 
 { #category : #accessing }
@@ -136,6 +147,11 @@ ExperimentResults >> buildTaskResultsFor: participantsSubset [
 	^ { t1. t2 }
 ]
 
+{ #category : #accessing }
+ExperimentResults >> cache: aParticipantResult [ 
+	self class cache: aParticipantResult 
+]
+
 { #category : #'data extraction' }
 ExperimentResults >> collectControlTasksFrom: participants [
 
@@ -195,6 +211,13 @@ ExperimentResults >> collectTreatmentTasksFrom: participants [
 ]
 
 { #category : #'data extraction' }
+ExperimentResults >> dataEntriesFrom: dataPath [
+
+	^ dataPath entries select: [ :e |
+		  e isDirectory and: [ (self isAlreadyCached: e name) not ] ]
+]
+
+{ #category : #'data extraction' }
 ExperimentResults >> dataExtractionProgress [
 
 	^ [ (participantResults size / dataSize) ]
@@ -210,15 +233,15 @@ ExperimentResults >> emails [
 { #category : #'data extraction' }
 ExperimentResults >> extractResultsFromPath: dataPath [
 
-	participantResults := (dataPath entries select: [ :e | e isDirectory ]) 
-		                      collect: [ :dir | 
-			                      | data result |
-			                      data := OCDbgExampleCode loadDataFromPath:
-				                              dir.
-			                      result := ParticipantResult newFromData: data.
-			                      result participant surveys:
-				                      (self extractSurveysFromData: data).
-			                      result ].
+	participantResults := (self dataEntriesFrom: dataPath) collect: [
+		                      :dir |
+		                      | data result |
+		                      data := OCDbgExampleCode loadDataFromPath: dir.
+		                      result := ParticipantResult newFromData: data.
+		                      result participant surveys:
+			                      (self extractSurveysFromData: data).
+		                      self cache: result.
+		                      result ].
 	^ self
 ]
 
@@ -226,7 +249,7 @@ ExperimentResults >> extractResultsFromPath: dataPath [
 ExperimentResults >> extractResultsWithProgress: dataPath [
 
 	| dataEntries |
-	dataEntries := dataPath entries select: [ :e | e isDirectory ].
+	dataEntries := self dataEntriesFrom: dataPath.
 	dataSize := dataEntries size.
 
 	participantResults := OrderedCollection new.
@@ -236,7 +259,8 @@ ExperimentResults >> extractResultsWithProgress: dataPath [
 		result := ParticipantResult newFromData: data.
 		result id: dir reference path basename.
 		result participant surveys: (self extractSurveysFromData: data).
-		participantResults add: result ].
+		participantResults add: result.
+		self cache: result ].
 	self class current: self.
 	^ self
 ]
@@ -252,6 +276,11 @@ ExperimentResults >> extractSurveysFromData: data [
 			 ifNone: [ nil ]).
 
 	^ surveys
+]
+
+{ #category : #testing }
+ExperimentResults >> isAlreadyCached: aString [ 
+	^self class isCached: aString
 ]
 
 { #category : #accessing }
