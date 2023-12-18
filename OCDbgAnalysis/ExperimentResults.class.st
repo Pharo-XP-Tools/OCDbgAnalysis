@@ -35,6 +35,12 @@ ExperimentResults class >> current: anExperiment [
 ]
 
 { #category : #accessing }
+ExperimentResults class >> dataCache [
+
+	^ dataCache ifNil: [ dataCache := Dictionary new ]
+]
+
+{ #category : #accessing }
 ExperimentResults class >> dataDirs [
 	^dataDirs ifNil:[dataDirs := OrderedCollection new]
 ]
@@ -55,6 +61,13 @@ ExperimentResults class >> extractResults: dataPath [
 ExperimentResults class >> extractResultsWithProgress: dataPath [
 	
 	^self new extractResultsWithProgress: dataPath asFileReference 
+]
+
+{ #category : #accessing }
+ExperimentResults class >> resetCache [
+
+	<script>
+	dataCache := nil
 ]
 
 { #category : #adding }
