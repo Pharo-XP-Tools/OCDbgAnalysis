@@ -17,6 +17,13 @@ Class {
 	#category : #'OCDbgAnalysis-NewModel'
 }
 
+{ #category : #spec }
+ExperimentResults class >> browse [
+	<script>
+
+	(OCREDataAnalysisPresenter on: self current) open
+]
+
 { #category : #cache }
 ExperimentResults class >> cache: aPhexParticipation [
 
@@ -35,7 +42,7 @@ ExperimentResults class >> cleanCache [
 { #category : #'instance creation' }
 ExperimentResults class >> current [
 
-	^ current ifNil:[self new]
+	^ current ifNil:[current := self new]
 ]
 
 { #category : #'instance creation' }
@@ -55,6 +62,11 @@ ExperimentResults class >> isCached: aString [
 ]
 
 { #category : #'instance creation' }
+ExperimentResults class >> materializeFromSTON [
+	^self replaceWith: (STON fromString: 'data.ston' asFileReference contents)
+]
+
+{ #category : #'instance creation' }
 ExperimentResults class >> on: anExperimentResultsExtractor [
 
 	^self new
@@ -62,6 +74,14 @@ ExperimentResults class >> on: anExperimentResultsExtractor [
 			  (anExperimentResultsExtractor participantResults collect: [ :p |
 					   self cache: (PhexParticipation fromParticipantResult: p) ]);
 		  yourself
+]
+
+{ #category : #'instance creation' }
+ExperimentResults class >> replaceWith: anExperiment [
+
+	self cleanCache.
+	current := anExperiment.
+	current participations do: [ :p | self cache: p ]
 ]
 
 { #category : #'data analysis' }

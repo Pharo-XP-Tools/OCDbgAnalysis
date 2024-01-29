@@ -681,6 +681,15 @@ OCREDataAnalysisPresenter >> stonExport [
 		close
 ]
 
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> stonImport [
+	ExperimentResults materializeFromSTON.
+	experiment := ExperimentResults current.
+	self doAnalysis.
+	self updateAllViews 
+	
+]
+
 { #category : #updating }
 OCREDataAnalysisPresenter >> updateAllViews [
 
