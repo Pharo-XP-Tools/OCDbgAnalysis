@@ -62,20 +62,12 @@ OCREDataAnalysisPresenter class >> plotMeansBarChartFor: participants [
 OCREDataAnalysisPresenter >> buildParticipantsToolbar [
 
 	participantsToolbar := self newToolbar.
-	alternateDurationButton := self newToolbarToggleButton.
-	rawDurationButton := self newToolbarToggleButton.
-	rawDurationButton state: true.
-	
-	participantsToolbar addItemRight: rawDurationButton.
-	participantsToolbar addItemRight:  alternateDurationButton.
-	
-	rawDurationButton associatedToggleButtons: { alternateDurationButton }.
-	
-	rawDurationButton label: 'Raw time'; icon: (self application iconNamed: #recentMessages).
-	alternateDurationButton label: 'Consolidated time'; icon: (self application iconNamed: #history).
-	
-	rawDurationButton whenActivatedDo: [ self useRawTimes ].
-	alternateDurationButton whenActivatedDo: [ self useConsolidatedTimes ].
+	participantsToolbar addItem: (SpToolbarButtonPresenter new
+			 label: 'Fix times';
+			 icon: (self iconNamed: #history);
+			 action: [ self fixTimes ];
+			 yourself).
+	participantsToolbar beIcons
 ]
 
 { #category : #actions }
@@ -94,8 +86,8 @@ OCREDataAnalysisPresenter >> chooseAndLoad [
 	f openModal.
 
 	f answer ifNotNil: [ :a |
-		ExperimentResults addDataDir: a asFileReference.
-		dataDirs items: ExperimentResults dataDirs ]
+		ExperimentResultsExtractor addDataDir: a asFileReference.
+		dataDirs items: ExperimentResultsExtractor dataDirs ]
 ]
 
 { #category : #analysis }
@@ -107,9 +99,12 @@ OCREDataAnalysisPresenter >> confidenceIntervals: datas [
 { #category : #specs }
 OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 
-	participant isParticipationValid ifFalse: [ ^ Color black ].
+	(participant treatmentTask notNil and: [participant treatmentTask isValid]) ifFalse: [ ^ Color black ].
 
-	participant dataChecked ifTrue: [ ^ Color blue darker ].
+	({
+		 participant controlTask correctness.
+		 participant treatmentTask correctness } includes: nil) ifFalse: [
+		^ Color blue darker ].
 
 
 	^ Color red
@@ -142,10 +137,11 @@ OCREDataAnalysisPresenter >> defaultLayout [
 								     add: (SpBoxLayout newLeftToRight
 										      add: 'Participants' expand: false fill: false;
 										      add:
-											      experiment participantResults size printString
+											      experiment participations size printString
 											      , ' participations'
 										      expand: false
 										      fill: false;
+											   add: participantsToolbar height: 16;
 										      yourself)
 								     expand: false
 								     fill: false
@@ -173,6 +169,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 
 { #category : #analysis }
 OCREDataAnalysisPresenter >> doAnalysis [
+
 	experiment collectTasksForAnalysis.
 	experiment collectDeveloperExperience
 ]
@@ -229,7 +226,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself).
 
-	tasksTable items: experiment buildTaskResults.
+	tasksTable items:  experiment buildTaskResults.
 	tasksTable transmitDo: [ :task | self plotChartsForTask: task ].
 
 
@@ -245,13 +242,15 @@ OCREDataAnalysisPresenter >> initializePresenters [
 		participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Id'
 			  evaluated: [ :item | item shortId ])
-			 width:40;
+			displayBackgroundColor:[:p| p hasValidDemographicSurvey ifTrue:[Color white] ifFalse:[Color red]];
+			 width: 150;
 			 yourself).
-	participantsTable addColumn: ((SpStringTableColumn
+	"participantsTable addColumn: ((SpStringTableColumn
 			  title: 'XP Date'
 			  evaluated: [ :item | item dateStarted asLocalStringYMDHM ])
+				displayBackgroundColor:[:p| p hasValidDemographicSurvey ifTrue:[Color white] ifFalse:[Color red]];
 			 width: 100;
-			 yourself).
+			 yourself)."
 	
 		participantsTable addColumn:
 		((SpImageTableColumn title: ' ' evaluated: [ :item |
@@ -264,6 +263,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
+			 displayColor: [ :item | item controlTask hasUncheckedInterruptions ifTrue:[Color black] ifFalse:[Color red] ];
 			 sortFunction: nil;
 			 yourself).
 			
@@ -283,6 +283,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 		participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Treatment'
 			  evaluated: [ :item | item treatmentTaskInfos ])
+			displayColor: [ :item | (item treatmentTask notNil and: [item treatmentTask hasUncheckedInterruptions]) ifTrue:[Color black] ifFalse:[Color red] ];
 			 sortFunction: nil;
 			 yourself).
 
@@ -294,15 +295,15 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 width: 100;
 			 yourself).
 		
-		participantsTable addColumn: ((OCDbgActionTableColumn title: 'Time check' 
+	"	participantsTable addColumn: ((OCDbgActionTableColumn title: 'Time check' 
 		evaluated: [ :item | self iconNamed: #history ])
 			action:[:p| self fixTime: p];
 			 width: 40;
 			 sortFunction: nil;
-			 yourself).
+			 yourself)."
 
 	participantsTable items:
-		(experiment participantResults sort: [ :a :b |
+		(experiment participations sort: [ :a :b |
 			 a dateStarted > b dateStarted ]).
 
 	violins := self newRoassal.
@@ -343,12 +344,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				 label: 'Open';
 				 yourself).
 	dataDirs := self newDropList.
-	dataDirs items: ExperimentResults dataDirs
+	dataDirs items: ExperimentResultsExtractor dataDirs.
 
 
 
 
-	"	self buildParticipantsToolbar."
+		self buildParticipantsToolbar.
 ]
 
 { #category : #initialization }
@@ -409,7 +410,8 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 	| transformBlock dataViolins |
 	transformBlock := [ :data |
 	                  data collect: [ :duration |
-		                  duration minutes + (duration seconds / 60) asFloat ] ].
+		                  duration hours * 60 + duration minutes
+		                  + (duration seconds / 60) asFloat ] ].
 	dataViolins := RSViolinPlot data: {
 			               (transformBlock value: aTasksResults controlData).
 			               (transformBlock value: aTasksResults treatmentData) }.
@@ -419,8 +421,7 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 			 , ' points)').
 			('Treatment (' , aTasksResults treatmentData size printString
 			 , ' points)') }.
-	dataViolins title:
-			              'Time to finish the task (in min)'.
+	dataViolins title: 'Time to finish the task (in min)'.
 	dataViolins bandwidth: 10.
 	violins := dataViolins asPresenter
 ]
@@ -441,11 +442,11 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 OCREDataAnalysisPresenter >> plotControls [
 
 	|control1 control2 transformBlock dataViolins plot controlBar1 controlBar2|
-
+	tasksTable items ifEmpty:[^self].
 	control1 := tasksTable items first.
 	control2 := tasksTable items second.
 	transformBlock := [ :data |
-	                  data collect: [ :duration |
+	                  data collect: [ :duration | (duration hours * 60) +
 		                  duration minutes + (duration seconds / 60) asFloat ] ].
 	dataViolins := RSViolinPlot data: {
 			               (transformBlock value: control1 controlData).
@@ -490,6 +491,7 @@ OCREDataAnalysisPresenter >> plotExperienceBarChart [
 
 	| dataLabels data |
 	experience := self newRoassal.
+	true ifTrue:[self flag: 'adapt if necessary or remove'. ^self].
 	dataLabels := { '< 1'. '1-2 years'. '3-5 years'. '6-10 years'.
 	              'More than 10' }.
 	data := OrderedCollection new.
@@ -528,21 +530,25 @@ OCREDataAnalysisPresenter >> plotMeanDebugActionsWith95IC: aTasksResults [
 { #category : #charts }
 OCREDataAnalysisPresenter >> plotMeanTimesWith95IC: aTasksResults [
 
-	| transformBlock control treatment plot|
+	| transformBlock control treatment plot |
 	transformBlock := [ :data |
 	                  data collect: [ :duration |
-		                  duration minutes + (duration seconds / 60) asFloat ] ].
+		                  (duration hours * 60)+ duration minutes
+		                  + (duration seconds / 60) asFloat ] ].
 
-	control := (transformBlock value: aTasksResults controlData).
-	treatment := (transformBlock value: aTasksResults treatmentData).
-	
-	plot := (RSBarPlot barHeights: ({control. treatment} collect: #average))
-		errors: (self confidenceIntervals: {control. treatment}).
-	plot horizontalTick
-		fromNames: #(Control Treatment).
-	
+	control := transformBlock value: aTasksResults controlData.
+	treatment := transformBlock value: aTasksResults treatmentData.
+
+	plot := (RSBarPlot barHeights: ({
+			          control.
+			          treatment } collect: #average)) errors:
+		        (self confidenceIntervals: {
+				         control.
+				         treatment }).
+	plot horizontalTick fromNames: #( Control Treatment ).
+
 	plot title: 'Mean time (in min), 95% CI.'.
-	
+
 
 	meanTimesBars := plot asPresenter
 ]
@@ -550,27 +556,47 @@ OCREDataAnalysisPresenter >> plotMeanTimesWith95IC: aTasksResults [
 { #category : #specs }
 OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 
-	participant isParticipationValid ifFalse: [ ^ 'N/A' ].
-	participant dataChecked ifTrue: [^participant printCorrectness ].
-	^ 'Needs check'
+	| controlCorrectness treatmentCorrectness |
+	controlCorrectness := participant controlTask correctness.
+	treatmentCorrectness := [ participant treatmentTask correctness ]
+		                        on: Error
+		                        do: [ nil ].
+	(({
+		  controlCorrectness.
+		  treatmentCorrectness } includes: nil) or: [
+		 participant treatmentTask notNil ]) ifTrue: [ ^ 'Needs check' ].
+
+
+	^ String streamContents: [ :str |
+		  str << (controlCorrectness
+			   ifTrue: [ '1' ]
+			   ifFalse: [ '0' ]).
+		  str << ' | '.
+		  participant treatmentTask ifNil: [ str << 'x' ] ifNotNil: [
+			  str << (treatmentCorrectness
+				   ifTrue: [ '1' ]
+				   ifFalse: [ '0' ]) ] ]
 ]
 
 { #category : #actions }
 OCREDataAnalysisPresenter >> reload [
-	|dir|
+
+	| dir xpResults |
 	dir := dataDirs selectedItem.
-	(dir isNil or: [dir exists not]) ifTrue:[^self].
-	experiment := ExperimentResults new.
+	(dir isNil or: [ dir exists not ]) ifTrue: [ ^ self ].
+	xpResults := ExperimentResultsExtractor new.
 	progress := self newProgressBar.
 
 
 	self setProgressLayout.
 
 	progress
-		progress: [ experiment dataExtractionProgress ]
+		progress: [ xpResults dataExtractionProgress ]
 		every: 0.1 seconds.
 	[
-	[ experiment extractResultsWithProgress: dir] ensure: [
+	[
+	experiment := ExperimentResults on:
+		              (xpResults extractResultsWithProgress: dir) ] ensure: [
 		self doAnalysisAndUpdate ] ] fork
 ]
 
@@ -584,7 +610,8 @@ OCREDataAnalysisPresenter >> setDefaultLayout [
 OCREDataAnalysisPresenter >> setModelBeforeInitialization: anExperimentResult [
 
 	experiment := anExperimentResult.
-	experiment collectDeveloperExperience
+	self flag: 'adapt if necessary or remove'
+	"experiment collectDeveloperExperience"
 ]
 
 { #category : #specs }
@@ -625,7 +652,7 @@ OCREDataAnalysisPresenter >> updateAllViews [
 	index := tasksTable selection selectedIndex.
 	tasksTable items: experiment buildTaskResults.
 	participantsTable items:
-		(experiment participantResults sort: [ :a :b |
+		(experiment participations sort: [ :a :b |
 			 a dateStarted > b dateStarted ]).
 	violins := self newRoassal.
 	debugActions := self newRoassal.

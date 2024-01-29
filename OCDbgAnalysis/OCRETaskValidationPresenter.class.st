@@ -26,12 +26,12 @@ OCRETaskValidationPresenter >> defaultLayout [
 
 { #category : #initialization }
 OCRETaskValidationPresenter >> initializePresenters [
-	title := self newLabel label: task taskInfo title.
+	title := self newLabel label: task title.
 	success := self newLabel
-		           label: ('Success: ', task testSuccess printString);
+		           label: ('Success: ', task correctnessTest printString);
 		           yourself.
 	participantAnswer := self newText
-		                     text: task answer contents;
+		                     text: task answer;
 		                     beNotEditable;
 		                     yourself.
 

@@ -17,11 +17,11 @@ OCREExperienceScatterPlots >> defaultLayout [
 	^ SpPanedLayout newTopToBottom
 		  add: (SpBoxLayout newLeftToRight
 				   add: ammoliteC;
-				   add: ammoliteT;
+				   add: loT;
 				   yourself);
 		  add: (SpBoxLayout newLeftToRight
 				   add: loC;
-				   add: loT;
+				   add: ammoliteT;
 				   yourself);
 		  yourself
 ]

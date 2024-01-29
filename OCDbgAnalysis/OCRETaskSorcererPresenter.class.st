@@ -34,16 +34,18 @@ OCRETaskSorcererPresenter >> experimentResultsBrowser: anObject [
 
 { #category : #'accessing - model' }
 OCRETaskSorcererPresenter >> filterEvents: filter [
-	|history finishTaskHistory|
+
+	| history finishTaskHistory |
 	filter ifEmpty: [
 		rawData items: participantResult rawData.
 		^ self ].
-	history := 
-	(DSRecordHistory on: participantResult rawData ).
+	history := participantResult eventsHistory.
 	history buildWindowHistory.
-	finishTaskHistory := history windowsHistory keys detect:[:name|
-		('Finish task ', filter, '*' ) match: name windowName asString
-		] ifNone:[self halt].
+	finishTaskHistory := history windowsHistory keys
+		                     detect: [ :name |
+			                     'Finish task ' , filter , '*' match:
+				                     name windowName asString ]
+		                     ifNone: [ self halt ].
 	rawData items: (history windowsHistory at: finishTaskHistory)
 ]
 
@@ -55,7 +57,7 @@ OCRETaskSorcererPresenter >> initializePresenters [
 	taskNames whenSelectedItemChangedDo: [ :e| self filterEvents: e].
 	
 	rawData := self newList.
-	rawData items: participantResult rawData.
+	rawData items: participantResult events.
 	rawData contextMenu: self rawDataMenu.
 
 	newTaskData := self newTable.
@@ -139,23 +141,23 @@ OCRETaskSorcererPresenter >> tryToFixTask [
 
 	| taskName taskStart taskStartIndex taskEventsRange taskSwitchingEvent taskEvents |
 	taskName := taskNames selectedItem ifEmpty: [ ^ self ].
-	taskStart := participantResult rawData detect: [ :e |
+	taskStart := participantResult events detect: [ :e |
 		             e class == DSStartTaskRecord and: [
 			             e task title = taskName ] ].
-	taskStartIndex := participantResult rawData indexOf: taskStart.
-	taskEventsRange := participantResult rawData
+	taskStartIndex := participantResult events indexOf: taskStart.
+	taskEventsRange := participantResult events
 		                   copyFrom: taskStartIndex + 1
-		                   to: participantResult rawData size.
+		                   to: participantResult events size.
 	taskSwitchingEvent := taskEventsRange
 		                      detect: [ :e |
 			                      {
 				                      DSStartTaskRecord.
 				                      DSEndingTaskRecord } includes: e class ]
-		                      ifNone: [ participantResult rawData last ].
-	taskEvents := participantResult rawData
+		                      ifNone: [ participantResult events last ].
+	taskEvents := participantResult events
 		              copyFrom: taskStartIndex
 		              to:
-		              (participantResult rawData indexOf: taskSwitchingEvent).
+		              (participantResult events indexOf: taskSwitchingEvent).
 
 	self
 		proposeFixForTask: taskStart task
@@ -165,12 +167,26 @@ OCRETaskSorcererPresenter >> tryToFixTask [
 
 { #category : #'as yet unclassified' }
 OCRETaskSorcererPresenter >> validateFix [
-	|dstasks taskStats|
-	participantResult rawData add: taskEnding endingTask after: taskEnding insertionPoint.
-	dstasks := participantResult rawData  ocdSelectTasksEnding collect: [ :e | e task ].
-	taskStats := dstasks collect: [ :dst | 
-		             TaskStats newForTask: dst fromData: participantResult rawData  ].
-	participantResult tasks: taskStats.
+
+	| dstasks dst taskStats |
+	participantResult events
+		add: taskEnding endingTask
+		after: taskEnding insertionPoint.
+	dstasks := participantResult events ocdSelectTasksEnding collect: [
+		           :e | e task ].
+
+
+	dst := dstasks
+		       detect: [ :t | t title = taskNames selectedItem ]
+		       ifNone: [
+			       self inform: 'Impossible to fix: task was not found'.
+			       ^ self ].
+
+	taskStats := TaskStats
+		             newForTask: dst
+		             fromData: participantResult events.
+	participantResult treatmentTask: (PhexTaskResult from: taskStats).
+	participantResult treatmentTask beTreatment.
 	experimentResultsBrowser doAnalysis.
 	experimentResultsBrowser updateAllViews
 ]

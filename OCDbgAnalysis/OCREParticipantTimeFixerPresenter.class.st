@@ -27,19 +27,9 @@ OCREParticipantTimeFixerPresenter >> experimentResultsBrowser: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: aTaskStats [
+OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: aPhexTaskResult [
 
-	| taskIndex surveys |
-	taskIndex := participant tasks indexOf: aTaskStats.
-	surveys := participant participant surveys select: [ :s |
-		           s survey title = 'Post-task survey' ].
-
-	(taskIndex = 1 and: [ surveys size > 0 ]) ifTrue: [
-		^ surveys first survey answers third answer ].
-	(taskIndex > 1 and: [ surveys size > 1 ]) ifTrue: [
-		^ surveys second survey answers third answer ].
-
-	^ 'undeclared'
+	^ aPhexTaskResult declaredInterruptionTime
 ]
 
 { #category : #'accessing - model' }
@@ -47,22 +37,22 @@ OCREParticipantTimeFixerPresenter >> initializePresenters [
 	|tasks|
 	table := self newTable.
 	table contextMenu: self menu.
-	table addColumn: ((SpStringTableColumn
+	"table addColumn: ((SpStringTableColumn
 			  title: 'Task name'
-			  evaluated: [ :item | item taskName ])
+			  evaluated: [ :item | item title ])
 			 sortFunction: nil;
 			 yourself).
 
 	table addColumn: ((SpStringTableColumn
 			  title: 'Calculated time'
-			  evaluated: [ :item | item alternateDuration printString ])
+			  evaluated: [ :item | item time ])
 			 sortFunction: nil;
-			 yourself).
+			 yourself)."
 
 	table addColumn: ((SpStringTableColumn
 			  title: 'Estimated idle time'
 			  evaluated: [ :item |
-				  item calculateInterruptionTimes asSeconds printString ])
+				  item calculateInterruptionTimes printString ])
 			 sortFunction: nil;
 			 yourself).
 
@@ -75,18 +65,17 @@ OCREParticipantTimeFixerPresenter >> initializePresenters [
 	table addColumn: ((SpStringTableColumn
 			  title: 'Retained idle time'
 			  evaluated: [ :item | item retainedIdleTime printString ])
-			 beEditable;
 			 onAcceptEdition: [ :item :text |
-				 item retainedIdleTime: text asNumber ];
+				 item retainedIdleTime ];
 			 sortFunction: nil;
 			 yourself).
 
-	table addColumn: 
+	"table addColumn: 
 		((SpStringTableColumn title: 'Fixed time' evaluated: [ :item |
-				  (item alternateDuration - item retainedIdleTime asSeconds)
+				  (item time - item retainedIdleTime)
 					  printString ])
 			 sortFunction: nil;
-			 yourself).
+			 yourself)."
 	tasks := OrderedCollection new.
 	participant controlTask ifNotNil:[:t| tasks add: t].
 	participant treatmentTask ifNotNil:[:t| tasks add: t].	
@@ -110,7 +99,7 @@ OCREParticipantTimeFixerPresenter >> menu [
 			  anItem
 				  name: 'Show idle times...';
 				  iconName: #glamorousInspect;
-				  action: [ table selectedItem collectTimeDiscrepancies inspect ] ];
+				  action: [ (OCREParticipantIdleTimesAnalyzer on: table selectedItem detectedInterruptions) open  ] ];
 		  yourself
 ]
 

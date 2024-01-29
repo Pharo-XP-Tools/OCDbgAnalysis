@@ -11,10 +11,12 @@ Class {
 { #category : #'accessing - model' }
 OCREParticipantValidationPresenter >> defaultLayout [
 
-	^ SpBoxLayout newTopToBottom
-		  add: (OCRETaskValidationPresenter on: participant tasks first);
-		  add: (OCRETaskValidationPresenter on: participant tasks last);
-		  yourself
+	layout := SpBoxLayout newTopToBottom.
+	participant controlTask ifNotNil: [ :t |
+		layout add: (OCRETaskValidationPresenter on: t) ].
+	participant treatmentTask ifNotNil: [ :t |
+		layout add: (OCRETaskValidationPresenter on: t) ].
+	^ layout
 ]
 
 { #category : #accessing }
