@@ -1,6 +1,8 @@
 Class {
 	#name : #OCDbgLinkTableColumn,
 	#superclass : #SpLinkTableColumn,
+	#traits : 'SpTDecoratedText',
+	#classTraits : 'SpTDecoratedText classTrait',
 	#category : #'OCDbgAnalysis-Presenters'
 }
 
