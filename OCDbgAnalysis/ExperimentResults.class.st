@@ -1,307 +1,146 @@
+"
+I hold a Phex experiment results and provide API to explore them. 
+"
 Class {
 	#name : #ExperimentResults,
 	#superclass : #Object,
 	#instVars : [
-		'participantResults',
-		'emails',
-		'treatmentTasks',
-		'controlTasks',
-		'participantsExperience',
-		'dataSize'
+		'participations',
+		'controls',
+		'treatments',
+		'participantsExperience'
 	],
 	#classInstVars : [
-		'current',
-		'dataDirs',
-		'dataCache'
+		'dataCache',
+		'current'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : #'OCDbgAnalysis-NewModel'
 }
 
-{ #category : #accessing }
-ExperimentResults class >> addDataDir: aDirectoryPath [
+{ #category : #cache }
+ExperimentResults class >> cache: aPhexParticipation [
 
-	self dataDirs add: aDirectoryPath
+	self dataCache at: aPhexParticipation id put: aPhexParticipation.
+	^aPhexParticipation
 ]
 
-{ #category : #accessing }
-ExperimentResults class >> cache: aParticipantResult [
-
-	self dataCache at: aParticipantResult id put: aParticipantResult
-]
-
-{ #category : #accessing }
-ExperimentResults class >> current [
-	^current ifNil:[current := self new]
-]
-
-{ #category : #accessing }
-ExperimentResults class >> current: anExperiment [
-
-	current := anExperiment
-]
-
-{ #category : #accessing }
-ExperimentResults class >> dataCache [
-
-	^ dataCache ifNil: [ dataCache := Dictionary new ]
-]
-
-{ #category : #accessing }
-ExperimentResults class >> dataDirs [
-	^dataDirs ifNil:[dataDirs := OrderedCollection new]
-]
-
-{ #category : #'as yet unclassified' }
-ExperimentResults class >> extractAndOpenResults: dataPath [
-	
-	^(self extractResults: dataPath) inspect
-]
-
-{ #category : #'as yet unclassified' }
-ExperimentResults class >> extractResults: dataPath [
-	
-	^self new extractResultsFromPath: dataPath asFileReference 
-]
-
-{ #category : #'as yet unclassified' }
-ExperimentResults class >> extractResultsWithProgress: dataPath [
-	
-	^self new extractResultsWithProgress: dataPath asFileReference 
-]
-
-{ #category : #testing }
-ExperimentResults class >> isCached: aString [ 
-	^self dataCache keys includes: aString
-]
-
-{ #category : #accessing }
-ExperimentResults class >> resetCache [
+{ #category : #private }
+ExperimentResults class >> cleanCache [
 
 	<script>
 	dataCache := nil
 ]
 
-{ #category : #adding }
-ExperimentResults >> addEmail: aString [
-	self emails add: aString.
-	aString crTrace
+{ #category : #'instance creation' }
+ExperimentResults class >> current [
+
+	^ current ifNil:[self new]
 ]
 
-{ #category : #adding }
-ExperimentResults >> addPersonalDataSurvey: aDSSurveyRecord [
+{ #category : #'instance creation' }
+ExperimentResults class >> current: anObject [
+	current := anObject
+]
 
-	aDSSurveyRecord ifNil: [ ^ self ].
-	self addEmail: aDSSurveyRecord survey questions third answer.
-"	aDSSurveyRecord survey questions third answer: nil"
+{ #category : #cache }
+ExperimentResults class >> dataCache [
+
+	^ dataCache ifNil: [ dataCache := Dictionary new ]
+]
+
+{ #category : #cache }
+ExperimentResults class >> isCached: aString [ 
+	^self dataCache keys includes: aString
+]
+
+{ #category : #'instance creation' }
+ExperimentResults class >> on: anExperimentResultsExtractor [
+
+	^self new
+		  participations:
+			  (anExperimentResultsExtractor participantResults collect: [ :p |
+					   self cache: (PhexParticipation fromParticipantResult: p) ]);
+		  yourself
 ]
 
 { #category : #'data analysis' }
 ExperimentResults >> buildTaskResults [
 	
-	|t1 t2 debuggingActionCount|
-	debuggingActionCount := [ :results|  (results collect: [:next|	
-	(DSRecordHistory on: next events) countDebugActions ]) "average asFloat rounded"].
 
-	self collectTasksForAnalysis.
-	t1 := TasksResults new.
-	t1 name: (controlTasks t1 first taskInfo title).
-	t1 controlData: (controlTasks t1 collect:[:t| t duration]).
-	t1 treatmentData: (treatmentTasks t1 collect:[:t| t duration]).
-	t1 ratio: ((t1 controlAvg / t1 treatmentAvg) asFloat truncateTo: 0.000001).
+	self collectTasksForAnalysis.	
+	^controls keys collect: [ :taskName|  
+		|taskResult|		
+		taskResult := TasksResults new.
+		taskResult name: taskName.
+		taskResult controlData: ((controls at: taskName) collect:[:t| t duration]).
+		taskResult treatmentData: ((treatments at: taskName) collect:[:t| t duration]).
+		taskResult ratio: ((taskResult controlAvg / taskResult treatmentAvg) asFloat truncateTo: 0.000001).	
+		taskResult averageDebuggingActionsCount: 
+			{(controls at: taskName) collect: [:next| next countDebugActions ].  
+			(treatments at: taskName) collect: [:next| next countDebugActions ]}]
 	
-	t1 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t1).  (debuggingActionCount value: treatmentTasks t1).  }.
-	
-	t2 := TasksResults new.
-	t2 name: (controlTasks t2 first taskInfo title).
-	t2 controlData: (controlTasks t2 collect:[:t| t duration]).
-	t2 treatmentData: (treatmentTasks t2 collect:[:t| t duration]).
-	t2 ratio: ((t2 controlAvg asNanoSeconds / t2 treatmentAvg asNanoSeconds) asFloat truncateTo: 0.000001).
-		t2 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t2).  (debuggingActionCount value: treatmentTasks t2).  }.
-	
-	^ { t1. t2 }
-]
 
-{ #category : #'data analysis' }
-ExperimentResults >> buildTaskResultsFor: participantsSubset [
-	
-	|t1 t2 debuggingActionCount|
-	debuggingActionCount := [ :results|  (results collect: [:next|	
-	(DSRecordHistory on: next events) countDebugActions ]) "average asFloat rounded"].
-
-	self collectTasksForAnalysisFor: participantsSubset.
-	t1 := TasksResults new.
-	t1 name: (controlTasks t1 first taskInfo title).
-	t1 controlData: (controlTasks t1 collect:[:t| t duration]).
-	t1 treatmentData: (treatmentTasks t1 collect:[:t| t duration]).
-	t1 ratio: ((t1 controlAvg / t1 treatmentAvg) asFloat truncateTo: 0.000001).
-	
-	t1 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t1).  (debuggingActionCount value: treatmentTasks t1).  }.
-	
-	t2 := TasksResults new.
-	t2 name: (controlTasks t2 first taskInfo title).
-	t2 controlData: (controlTasks t2 collect:[:t| t duration]).
-	t2 treatmentData: (treatmentTasks t2 collect:[:t| t duration]).
-	t2 ratio: ((t2 controlAvg asNanoSeconds / t2 treatmentAvg asNanoSeconds) asFloat truncateTo: 0.000001).
-		t2 averageDebuggingActionsCount: {(debuggingActionCount value: controlTasks t2).  (debuggingActionCount value: treatmentTasks t2).  }.
-	
-	^ { t1. t2 }
-]
-
-{ #category : #accessing }
-ExperimentResults >> cache: aParticipantResult [ 
-	self class cache: aParticipantResult 
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> collectControlTasksFrom: participants [
-
-	controlTasks := ControlTasks new.
-	participants do: [ :p | 
-			|task|
-			task := p tasks first.
-			task useConsolidatedTimes.
-			controlTasks addTaskStats: task ]
 ]
 
 { #category : #'data analysis' }
 ExperimentResults >> collectDeveloperExperience [
 
 	participantsExperience := OrderedCollection new.
-	((participantResults select: [ :p | p shouldCount ]) collect: [ :r |
-		 r participant surveys ]) do: [ :surveys |
-		| demographicSurvey |
-		demographicSurvey := surveys
-			                     detect: [ :s |
-			                     s survey title = 'Demographic information' ]
-			                     ifNone: [ nil ].
-		demographicSurvey ifNotNil: [ :s |
-			| xp |
-			xp := s survey answers
-				      detect: [ :a |
-					      a title
-					      =
-					      'How many years of programming experience do you have with Pharo?' ]
-				      ifNone: [ nil ].
-			xp ifNotNil: [ participantsExperience add: xp answer answer ] ] ]
+
+	((participations select: [ :p | p demographicSurvey notNil ])
+		 collect: [ :p | p demographicSurvey ]) do: [ :survey |
+		| xp |
+		xp := survey answers
+			      detect: [ :a |
+				      a question
+				      =
+				      'How many years of programming experience do you have with Pharo?' ]
+			      ifNone: [ nil ].
+		xp ifNotNil: [ participantsExperience add: xp answer ] ]
 ]
 
 { #category : #'data extraction' }
 ExperimentResults >> collectTasksForAnalysis [
 
-	self collectControlTasksFrom: participantResults.
-	self collectTreatmentTasksFrom: participantResults
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> collectTasksForAnalysisFor: participantsSubset [
-
-	self collectControlTasksFrom: participantsSubset.
-	self collectTreatmentTasksFrom: participantsSubset
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> collectTreatmentTasksFrom: participants [
-
-	treatmentTasks := TreatmentTasks new.
-	participants do: [ :p |
-		| task |
-		task := p tasks last.
-		task useConsolidatedTimes.
-		treatmentTasks addTaskStats: task ]
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> dataEntriesFrom: dataPath [
-
-	^ dataPath entries select: [ :e |
-		  e isDirectory and: [ (self isAlreadyCached: e name) not ] ]
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> dataExtractionProgress [
-
-	^ [ (participantResults size / dataSize) ]
-		  on: Error
-		  do: [ 0 ]
-]
-
-{ #category : #accessing }
-ExperimentResults >> emails [
-	^ emails ifNil:[emails := OrderedCollection new]
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> extractResultsFromPath: dataPath [
-
-	participantResults := self class dataCache values asOrderedCollection.
-	(self dataEntriesFrom: dataPath) collect: [ :dir |
-		| data result |
-		data := OCDbgExampleCode loadDataFromPath: dir.
-		result := ParticipantResult newFromData: data.
-		result participant surveys: (self extractSurveysFromData: data).
-		result tasks notEmpty ifTrue: [
-			self cache: result.
-			participantResults add: result ] ].
-	^ self
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> extractResultsWithProgress: dataPath [
-
-	| dataEntries |
-	dataEntries := self dataEntriesFrom: dataPath.
-	participantResults := self class dataCache values asOrderedCollection.
-	dataSize := dataEntries size + participantResults size.
-	dataEntries do: [ :dir |
-		| data result |
-		data := OCDbgExampleCode loadDataFromPath: dir.
-		result := ParticipantResult newFromData: data.
-		result id: dir reference path basename.
-		result participant surveys: (self extractSurveysFromData: data).
-		result tasks notEmpty ifTrue: [
-			participantResults add: result.
-			self cache: result ] ].
-	self class current: self.
-	^ self
-]
-
-{ #category : #'data extraction' }
-ExperimentResults >> extractSurveysFromData: data [
-
-	| surveys |
-	surveys := data select: [ :e | e class = DSSurveyRecord ].
-	self addPersonalDataSurvey:
-		(surveys
-			 detect: [ :s | s survey questions size = 4 ]
-			 ifNone: [ nil ]).
-
-	^ surveys
-]
-
-{ #category : #testing }
-ExperimentResults >> isAlreadyCached: aString [ 
-	^self class isCached: aString
-]
-
-{ #category : #accessing }
-ExperimentResults >> participantResults [
-
-	^ participantResults
-]
-
-{ #category : #accessing }
-ExperimentResults >> participantResults: anObject [
-
-	participantResults := anObject
-]
-
-{ #category : #accessing }
-ExperimentResults >> participantsExperience [
-
-	^ participantsExperience
+	controls := ((participations collect: [ :p | p control ]) select: [
+		             :t | t notNil ]) groupedBy: [ :t | t title ].
+	treatments := ((participations collect: [ :p | p treatment ])
+		               select: [ :t | t notNil ]) groupedBy: [ :t | t title ]
 ]
 
 { #category : #'as yet unclassified' }
-ExperimentResults >> scatterPlots [
-	self shouldBeImplemented.
+ExperimentResults >> extractContactInformation [
+
+	| infos dict |
+	infos := (self participations collect: [ :p | p contactInfo ])
+		         reject: [ :e | e isNil ].
+
+	dict := Dictionary new.
+	infos do: [ :info |
+		info answers do: [ :a |
+			(#( 'If you would participate in a more detailed interview, please add your e-mail'
+			    'If you would be informed about the results of this work, please add your e-mail' )
+				 includes: a question) ifTrue: [
+				(dict at: a question ifAbsentPut: [ OrderedCollection new ]) add:
+					a answer.
+				a answer: nil ] ] ].
+
+	dict inspect
+]
+
+{ #category : #initialization }
+ExperimentResults >> initialize [
+	participations := OrderedCollection new
+]
+
+{ #category : #accessing }
+ExperimentResults >> participations [
+
+	^ participations ifNil:[participations := OrderedCollection new]
+]
+
+{ #category : #accessing }
+ExperimentResults >> participations: anObject [
+
+	participations := anObject
 ]

@@ -26,8 +26,7 @@ ParticipantInfo >> = anObject [
 
 	self == anObject ifTrue: [ ^ true ].
 	self class == anObject class ifFalse: [ ^ false ].
-	self startDateTime = anObject startDateTime ifFalse: [ ^ false ].
-	^ self uuid = anObject uuid
+	^true
 ]
 
 { #category : #'as yet unclassified' }

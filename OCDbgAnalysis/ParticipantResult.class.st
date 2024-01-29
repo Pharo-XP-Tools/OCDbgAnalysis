@@ -9,7 +9,8 @@ Class {
 		'rawData',
 		'shouldCount',
 		'id',
-		'shortId'
+		'shortId',
+		'demographicSurvey'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -123,9 +124,27 @@ ParticipantResult >> dateStarted [
 	^tasks first events first dateTime 
 ]
 
+{ #category : #'as yet unclassified' }
+ParticipantResult >> demographicSurvey [
+
+	^ demographicSurvey ifNil: [
+		  demographicSurvey := participant surveys
+			                       detect: [ :s |
+			                       s survey title = 'Demographic information' ]
+			                       ifNone: [ nil ] ]
+]
+
 { #category : #accessing }
 ParticipantResult >> experience [
 	^participant participantDeclaredExperience
+]
+
+{ #category : #'as yet unclassified' }
+ParticipantResult >> hasValidDemographicSurvey [
+
+	^ (self demographicSurvey isNil or: [
+		   self demographicSurvey survey answers anySatisfy: [ :a |
+			   a answer answer = 'No choice' ] ]) not
 ]
 
 { #category : #accessing }
