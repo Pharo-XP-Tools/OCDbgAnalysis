@@ -233,23 +233,27 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself).
 
-	tasksTable items:  experiment buildTaskResults.
+	tasksTable items: experiment buildTaskResults.
 	tasksTable transmitDo: [ :task | self plotChartsForTask: task ].
 
 
 	participantsTable := self newTable.
 	participantsTable contextMenu: self menu.
-"	participantsTable addColumn: ((SpCheckBoxTableColumn new
+	"	participantsTable addColumn: ((SpCheckBoxTableColumn new
 			  title: ' ';
 			  evaluated: [ :item | item shouldCount ])
 			 onActivation: [ :item | self countParticipant: item ];
 			 onDeactivation: [ :item | self dontCountParticipant: item ];
 			 width: 30;
 			 yourself)."
-		participantsTable addColumn: ((SpStringTableColumn
+	participantsTable addColumn:
+		((SpStringTableColumn
 			  title: 'Id'
 			  evaluated: [ :item | item shortId ])
-			displayBackgroundColor:[:p| p hasValidDemographicSurvey ifTrue:[Color white] ifFalse:[Color red]];
+			 displayBackgroundColor: [ :p |
+				 p hasValidDemographicSurvey
+					 ifTrue: [ Color white ]
+					 ifFalse: [ Color red ] ];
 			 width: 150;
 			 yourself).
 	"participantsTable addColumn: ((SpStringTableColumn
@@ -258,8 +262,8 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				displayBackgroundColor:[:p| p hasValidDemographicSurvey ifTrue:[Color white] ifFalse:[Color red]];
 			 width: 100;
 			 yourself)."
-	
-		participantsTable addColumn:
+
+	participantsTable addColumn:
 		((SpImageTableColumn title: ' ' evaluated: [ :item |
 				  item isControlTaskValid
 					  ifTrue: [ self iconNamed: #testGreen ]
@@ -270,27 +274,34 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
-			 displayColor: [ :item | item controlTask hasUncheckedInterruptions ifTrue:[Color red] ifFalse:[Color black] ];
+			 displayColor: [ :item |
+				 item controlTask hasUncheckedInterruptions
+					 ifTrue: [ Color red ]
+					 ifFalse: [ Color black ] ];
 			 sortFunction: nil;
 			 yourself).
-			
 
-			
-	
+
+
+
 
 
 	participantsTable addColumn:
 		((SpImageTableColumn title: ' ' evaluated: [ :item |
-				item isTreatmentTaskValid
-								  ifTrue: [ self iconNamed: #testGreen ]
+				  item isTreatmentTaskValid
+					  ifTrue: [ self iconNamed: #testGreen ]
 					  ifFalse: [ self iconNamed: #testRed ] ])
 			 width: 16;
 			 sortFunction: nil;
 			 yourself).
-		participantsTable addColumn: ((SpStringTableColumn
+	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Treatment'
 			  evaluated: [ :item | item treatmentTaskInfos ])
-			displayColor: [ :item | (item treatmentTask notNil and: [item treatmentTask hasUncheckedInterruptions]) ifTrue:[Color red] ifFalse:[Color black] ];
+			 displayColor: [ :item |
+				 (item treatmentTask notNil and: [
+						  item treatmentTask hasUncheckedInterruptions ])
+					 ifTrue: [ Color red ]
+					 ifFalse: [ Color black ] ];
 			 sortFunction: nil;
 			 yourself).
 
@@ -301,7 +312,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 displayColor: [ :item | self correctnessColorFor: item ];
 			 width: 100;
 			 yourself).
-		
+
 	"	participantsTable addColumn: ((OCDbgActionTableColumn title: 'Time check' 
 		evaluated: [ :item | self iconNamed: #history ])
 			action:[:p| self fixTime: p];
@@ -309,8 +320,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 sortFunction: nil;
 			 yourself)."
 
-	participantsTable items:
-		(experiment participations sort: [ :a :b |
+	participantsTable items: (experiment participations sort: [ :a :b |
 			 a dateStarted > b dateStarted ]).
 
 	violins := self newRoassal.
@@ -346,6 +356,16 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				 label: 'Load';
 				 yourself);
 		add: (self newButton
+				 icon: (self application iconNamed: #smallForward);
+				 action: [ self stonExport ];
+				 label: 'To STON';
+				 yourself);
+			add: (self newButton
+				 icon: (self application iconNamed: #glamorousDown);
+				 action: [ self stonImport ];
+				 label: 'From STON';
+				 yourself);
+		add: (self newButton
 				 icon: (self application iconNamed: #glamorousFolder);
 				 action: [ self chooseAndLoad ];
 				 label: 'Open';
@@ -356,7 +376,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 
 
-		self buildParticipantsToolbar.
+	self buildParticipantsToolbar
 ]
 
 { #category : #initialization }
@@ -651,6 +671,14 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 							   yourself);
 					  yourself);
 			 yourself)
+]
+
+{ #category : #'as yet unclassified' }
+OCREDataAnalysisPresenter >> stonExport [
+
+	'data.ston' asFileReference writeStream
+		nextPutAll: (STON toString: experiment);
+		close
 ]
 
 { #category : #updating }
