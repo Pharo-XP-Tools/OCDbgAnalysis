@@ -73,6 +73,9 @@ OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 		self update ].
 
 	comment := self newText.
+	comment whenTextChangedDo: [ :newValue| selectedIdleTime ifNotNil:[:t|t comment: newValue] ].
+	
+	
 	decision := self newLabel.
 	decision label: 'Remove time: ', (selectedIdleTime ifNotNil:[:t|t  decision printString] ifNil:['']).
 	resetButton := self newButton label: 'Reset decision'; action: [selectedIdleTime decision: nil. self updateSelectedIdleTime: selectedIdleTime]; yourself.
@@ -87,6 +90,7 @@ OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 
 { #category : #initialization }
 OCREParticipantIdleTimesAnalyzer >> initializeWindow: w [
+
 	super initializeWindow: w.
 	w title: 'Idle time analyzer'
 ]

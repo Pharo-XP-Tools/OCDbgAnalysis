@@ -2,12 +2,21 @@ Class {
 	#name : #OCREParticipantTimeFixerPresenter,
 	#superclass : #SpPresenter,
 	#instVars : [
-		'participant',
 		'experimentResultsBrowser',
-		'table'
+		'table',
+		'data'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
+
+{ #category : #'as yet unclassified' }
+OCREParticipantTimeFixerPresenter >> calculateInterruptionTimesFor: anAssociation [
+
+	^ (anAssociation value
+		   inject: 0
+		   into: [ :sum :next | sum + next computedIdleTime asSeconds ])
+		  asSeconds
+]
 
 { #category : #'accessing - model' }
 OCREParticipantTimeFixerPresenter >> defaultLayout [
@@ -27,14 +36,15 @@ OCREParticipantTimeFixerPresenter >> experimentResultsBrowser: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: aPhexTaskResult [
+OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: association [
 
-	^ aPhexTaskResult declaredInterruptionTime
+	^ association key
 ]
 
 { #category : #'accessing - model' }
 OCREParticipantTimeFixerPresenter >> initializePresenters [
-	|tasks|
+
+	| colorBlock|
 	table := self newTable.
 	table contextMenu: self menu.
 	"table addColumn: ((SpStringTableColumn
@@ -48,26 +58,31 @@ OCREParticipantTimeFixerPresenter >> initializePresenters [
 			  evaluated: [ :item | item time ])
 			 sortFunction: nil;
 			 yourself)."
+			
+	colorBlock := [ :item| (item value anySatisfy: [ :i| i decision isNil ]) ifTrue:[Color red] ifFalse:[Color black]].		
 
 	table addColumn: ((SpStringTableColumn
 			  title: 'Estimated idle time'
 			  evaluated: [ :item |
-				  item calculateInterruptionTimes printString ])
+				  (self calculateInterruptionTimesFor: item) printString ])
 			 sortFunction: nil;
+			 displayColor: colorBlock;
 			 yourself).
 
 	table addColumn: ((SpStringTableColumn
 			  title: 'Declared idle time'
-			  evaluated: [ :item | (self findDeclaredIdleTimeFor: item) printString ])
+			  evaluated: [ :item |
+				  (self findDeclaredIdleTimeFor: item) asString ])
 			 sortFunction: nil;
+			displayColor: colorBlock;
 			 yourself).
 
 	table addColumn: ((SpStringTableColumn
 			  title: 'Retained idle time'
-			  evaluated: [ :item | item retainedIdleTime printString ])
-			 onAcceptEdition: [ :item :text |
-				 item retainedIdleTime ];
+			  evaluated: [ :item |
+				  (self retainedIdleTimeFor: item) printString ])
 			 sortFunction: nil;
+			displayColor: colorBlock;
 			 yourself).
 
 	"table addColumn: 
@@ -76,10 +91,8 @@ OCREParticipantTimeFixerPresenter >> initializePresenters [
 					  printString ])
 			 sortFunction: nil;
 			 yourself)."
-	tasks := OrderedCollection new.
-	participant controlTask ifNotNil:[:t| tasks add: t].
-	participant treatmentTask ifNotNil:[:t| tasks add: t].	
-		table items: tasks
+
+	table items: data
 ]
 
 { #category : #initialization }
@@ -88,7 +101,7 @@ OCREParticipantTimeFixerPresenter >> initializeWindow: aWindowPresenter [
 	super initializeWindow: aWindowPresenter.
 	aWindowPresenter
 		title: 'Time Fixer';
-		whenClosedDo: [ experimentResultsBrowser update ]
+		whenClosedDo: [ experimentResultsBrowser updateAllViews ]
 ]
 
 { #category : #'accessing - model' }
@@ -97,14 +110,26 @@ OCREParticipantTimeFixerPresenter >> menu [
 	^ self newMenu
 		  addItem: [ :anItem |
 			  anItem
-				  name: 'Show idle times...';
+				  name: 'Fix idle times...';
 				  iconName: #glamorousInspect;
-				  action: [ (OCREParticipantIdleTimesAnalyzer on: table selectedItem detectedInterruptions) open  ] ];
+				  action: [
+					  (OCREParticipantIdleTimesAnalyzer on: table selectedItem value)
+						  open ] ];
 		  yourself
 ]
 
-{ #category : #'accessing - model' }
-OCREParticipantTimeFixerPresenter >> setModelBeforeInitialization: aParticipantResult [
+{ #category : #'as yet unclassified' }
+OCREParticipantTimeFixerPresenter >> retainedIdleTimeFor: anAssociation [
 
-	participant := aParticipantResult
+	^ ((anAssociation value select: [ :item |
+		    item decision notNil and: [ item decision ] ])
+		   inject: 0
+		   into: [ :sum :next | sum + next computedIdleTime asSeconds ])
+		  asSeconds
+]
+
+{ #category : #'accessing - model' }
+OCREParticipantTimeFixerPresenter >> setModelBeforeInitialization: associations [
+
+	data := associations
 ]

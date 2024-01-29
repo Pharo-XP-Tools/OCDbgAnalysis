@@ -111,7 +111,7 @@ PhexTaskResult >> detectedInterruptions [
 
 { #category : #accessing }
 PhexTaskResult >> duration [
-	^time
+	^self time
 ]
 
 { #category : #accessing }
@@ -213,8 +213,8 @@ PhexTaskResult >> survey: anObject [
 
 { #category : #accessing }
 PhexTaskResult >> time [
-
-	^ time
+	self haltOnce.
+	^ time - self retainedIdleTime
 ]
 
 { #category : #accessing }

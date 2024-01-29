@@ -169,7 +169,6 @@ OCREDataAnalysisPresenter >> defaultLayout [
 
 { #category : #analysis }
 OCREDataAnalysisPresenter >> doAnalysis [
-
 	experiment collectTasksForAnalysis.
 	experiment collectDeveloperExperience
 ]
@@ -186,9 +185,17 @@ OCREDataAnalysisPresenter >> dontCountParticipant: aParticipantResult [
 ]
 
 { #category : #actions }
-OCREDataAnalysisPresenter >> fixTime: aParticipantResults [
+OCREDataAnalysisPresenter >> fixTimes [
 
-	(OCREParticipantTimeFixerPresenter on: aParticipantResults)
+	| interruptions |
+	interruptions := ((experiment participations collect: [ :p |
+		                   {
+			                   p controlTask.
+			                   p treatmentTask } flattened ]) flattened
+		                  reject: [ :t | t isNil ]) collect: [ :t |
+		                 t declaredInterruptionTime
+		                 -> t detectedInterruptions ].
+	(OCREParticipantTimeFixerPresenter on: interruptions)
 		experimentResultsBrowser: self;
 		open
 ]
