@@ -64,7 +64,7 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 		load"
 		
 	[Metacello new
-    baseline: 'Roassal3';
-    repository: 'github://ObjectProfile/Roassal3';
-    load: 'Full' ] on: MCMergeOrLoadWarning do: [:warning | warning load ]
+    baseline: 'Roassal';
+    repository: 'github://pharo-graphics/Roassal';
+    load: 'Full'.] on: MCMergeOrLoadWarning do: [:warning | warning load ]
 ]
