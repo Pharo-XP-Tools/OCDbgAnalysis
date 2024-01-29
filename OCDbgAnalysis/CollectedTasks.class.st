@@ -3,7 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		't1',
-		't2'
+		't2',
+		'tasks'
 	],
 	#category : #'OCDbgAnalysis-ExportModel'
 }
@@ -40,4 +41,16 @@ CollectedTasks >> t2 [
 CollectedTasks >> t2: anObject [
 
 	t2 := anObject
+]
+
+{ #category : #accessing }
+CollectedTasks >> tasks [
+
+	^ tasks
+]
+
+{ #category : #accessing }
+CollectedTasks >> tasks: anObject [
+
+	tasks := anObject
 ]
