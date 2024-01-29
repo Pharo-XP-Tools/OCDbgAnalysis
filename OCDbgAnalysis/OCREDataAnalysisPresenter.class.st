@@ -270,7 +270,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Control'
 			  evaluated: [ :item | item controlTaskInfos ])
-			 displayColor: [ :item | item controlTask hasUncheckedInterruptions ifTrue:[Color black] ifFalse:[Color red] ];
+			 displayColor: [ :item | item controlTask hasUncheckedInterruptions ifTrue:[Color red] ifFalse:[Color black] ];
 			 sortFunction: nil;
 			 yourself).
 			
@@ -281,8 +281,8 @@ OCREDataAnalysisPresenter >> initializePresenters [
 
 	participantsTable addColumn:
 		((SpImageTableColumn title: ' ' evaluated: [ :item |
-				  item isTreatmentTaskValid
-					  ifTrue: [ self iconNamed: #testGreen ]
+				item isTreatmentTaskValid
+								  ifTrue: [ self iconNamed: #testGreen ]
 					  ifFalse: [ self iconNamed: #testRed ] ])
 			 width: 16;
 			 sortFunction: nil;
@@ -290,7 +290,7 @@ OCREDataAnalysisPresenter >> initializePresenters [
 		participantsTable addColumn: ((SpStringTableColumn
 			  title: 'Treatment'
 			  evaluated: [ :item | item treatmentTaskInfos ])
-			displayColor: [ :item | (item treatmentTask notNil and: [item treatmentTask hasUncheckedInterruptions]) ifTrue:[Color black] ifFalse:[Color red] ];
+			displayColor: [ :item | (item treatmentTask notNil and: [item treatmentTask hasUncheckedInterruptions]) ifTrue:[Color red] ifFalse:[Color black] ];
 			 sortFunction: nil;
 			 yourself).
 
@@ -603,7 +603,8 @@ OCREDataAnalysisPresenter >> reload [
 	[
 	[
 	experiment := ExperimentResults on:
-		              (xpResults extractResultsWithProgress: dir) ] ensure: [
+		              (xpResults extractResultsWithProgress: dir).
+	ExperimentResults current: experiment ] ensure: [
 		self doAnalysisAndUpdate ] ] fork
 ]
 

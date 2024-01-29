@@ -28,7 +28,8 @@ ExperimentResults class >> cache: aPhexParticipation [
 ExperimentResults class >> cleanCache [
 
 	<script>
-	dataCache := nil
+	dataCache := nil.
+	current := nil
 ]
 
 { #category : #'instance creation' }
@@ -108,7 +109,7 @@ ExperimentResults >> collectTasksForAnalysis [
 		               select: [ :t | t notNil ]) groupedBy: [ :t | t title ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'data extraction' }
 ExperimentResults >> extractContactInformation [
 
 	| infos dict |

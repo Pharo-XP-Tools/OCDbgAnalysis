@@ -12,11 +12,10 @@ Class {
 		'correctness',
 		'declaredInterruptionTime',
 		'answer',
-		'correctnessTest',
 		'eventsHistory',
 		'detectedInterruptions',
 		'type',
-		'isValid'
+		'validity'
 	],
 	#category : #'OCDbgAnalysis-NewModel'
 }
@@ -48,26 +47,33 @@ PhexTaskResult >> calculateInterruptionTimes [
 
 ]
 
-{ #category : #time }
-PhexTaskResult >> computeTime [
-	self halt
-]
-
 { #category : #accessing }
 PhexTaskResult >> correctness [
 
-	^ correctness
+	^ correctness isCorrect
 ]
 
 { #category : #accessing }
 PhexTaskResult >> correctness: anObject [
 
-	correctness := anObject
+	correctness := correctness isCorrect: true
+]
+
+{ #category : #accessing }
+PhexTaskResult >> correctnessComment [
+
+	^correctness comment
+]
+
+{ #category : #accessing }
+PhexTaskResult >> correctnessComment: aString [
+
+	correctness comment: aString
 ]
 
 { #category : #accessing }
 PhexTaskResult >> correctnessTest [
-	^ correctnessTest
+	^ correctness correctnessTest
 ]
 
 { #category : #time }
@@ -126,6 +132,11 @@ PhexTaskResult >> events: anObject [
 	events := anObject
 ]
 
+{ #category : #accessing }
+PhexTaskResult >> eventsHistory [
+	^ eventsHistory
+]
+
 { #category : #time }
 PhexTaskResult >> findDeclaredInterruptionTime [
 
@@ -139,39 +150,38 @@ PhexTaskResult >> findDeclaredInterruptionTime [
 	declaredInterruptionTime := declaration answer
 ]
 
+{ #category : #testing }
+PhexTaskResult >> forceValidity: aBoolean [
+
+	validity isValid: aBoolean
+]
+
 { #category : #'instance creation' }
 PhexTaskResult >> fromDSEvents: evts [
 
 	title := evts first task title.
 	events := evts.
 	eventsHistory := DSRecordHistory on: events.
-	correctness := nil.
+	correctness := PhexTaskCorrectness onTaskResult: self.
 	answer := evts last task answer contents.
-	time := evts last task endTime - evts last task startTime.
-	correctnessTest := (evts
-		                    detect: [ :evt |
-		                    evt class = DSTaskSuccessRecord ]
-		                    ifNone: [ nil ])
-		                   ifNil: [ false ]
-		                   ifNotNil: [ :e | e successBoolean ].
-
+	time := evts last task endTime - evts last task startTime.	
 	self detectTimeInterruptions
 ]
 
 { #category : #'instance creation' }
-PhexTaskResult >> fromTaskStats: aTaskStats [ 
-	
+PhexTaskResult >> fromTaskStats: aTaskStats [
+
 	title := aTaskStats taskInfo title.
-	events := aTaskStats events.	
+	events := aTaskStats events.
 	eventsHistory := DSRecordHistory on: events.
-	correctness := aTaskStats correctness.
+	correctness := (PhexTaskCorrectness onTaskResult: self)
+		               isCorrect: aTaskStats correctness;
+		               correctnessTest: aTaskStats testSuccess;
+		               yourself.
 	answer := aTaskStats answer contents.
 	time := aTaskStats rawDuration.
-	correctnessTest := aTaskStats testSuccess.
-	
-	self detectTimeInterruptions.
-	
-	
+
+	self detectTimeInterruptions
 ]
 
 { #category : #time }
@@ -180,13 +190,16 @@ PhexTaskResult >> hasUncheckedInterruptions [
 	^ detectedInterruptions anySatisfy: [ :d | d decision isNil ]
 ]
 
+{ #category : #initialization }
+PhexTaskResult >> initialize [
+	super initialize.
+	validity := PhexTaskValidity onTaskResult: self
+]
+
 { #category : #testing }
 PhexTaskResult >> isValid [
 
-	^ isValid ifNil: [
-		  isValid := type = #control or: [
-			             eventsHistory breakpointEvents anySatisfy: [ :bp |
-				             bp objectCentric ] ] ]
+	^ validity isValid
 ]
 
 { #category : #accessing }
@@ -213,7 +226,6 @@ PhexTaskResult >> survey: anObject [
 
 { #category : #accessing }
 PhexTaskResult >> time [
-	self haltOnce.
 	^ time - self retainedIdleTime
 ]
 
@@ -233,4 +245,21 @@ PhexTaskResult >> title [
 PhexTaskResult >> title: anObject [
 
 	title := anObject
+]
+
+{ #category : #accessing }
+PhexTaskResult >> type [
+	^ type
+]
+
+{ #category : #testing }
+PhexTaskResult >> validityComment [
+
+	^ validity comment
+]
+
+{ #category : #testing }
+PhexTaskResult >> validityComment: aString [
+
+	 validity comment: aString
 ]
