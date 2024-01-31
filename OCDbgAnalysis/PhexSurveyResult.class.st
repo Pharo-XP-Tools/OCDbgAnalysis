@@ -18,6 +18,12 @@ PhexSurveyResult class >> from: aDSSurveyRecord [
 	^self new from: aDSSurveyRecord
 ]
 
+{ #category : #'instance creation' }
+PhexSurveyResult class >> title: aString answer: answers dateTime: aDateTime [
+
+	^ self new title: aString answer: answers dateTime: aDateTime
+]
+
 { #category : #accessing }
 PhexSurveyResult >> answers [
 	^ answers
@@ -50,4 +56,11 @@ PhexSurveyResult >> printOn: aStream [
 { #category : #accessing }
 PhexSurveyResult >> title [
 	^ title
+]
+
+{ #category : #'instance creation' }
+PhexSurveyResult >> title: aString answer: aws dateTime: aDateTime [ 
+	title := aString.
+	answers := aws.
+	dateTime := aDateTime 
 ]

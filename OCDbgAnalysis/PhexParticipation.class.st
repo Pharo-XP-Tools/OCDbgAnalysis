@@ -133,6 +133,11 @@ PhexParticipation >> eventsHistory [
 	^ DSRecordHistory on: events
 ]
 
+{ #category : #accessing }
+PhexParticipation >> experimentFeedback [
+	^ experimentFeedback
+]
+
 { #category : #testing }
 PhexParticipation >> hasValidDemographicSurvey [
 
@@ -163,10 +168,15 @@ PhexParticipation >> shortId [
 		String streamContents: [ :str|
 			str << (id readStream upTo: $-; upTo: $-; upTo: $-; upTo: $-; upTo: $-).
 			str << '-'.
-			str << self dateStarted asDate yyyymmdd.
+			str << self dateStarted asDate ddmmyyyy.
 			str << '-'.			
 			self dateStarted asTime print24: true on: str.
 			 ]]
+]
+
+{ #category : #accessing }
+PhexParticipation >> shortId: anUndefinedObject [ 
+	shortId := anUndefinedObject
 ]
 
 { #category : #accessing }

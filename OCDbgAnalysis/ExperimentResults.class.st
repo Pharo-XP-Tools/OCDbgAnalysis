@@ -130,6 +130,81 @@ ExperimentResults >> collectTasksForAnalysis [
 ]
 
 { #category : #'data extraction' }
+ExperimentResults >> convertSurveyAnswersToDictionary: aPhexSurveyResult [
+
+	| dict |
+	dict := Dictionary new.
+	aPhexSurveyResult answers do: [ :a |
+		dict at: a question put: a answer ].
+	^ dict
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> convertSurveysToCSV [
+
+	| csvs experimentFeedback demographicSurvey controlTasks treatmentTasks ammoliteControlSurveys ammoliteTreatmentSurveys lightsOutControlSurveys lightsOutTreatmentSurveys|
+	csvs := Dictionary new.
+	experimentFeedback := (self participations collect: [ :p |
+		                       p experimentFeedback -> p id ]) reject: [
+		                      :e | e key isNil ].
+
+	demographicSurvey := (self participations collect: [ :p |
+		                      p demographicSurvey -> p id ]) reject: [ :e |
+		                     e key isNil ].
+	
+	controlTasks := (self participations collect: [ :p |
+		                      p controlTask -> p id ]) reject: [ :e |
+		                     e key isNil ].	
+	ammoliteControlSurveys := ((controlTasks select:[:t| t key title = 'Ammolite' ]) collect:[:t| t key survey -> t value]) reject:[:assoc| assoc key isNil].
+	lightsOutControlSurveys := ((controlTasks select:[:t| t key title = 'Lights Out' ]) collect:[:t| t key survey -> t value]) reject:[:assoc| assoc key isNil].
+	
+	
+	treatmentTasks := (self participations collect: [ :p |
+		                      p treatmentTask -> p id ]) reject: [ :e |
+		                     e key isNil ].
+	ammoliteTreatmentSurveys := ((treatmentTasks select:[:t| t key title = 'Ammolite' ]) collect:[:t| t key survey -> t value]) reject:[:assoc| assoc key isNil]..
+	lightsOutTreatmentSurveys := ((treatmentTasks select:[:t| t key title = 'Lights Out' ]) collect:[:t| t key survey -> t value]) reject:[:assoc| assoc key isNil]..
+	
+	csvs at: 'ammolite-control.csv' put: (self convertSurveysToCSV: ammoliteControlSurveys).
+	csvs at: 'lightsout-control.csv' put: (self convertSurveysToCSV: lightsOutControlSurveys).
+	csvs at: 'ammolite-treatment.csv' put: (self convertSurveysToCSV: ammoliteTreatmentSurveys).
+	csvs at: 'lightsout-treatment.csv' put: (self convertSurveysToCSV: lightsOutTreatmentSurveys).	
+	csvs at: 'experiment-feedback.csv' put: (self convertSurveysToCSV: experimentFeedback).
+	csvs at: 'demographic-information.csv' put: (self convertSurveysToCSV: experimentFeedback).
+	
+	csvs keysAndValuesDo: [ :filename :data|
+		filename asFileReference writeStream nextPutAll: data; close ]
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> convertSurveysToCSV: surveys [
+
+	| dicts questions csv |
+	dicts := surveys collect: [ :s |
+		         (self convertSurveyAnswersToDictionary: s key) -> s value ].
+	questions := dicts first key keys.
+	csv := String streamContents: [ :str |
+		       str << 'participant'.
+		       str << ';'.
+		       questions do: [ :q |
+			       str << q.
+			       q = questions last ifFalse: [ str << ';' ] ].
+		       str cr.
+
+		       dicts do: [ :d |
+			       | uuid dict |
+			       uuid := d value.
+			       dict := d key.
+			       str << uuid.
+			       str << ';'.
+			       questions do: [ :q |
+				       str << (dict at: q).
+				       q = questions last ifFalse: [ str << ';' ] ].
+			       str cr ] ].
+	^ csv
+]
+
+{ #category : #'data extraction' }
 ExperimentResults >> extractContactInformation [
 
 	| infos dict |
