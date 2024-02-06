@@ -52,7 +52,7 @@ OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 	idleTimesList displayColor: [ :item |
 		item decision ifNil:
 			[ Color red ]
-			ifNotNil: [ Color blue ] ].
+			ifNotNil: [ item decision ifTrue:[ Color blue] ifFalse:[Color black] ] ].
 	idleTimesList whenSelectedDo: [ :s | self updateSelectedIdleTime: s ].
 	idleTimesList items: idleTimes.
 

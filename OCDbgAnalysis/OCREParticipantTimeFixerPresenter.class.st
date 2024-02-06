@@ -9,7 +9,49 @@ Class {
 	#category : #'OCDbgAnalysis-Presenters'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
+OCREParticipantTimeFixerPresenter >> autoFixCase1: collectionOfIdleTimes [
+
+	| comment |
+	comment := 'Case 1: computed and declared interruption are consistent.
+Decision taken automatically for all interruption of that task, based on case 1 rules.
+Decision: interruption.'.
+	collectionOfIdleTimes do: [ :idleTime |
+		idleTime decision: true.
+		idleTime comment: comment ]
+]
+
+{ #category : #actions }
+OCREParticipantTimeFixerPresenter >> autoFixCase2: collectionOfIdleTimes [
+
+	| comment |
+	self halt: 'not implemented yet'.
+	comment := 'Case 1: computed and declared interruption are consistent.
+Decision taken automatically for all interruption of that task, based on case 1 rules.
+Decision: interruption.'.
+	collectionOfIdleTimes do: [ :idleTime |
+		idleTime decision: true.
+		idleTime comment: comment ]
+]
+
+{ #category : #actions }
+OCREParticipantTimeFixerPresenter >> autoFixCase6: collectionOfIdleTimes [
+
+	| forced comment |
+	forced := IdleTimeControl new.	
+	comment := 'Case 6: cannot decide interruption from computed interruption while declared interruption is not 0.
+Decision taken automatically for all interruption of that task, based on case 6 rules.
+Decision: interruption.'.
+	forced comment: comment.
+	forced computedIdleTime: ((self application newSelect items: {60. 300. 600. }; title: 'Force idle time (in seconds)'; openModal) ifNil:[^self]) asSeconds.
+	forced events: OrderedCollection new.
+	forced timeGapStartEvent: collectionOfIdleTimes first events first.
+	forced timeGapStopEvent: collectionOfIdleTimes first events last.
+	forced decision: true.
+	collectionOfIdleTimes add: forced
+]
+
+{ #category : #'presenter - data' }
 OCREParticipantTimeFixerPresenter >> calculateInterruptionTimesFor: anAssociation [
 
 	^ (anAssociation value
@@ -18,7 +60,7 @@ OCREParticipantTimeFixerPresenter >> calculateInterruptionTimesFor: anAssociatio
 		  asSeconds
 ]
 
-{ #category : #'accessing - model' }
+{ #category : #spec }
 OCREParticipantTimeFixerPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -35,13 +77,13 @@ OCREParticipantTimeFixerPresenter >> experimentResultsBrowser: anObject [
 	experimentResultsBrowser := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'presenter - data' }
 OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: association [
 
 	^ association key
 ]
 
-{ #category : #'accessing - model' }
+{ #category : #initialization }
 OCREParticipantTimeFixerPresenter >> initializePresenters [
 
 	| colorBlock|
@@ -104,21 +146,36 @@ OCREParticipantTimeFixerPresenter >> initializeWindow: aWindowPresenter [
 		whenClosedDo: [ experimentResultsBrowser updateAllViews ]
 ]
 
-{ #category : #'accessing - model' }
+{ #category : #spec }
 OCREParticipantTimeFixerPresenter >> menu [
 
 	^ self newMenu
 		  addItem: [ :anItem |
 			  anItem
 				  name: 'Fix idle times...';
-				  iconName: #glamorousInspect;
+				  iconName: #testRed;
 				  action: [
 					  (OCREParticipantIdleTimesAnalyzer on: table selectedItem value)
 						  open ] ];
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'Auto-Fix: case 1 (consistent, based on calculation)';
+				  iconName: #testGreen;
+				  action: [ self autoFixCase1: table selectedItem value ] ];
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'Auto-Fix: case 2 (based on declaration)';
+				  iconName: #testYellow;
+				  action: [ self autoFixCase2: table selectedItem value ] ];
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'Auto-Fix: case 6 (based on declaration)';
+				  iconName: #confirm;
+				  action: [ self autoFixCase6: table selectedItem value ] ];
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'presenter - data' }
 OCREParticipantTimeFixerPresenter >> retainedIdleTimeFor: anAssociation [
 
 	^ ((anAssociation value select: [ :item |
