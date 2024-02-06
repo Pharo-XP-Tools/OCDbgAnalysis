@@ -54,9 +54,9 @@ PhexTaskResult >> correctness [
 ]
 
 { #category : #accessing }
-PhexTaskResult >> correctness: anObject [
+PhexTaskResult >> correctness: bool [
 
-	correctness := correctness isCorrect: true
+	correctness := correctness isCorrect: bool
 ]
 
 { #category : #accessing }
