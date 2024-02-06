@@ -204,6 +204,131 @@ ExperimentResults >> convertSurveysToCSV: surveys [
 	^ csv
 ]
 
+{ #category : #accessing }
+ExperimentResults >> demographicSurveyCSVFormat [
+
+	^ {
+		  ('What is your highest achieved level of education?' -> 12).
+		  ('What is you current job position?' -> 13).
+		  ('How many years of programming experience do you have?' -> 14).
+		  ('How many years of programming experience do you have with Pharo?'
+		   -> 15).
+		  ('How often do you write code?' -> 16).
+		  ('How often do you write code in Pharo?' -> 17).
+		  ('How much do you agree with the sentence: "I''m familiar with debugging"'
+		   -> 18).
+		  ('How much do you agree with the sentence: "I''m familiar with Object-Centric Debugging"'
+		   -> 19) }
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> demographicSurveySize [
+	^8
+]
+
+{ #category : #accessing }
+ExperimentResults >> experimentFeedbackCSVFormat [
+
+	^ {
+		  ('"The Experiment was easy." How much do you agree?' -> 20).
+		  ('"The Experiment was long." How much do you agree?' -> 21).
+		  ('How much do you agree with: "OCDbg would enable me to accomplish debugging tasks more quickly"'
+		   -> 22).
+		  ('How much do you agree with: "OCDbg would improve my debugging performance"'
+		   -> 23).
+		  ('How much do you agree with: "OCDbg would increase my productivity"'
+		   -> 24).
+		  ('How much do you agree with: "OCDbg would increase my debugging effectiveness"'
+		   -> 25).
+		  ('How much do you agree with: "OCDbg would make it easier to debug the code"'
+		   -> 26).
+		  ('How much do you agree with: "I would find OCDbg useful"' -> 27).
+		  ('How much do you agree with: "Learning to operate with OCDbg would be easy for me"'
+		   -> 28).
+		  ('How much do you agree with: "I would find it easy to get OCDbg to do what I want it to do, to track objects manipulations and locate the bug"'
+		   -> 29).
+		  ('How much do you agree with: "My interaction with OCDbg would be clear and understandable"'
+		   -> 30).
+		  ('How much do you agree with: "It would be easy for me to become skillful at using OCDbg"'
+		   -> 31).
+		  ('How much do you agree with: "It is easy to remember how to debug a code using OCDbg"'
+		   -> 32).
+		  ('How much do you agree with: "I would find OCDbg easy to use"'
+		   -> 33).
+		  ('How much do you agree with: "Assuming OCDbg would be available, I predict that I will use it in the future"'
+		   -> 34).
+		  ('How much do you agree with: " I would prefer OCDbg to the classic debugging system"'
+		   -> 35) }
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> experimentFeedbackSurveySize [
+	^16
+]
+
+{ #category : #'data extraction' }
+ExperimentResults >> exportParticipantDataToCSV [
+
+	| format csvs out taskExport surveyExport fws |
+	format := self participantExportFormat.
+
+	csvs := Dictionary new.
+	out := WriteStream on: String new.
+	taskExport := [ :col :task |
+	              col add: task title.
+	              col add: task correctness asString.
+					  col add: task isValid. 				
+					  col add: task time.
+	              col add: (task answer reject: [ :c | c = $; ]) ].
+
+	surveyExport := [ :col :survey :csvFormat |
+	                | dict |
+	                dict := self convertSurveyAnswersToDictionary: survey.
+	                (csvFormat collect: #key) do: [ :f |
+		                col add: (dict at: f) ] ].
+
+	self participations do: [ :p |
+		| col |
+		col := OrderedCollection new.
+		col add: p id.
+		p controlTask
+			ifNil: [
+				5 timesRepeat: [ col add: ' ' ].
+				self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
+			ifNotNil: [ :t |
+				taskExport value: col value: t.
+				p controlTask survey
+					ifNil: [ self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
+					ifNotNil: [ :s | surveyExport value: col value: s value: self postTaskCSVFormat] ].
+
+		p treatmentTask
+			ifNil: [
+				5 timesRepeat: [ col add: ' ' ].
+				self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
+			ifNotNil: [ :t |
+				taskExport value: col value: t.
+				p treatmentTask survey
+					ifNil: [ self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
+					ifNotNil: [ :s | surveyExport value: col value: s value: self postTaskCSVFormat ] ].
+
+		p experimentFeedback
+			ifNil: [
+			self experimentFeedbackSurveySize timesRepeat: [ col add: ' ' ] ]
+			ifNotNil: [ :s | surveyExport value: col value: s value: self experimentFeedbackCSVFormat].
+
+		p demographicSurvey
+			ifNil: [ self demographicSurveySize timesRepeat: [ col add: ' ' ] ]
+			ifNotNil: [ :s | surveyExport value: col value: s value: self demographicSurveyCSVFormat].
+
+		csvs at: p id put: col ].
+
+	fws := 'data.csv' asFileReference writeStream.
+	(NeoCSVWriter on: fws)
+		nextPut: format;
+		nextPutAll: csvs values;
+		close
+]
+
 { #category : #'data extraction' }
 ExperimentResults >> extractContactInformation [
 
@@ -229,6 +354,30 @@ ExperimentResults >> initialize [
 	participations := OrderedCollection new
 ]
 
+{ #category : #'as yet unclassified' }
+ExperimentResults >> participantExportFormat [
+	|format|
+	format := OrderedCollection new.
+	format add: 'id'.
+	format add: 'control task name'.
+	format add: 'control task correctness'.
+	format add: 'control task validity'.
+	format add: 'control task time in seconds'.	
+	format add: 'control task answer'.	
+	format addAll: (self postTaskCSVFormat collect: #value).
+	
+	format add: 'treatment task name'.
+	format add: 'treatment task correctness'.
+	format add: 'treatment task validity'.
+	format add: 'treatment task time in seconds'.	
+	format add: 'treatment task answer'.	
+	format addAll: (self postTaskCSVFormat collect: #value).
+	
+	format addAll: (self experimentFeedbackCSVFormat collect: #value).
+	format addAll: (self demographicSurveyCSVFormat collect: #value).
+	^format
+]
+
 { #category : #accessing }
 ExperimentResults >> participations [
 
@@ -239,4 +388,32 @@ ExperimentResults >> participations [
 ExperimentResults >> participations: anObject [
 
 	participations := anObject
+]
+
+{ #category : #accessing }
+ExperimentResults >> postTaskCSVFormat [
+
+	^ {
+		  ('"The Task was easy." How much do you agree?' -> 1).
+		  ('"The Task was long." How much do you agree?' -> 2).
+		  ('How long have you been interrupted?' -> 3).
+		  ('Did you find the bug?' -> 4).
+		  ('If you found the bug, please describe it.' -> 5).
+		  ('If you found the bug, how much the debugger helped discover the bug?'
+		   -> 6).
+		  ('If you found the bug, how much do you agree with: "The debugging method is enjoyable"'
+		   -> 7).
+		  ('If you found the bug, how much do you agree with: "The debugging method is efficient"'
+		   -> 8).
+		  ('If you found the bug, how much do you agree with: "The debugging method is intuitive"'
+		   -> 9).
+		  ('If you found the bug, how much do you agree with: "The debugging method is easy to use"'
+		   -> 10).
+		  ('If you found the bug, how much do you agree with: "The debugging method is asy to learn"'
+		   -> 11) }
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> postTaskSurveySize [
+	^11
 ]
