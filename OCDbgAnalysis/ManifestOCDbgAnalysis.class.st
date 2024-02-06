@@ -8,6 +8,13 @@ Class {
 }
 
 { #category : #'code-critics' }
+ManifestOCDbgAnalysis class >> ruleCollectionProtocolRuleV1FalsePositive [
+
+	<ignoreForCoverage>
+	^ #(#(#(#RGPackageDefinition #(#OCDbgAnalysis)) #'2024-02-01T21:20:08.655981+01:00') )
+]
+
+{ #category : #'code-critics' }
 ManifestOCDbgAnalysis class >> ruleLongMethodsRuleV1FalsePositive [
 
 	<ignoreForCoverage>
