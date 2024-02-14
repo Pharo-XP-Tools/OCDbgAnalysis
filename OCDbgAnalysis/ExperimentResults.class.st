@@ -278,7 +278,7 @@ ExperimentResults >> exportParticipantDataToCSV [
 	              col add: task title.
 	              col add: task correctness asString.
 					  col add: task isValid. 				
-					  col add: task time.
+					  col add: task time asSeconds.
 	              col add: (task answer reject: [ :c | c = $; ]) ].
 
 	surveyExport := [ :col :survey :csvFormat |
