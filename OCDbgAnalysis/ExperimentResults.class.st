@@ -120,7 +120,7 @@ ExperimentResults >> collectDeveloperExperience [
 		xp ifNotNil: [ participantsExperience add: xp answer ] ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : #'data analysis' }
 ExperimentResults >> collectTasksForAnalysis [
 
 	controls := ((participations collect: [ :p | p control ]) select: [
@@ -129,7 +129,7 @@ ExperimentResults >> collectTasksForAnalysis [
 		               select: [ :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : #'data export' }
 ExperimentResults >> convertSurveyAnswersToDictionary: aPhexSurveyResult [
 
 	| dict |
@@ -139,7 +139,7 @@ ExperimentResults >> convertSurveyAnswersToDictionary: aPhexSurveyResult [
 	^ dict
 ]
 
-{ #category : #'data extraction' }
+{ #category : #'data export' }
 ExperimentResults >> convertSurveysToCSV [
 
 	| csvs experimentFeedback demographicSurvey controlTasks treatmentTasks ammoliteControlSurveys ammoliteTreatmentSurveys lightsOutControlSurveys lightsOutTreatmentSurveys|
@@ -176,7 +176,7 @@ ExperimentResults >> convertSurveysToCSV [
 		filename asFileReference writeStream nextPutAll: data; close ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : #'data export' }
 ExperimentResults >> convertSurveysToCSV: surveys [
 
 	| dicts questions csv |
@@ -204,7 +204,7 @@ ExperimentResults >> convertSurveysToCSV: surveys [
 	^ csv
 ]
 
-{ #category : #accessing }
+{ #category : #'data export' }
 ExperimentResults >> demographicSurveyCSVFormat [
 
 	^ {
@@ -221,12 +221,12 @@ ExperimentResults >> demographicSurveyCSVFormat [
 		   -> 19) }
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'data export' }
 ExperimentResults >> demographicSurveySize [
 	^8
 ]
 
-{ #category : #accessing }
+{ #category : #'data export' }
 ExperimentResults >> experimentFeedbackCSVFormat [
 
 	^ {
@@ -261,12 +261,12 @@ ExperimentResults >> experimentFeedbackCSVFormat [
 		   -> 35) }
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'data export' }
 ExperimentResults >> experimentFeedbackSurveySize [
 	^16
 ]
 
-{ #category : #'data extraction' }
+{ #category : #'data export' }
 ExperimentResults >> exportParticipantDataToCSV [
 
 	| format csvs out taskExport surveyExport fws |
@@ -354,7 +354,7 @@ ExperimentResults >> initialize [
 	participations := OrderedCollection new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'data export' }
 ExperimentResults >> participantExportFormat [
 	|format|
 	format := OrderedCollection new.
@@ -363,7 +363,8 @@ ExperimentResults >> participantExportFormat [
 	format add: 'control task correctness'.
 	format add: 'control task validity'.
 	format add: 'control task time in seconds'.	
-	format add: 'control task answer'.	
+	format add: 'control task answer'.
+	format add: 'control task actions'.	
 	format addAll: (self postTaskCSVFormat collect: #value).
 	
 	format add: 'treatment task name'.
@@ -371,6 +372,7 @@ ExperimentResults >> participantExportFormat [
 	format add: 'treatment task validity'.
 	format add: 'treatment task time in seconds'.	
 	format add: 'treatment task answer'.	
+	format add: 'treatment task actions'.	
 	format addAll: (self postTaskCSVFormat collect: #value).
 	
 	format addAll: (self experimentFeedbackCSVFormat collect: #value).
@@ -390,7 +392,7 @@ ExperimentResults >> participations: anObject [
 	participations := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #'data export' }
 ExperimentResults >> postTaskCSVFormat [
 
 	^ {
@@ -413,7 +415,7 @@ ExperimentResults >> postTaskCSVFormat [
 		   -> 11) }
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'data export' }
 ExperimentResults >> postTaskSurveySize [
 	^11
 ]
