@@ -124,9 +124,9 @@ ExperimentResults >> collectDeveloperExperience [
 ExperimentResults >> collectTasksForAnalysis [
 
 	controls := ((participations collect: [ :p | p control ]) select: [
-		             :t | t notNil ]) groupedBy: [ :t | t title ].
+		             :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
 	treatments := ((participations collect: [ :p | p treatment ])
-		               select: [ :t | t notNil ]) groupedBy: [ :t | t title ]
+		               select: [ :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ]
 ]
 
 { #category : #'data extraction' }
