@@ -279,7 +279,8 @@ ExperimentResults >> exportParticipantDataToCSV [
 	              col add: task correctness asString.
 					  col add: task isValid. 				
 					  col add: task time asSeconds.
-	              col add: (task answer reject: [ :c | c = $; ]) ].
+	              col add: (task answer reject: [ :c | c = $; ]).
+				 	  col add: task countDebugActions  ].
 
 	surveyExport := [ :col :survey :csvFormat |
 	                | dict |
@@ -293,7 +294,7 @@ ExperimentResults >> exportParticipantDataToCSV [
 		col add: p id.
 		p controlTask
 			ifNil: [
-				5 timesRepeat: [ col add: ' ' ].
+				6 timesRepeat: [ col add: ' ' ].
 				self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
 			ifNotNil: [ :t |
 				taskExport value: col value: t.
@@ -303,7 +304,7 @@ ExperimentResults >> exportParticipantDataToCSV [
 
 		p treatmentTask
 			ifNil: [
-				5 timesRepeat: [ col add: ' ' ].
+				6 timesRepeat: [ col add: ' ' ].
 				self postTaskSurveySize timesRepeat: [ col add: ' ' ] ]
 			ifNotNil: [ :t |
 				taskExport value: col value: t.
