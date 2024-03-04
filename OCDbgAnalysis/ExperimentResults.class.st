@@ -122,7 +122,7 @@ ExperimentResults >> collectDeveloperExperience [
 
 { #category : #'data analysis' }
 ExperimentResults >> collectTasksForAnalysis [
-
+	
 	controls := ((participations collect: [ :p | p control ]) select: [
 		             :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
 	treatments := ((participations collect: [ :p | p treatment ])
@@ -270,7 +270,7 @@ ExperimentResults >> experimentFeedbackSurveySize [
 ExperimentResults >> exportParticipantDataToCSV [
 
 	| format csvs out taskExport surveyExport fws |
-	format := self participantExportFormat.
+	format := self hardCodedParticipantExportFormat.
 
 	csvs := Dictionary new.
 	out := WriteStream on: String new.
@@ -322,7 +322,7 @@ ExperimentResults >> exportParticipantDataToCSV [
 			ifNotNil: [ :s | surveyExport value: col value: s value: self demographicSurveyCSVFormat].
 
 		csvs at: p id put: col ].
-
+	
 	fws := 'data.csv' asFileReference writeStream.
 	(NeoCSVWriter on: fws)
 		nextPut: format;
@@ -348,6 +348,11 @@ ExperimentResults >> extractContactInformation [
 				a answer: nil ] ] ].
 
 	dict inspect
+]
+
+{ #category : #'data export' }
+ExperimentResults >> hardCodedParticipantExportFormat [
+	^#('id' 'control task name' 'control task correctness' 'control task validity' 'control task time in seconds' 'control task answer' 'control task actions' 'ct-task-easiness' 'ct-task-length' 'ct-task-interruption' 'ct-bug-found' 'ct-bug-description' 'ct-debugger-help' 'ct-debugger-enjoy' 'ct-debugger-efficient' 'ct-debugger-intuitive' 'ct-debugger-easiness' 'ct-debugger-learn' 'treatment task name' 'treatment task correctness' 'treatment task validity' 'treatment task time in seconds' 'treatment task answer' 'treatment task actions' 'tt-task-easiness' 'tt-task-length' 'tt-task-interruption' 'tt-bug-found' 'tt-bug-description' 'tt-debugger-help' 'tt-debugger-enjoy' 'tt-debugger-efficient' 'tt-debugger-intuitive' 'tt-debugger-easiness' 'tt-debugger-learn' 'experiment-easiness' 'experiment-length' 'ocd-help' 'ocd-performance' 'ocd-productivity' 'ocd-effectiveness' 'ocd-easiness' 'ocd-usefulness' 'learn-ocd' 'ocd-tasks-help' 'ocd-interaction' 'ocd-skills' 'ocd-debugging' 'ocd-use' 'ocd-future' 'ocd-over-classical' 'education' 'job-position' 'program-exp' 'pharo-exp' 'code-frequency' 'pharo-frequency' 'debugger-familiarity' 'debugger-ocd-familarity' )
 ]
 
 { #category : #initialization }
