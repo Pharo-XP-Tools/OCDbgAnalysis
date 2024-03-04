@@ -40,22 +40,19 @@ OCREExperienceScatterPlots >> initializePresenters [
 		label
 		 ].
 
+
 	
-	ammoliteCData  := 	(participants collect: [ :p| 
-	p participant participantDeclaredExperience -> p tasks first
-	 ]) select:[:a| a key >=0 and:[a value taskInfo title = 'Ammolite' ] ].
+	ammoliteCData  := 	(participants collect: [ :p| p pharoExperience -> p controlTask]) 
+		select:[:a| a key > 0 and:[a value title = 'Ammolite' ] ].
 
-	ammoliteTData  := 	(participants collect: [ :p| 
-	p participant participantDeclaredExperience -> p tasks last
-	 ]) select:[:a| a key >=0 and:[a value taskInfo title = 'Ammolite' ] ].
+	ammoliteTData  := 	(participants collect: [ :p| p pharoExperience -> p treatmentTask]) 
+		select:[:a| a key > 0 and:[a value title = 'Ammolite' ] ].
 
-	loCData  := 	(participants collect: [ :p| 
-	p participant participantDeclaredExperience -> p tasks first
-	 ]) select:[:a| a key >=0 and:[a value taskInfo title ~= 'Ammolite' ] ].
+	loCData  := 	(participants collect: [ :p| p pharoExperience -> p controlTask]) 
+		select:[:a| a key > 0 and:[a value title ~= 'Ammolite' ] ].
 
-	loTData  := 	(participants collect: [ :p| 
-	p participant participantDeclaredExperience -> p tasks last
-	 ]) select:[:a| a key >=0 and:[a value taskInfo title ~= 'Ammolite' ] ].
+	loTData  := 	(participants collect: [ :p| p pharoExperience -> p treatmentTask]) 
+		select:[:a| a key > 0 and:[a value title ~= 'Ammolite' ] ].
 	
 	loC  := OCRERSScatterPlot new x: (loCData collect: #key) y: (loCData collect: [:t| t value duration asSeconds]).
 	loC xlabel: 'Experience'.

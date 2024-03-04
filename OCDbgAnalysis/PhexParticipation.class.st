@@ -162,6 +162,34 @@ PhexParticipation >> isTreatmentTaskValid [
 	^ treatmentTask notNil and: [ treatmentTask isValid ]
 ]
 
+{ #category : #'as yet unclassified' }
+PhexParticipation >> pharoExperience [
+
+	| xp |
+	demographicSurvey ifNil: [
+		'nil demographic survey' crTrace.
+		^ 0 ].
+	xp := (demographicSurvey answers
+		       detect: [ :a |
+			       a question
+			       =
+			       'How many years of programming experience do you have with Pharo?' ]
+		       ifNone: [ nil ]) ifNil: [ 0 ] ifNotNil: [ :a | a answer ].
+
+	xp ifNotNil: [
+		^ [
+		  | val |
+		  xp = '< 1' ifTrue: [ val := 1 ].
+		  xp = '1-2 years' ifTrue: [ val := 2 ].
+		  xp = '3-5 years' ifTrue: [ val := 3 ].
+		  xp = '6-10 years' ifTrue: [ val := 4 ].
+		  xp = 'More than 10' ifTrue: [ val := 5 ].
+		  val ifNil: [ -1 ] ]
+			  on: Error
+			  do: [ -1 ] ].
+	^ -1
+]
+
 { #category : #accessing }
 PhexParticipation >> shortId [
 	^shortId ifNil:[shortId := 
