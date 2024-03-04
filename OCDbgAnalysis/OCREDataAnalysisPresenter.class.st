@@ -136,9 +136,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 						    add: (SpBoxLayout newTopToBottom
 								     add: (SpBoxLayout newLeftToRight
 										      add: 'Participants' expand: false fill: false;
-										      add:
-											      experiment participations size printString
-											      , ' participations'
+										      add: self participationsGeneralInfo											      
 										      expand: false
 										      fill: false;
 											   add: participantsToolbar height: 16;
@@ -407,28 +405,19 @@ OCREDataAnalysisPresenter >> menu [
 { #category : #charts }
 OCREDataAnalysisPresenter >> openDiagrams [
 
-	| surveys dataLabels data plot |
-	surveys := experiment participantResults collect: [ :result |
-		           result participant surveys second survey answers first ].
+	(OCREExperienceScatterPlots on: experiment participations) open
+]
 
-	dataLabels := surveys first choices.
+{ #category : #initialization }
+OCREDataAnalysisPresenter >> participationsGeneralInfo [
 
-
-	data := OrderedCollection new.
-	dataLabels do: [ :l |
-		| count |
-		count := (surveys select: [ :s | s answer answer = l ]) size.
-		data add: count ].
-	data inspect.
-	plot := self newRoassal.
-	plot := RSBarPlotNew new
-		        data: data;
-		        yTickLabels: dataLabels;
-		        title: surveys first title;
-		        horizontal;
-		        asPresenter.
-
-	plot open
+	^ String streamContents: [ :s |
+		  s << experiment participations size asString.
+		  s << ' participations - '.
+		  s << (experiment participations select: [ :p |
+			   p treatmentTask notNil and: [ p treatmentTask isValid ] ]) size
+			  asString.
+		  s << ' valid participations' asString ]
 ]
 
 { #category : #charts }
