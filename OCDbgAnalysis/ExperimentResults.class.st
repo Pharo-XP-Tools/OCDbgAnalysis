@@ -8,7 +8,8 @@ Class {
 		'participations',
 		'controls',
 		'treatments',
-		'participantsExperience'
+		'participantsExperience',
+		'analysisResults'
 	],
 	#classInstVars : [
 		'dataCache',
@@ -88,7 +89,7 @@ ExperimentResults class >> replaceWith: anExperiment [
 ExperimentResults >> buildTaskResults [
 	
 
-	self collectTasksForAnalysis.	
+	self doTasksAnalysis.	
 	^controls keys collect: [ :taskName|  
 		|taskResult|		
 		taskResult := TasksResults new.
@@ -120,13 +121,10 @@ ExperimentResults >> collectDeveloperExperience [
 		xp ifNotNil: [ participantsExperience add: xp answer ] ]
 ]
 
-{ #category : #'data analysis' }
-ExperimentResults >> collectTasksForAnalysis [
-	
-	controls := ((participations collect: [ :p | p control ]) select: [
-		             :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
-	treatments := ((participations collect: [ :p | p treatment ])
-		               select: [ :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ]
+{ #category : #accessing }
+ExperimentResults >> controls [
+
+	^ controls ifNil: [ controls := OrderedCollection new ]
 ]
 
 { #category : #'data export' }
@@ -424,4 +422,10 @@ ExperimentResults >> postTaskCSVFormat [
 { #category : #'data export' }
 ExperimentResults >> postTaskSurveySize [
 	^11
+]
+
+{ #category : #accessing }
+ExperimentResults >> treatments [
+
+	^ treatments ifNil: [ treatments := OrderedCollection new ]
 ]
