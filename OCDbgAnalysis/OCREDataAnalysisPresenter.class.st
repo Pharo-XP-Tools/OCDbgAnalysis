@@ -167,7 +167,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 
 { #category : #analysis }
 OCREDataAnalysisPresenter >> doAnalysis [
-	experiment collectTasksForAnalysis.
+	experiment doTasksAnalysis.
 	experiment collectDeveloperExperience
 ]
 
@@ -333,6 +333,11 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	buttonBar := self newButtonBar.
 	buttonBar
 		placeAtStart;
+"		add: (self newButton
+				 icon: (self application iconNamed: #glamorousZoomIn);
+				 action: [ self openDetailedAnalysis ];
+				 label: 'Explore';
+				 yourself);"
 		add: (self newButton
 				 icon: (self application iconNamed: #references);
 				 action: [ self openDiagrams ];
