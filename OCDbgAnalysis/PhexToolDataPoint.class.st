@@ -12,7 +12,8 @@ Class {
 
 { #category : #'private - computation' }
 PhexToolDataPoint >> compute [
-	self halt 
+
+	value := dataType compute: rawData
 ]
 
 { #category : #accessing }
