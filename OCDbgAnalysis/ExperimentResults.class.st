@@ -105,6 +105,30 @@ ExperimentResults >> buildTaskResults [
 ]
 
 { #category : #'data analysis' }
+ExperimentResults >> collectDetailedDataMetricFor: data possibleTypes: possibleTypes dataType: dataType [
+	"array first = control data, array second = treatment data"
+
+	| typeDict |
+	typeDict := Dictionary new.
+	possibleTypes do: [ :t | typeDict at: t put: OrderedCollection new ].
+	data do: [ :d |
+		possibleTypes do: [ :type |
+			(typeDict at: type) add: (d
+					 at: type
+					 ifPresent: [ :tdata |
+						 PhexToolDataPoint new
+							 rawData: tdata;
+							 toolName: type;
+							 dataType: dataType;
+							 recompute ]
+					 ifAbsent: [
+						 PhexToolDataPoint new
+							 toolName: type;
+							 empty ]) ] ].
+	^ typeDict
+]
+
+{ #category : #'data analysis' }
 ExperimentResults >> collectDeveloperExperience [
 
 	participantsExperience := OrderedCollection new.
@@ -222,6 +246,94 @@ ExperimentResults >> demographicSurveyCSVFormat [
 { #category : #'data export' }
 ExperimentResults >> demographicSurveySize [
 	^8
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataType: dataType [
+	"array first = control data, array second = treatment data"
+
+	| controlData treatmentData controlWindows treatmentWindows possibleTypes |
+	controlData := aTaskDataArray first.
+	treatmentData := aTaskDataArray second.
+
+	controlWindows := controlData collect: [ :data |
+		                  data eventsHistory filteredWindows groupedBy:
+			                  #type ].
+	treatmentWindows := treatmentData collect: [ :data |
+		                    data eventsHistory filteredWindows groupedBy:
+			                    #type ].
+
+	possibleTypes := (controlWindows flattened collect: #type) asSet.
+	possibleTypes addAll: (treatmentWindows flattened collect: #type).
+
+
+
+
+	^ self
+		  collectDetailedDataMetricFor: controlWindows
+		  possibleTypes: possibleTypes
+		  dataType: dataType
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> doTasksAnalysis [
+	
+	"Ensure the history is correctly rebuilt"
+	participations do: [ :p | 
+		p == self class ifFalse:[
+		self rebuildHistoryFor: p control.
+		self rebuildHistoryFor: p treatment]].	
+	
+	"Collect tasks"	
+	controls := ((participations collect: [ :p | p control ]) select: [
+		             :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
+	treatments := ((participations collect: [ :p | p treatment ])
+		               select: [ :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
+		
+	
+	"Analyze and cache results"
+	analysisResults := Dictionary new.
+	self doToolUsageAnalysis
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> doToolUsageAnalysis [
+
+	| taskList |
+	taskList := controls keys.
+
+
+	taskList do: [ :taskName |
+		| time actions usage |
+		time := self
+			        detailedToolAnalysisFor: {
+					        (controls at: taskName).
+					        (treatments at: taskName) }
+			        named: taskName
+			        dataType: PhexToolTimeCalculator.
+
+		actions := self
+			           detailedToolAnalysisFor: {
+					           (controls at: taskName).
+					           (treatments at: taskName) }
+			           named: taskName
+			           dataType: PhexToolActionsCalculator.
+
+		usage := self
+			         detailedToolAnalysisFor: {
+					         (controls at: taskName).
+					         (treatments at: taskName) }
+			         named: taskName
+			         dataType: PhexToolUsageCalculator.
+		time keysDo: [ :toolName |
+			| toolUsageResults |
+			toolUsageResults := PhexToolUsageResults new.
+			toolUsageResults toolName: toolName.
+			toolUsageResults timeDV: (PhexDependentVariable time: (time at: toolName)).
+			toolUsageResults actionsDV:	(PhexDependentVariable actions: (actions at: toolName)).
+			toolUsageResults occurencesDV:	(PhexDependentVariable usage: (usage at: toolName)).
+			(analysisResults at: taskName ifAbsentPut: [ OrderedCollection new ]) 
+																					add: toolUsageResults ] ]
 ]
 
 { #category : #'data export' }
