@@ -1,6 +1,9 @@
 "
-I am a calculator utility strategy, with a single `#compute:` abstract class method.
-My subclasses should reimplement this method to compute adequate metric data points values, and then passed to the correspoding data point for which they should build the data.
+I am a calculator utility strategy, with a two class methods:
+-  `#compute:` (abstract)
+- `#transform:`
+My subclasses should reimplement thess methods to compute adequate metric data points values and to transform the computed raw value to a Pharo object (if necessary), and then passed to the corresponding data point for which they should build the data.
+
 "
 Class {
 	#name : #PhexMetricCalculator,
@@ -12,4 +15,9 @@ Class {
 PhexMetricCalculator class >> compute: data [
 
 	^self subclassResponsibility 
+]
+
+{ #category : #'as yet unclassified' }
+PhexMetricCalculator class >> transform: aRawValue [
+	^aRawValue
 ]

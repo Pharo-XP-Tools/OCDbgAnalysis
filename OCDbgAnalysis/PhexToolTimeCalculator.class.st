@@ -15,3 +15,8 @@ PhexToolTimeCalculator class >> compute: data [
 		  into: [ :sum :next |
 		  sum + (next totalTime - next idleTime) asSeconds ]
 ]
+
+{ #category : #'as yet unclassified' }
+PhexToolTimeCalculator class >> transform: aRawValue [
+	^aRawValue seconds
+]

@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'dataType',
 		'value',
-		'rawData'
+		'rawData',
+		'transformation'
 	],
 	#category : #'OCDbgAnalysis-NewModel'
 }
@@ -20,12 +21,6 @@ PhexDataPoint class >> defaultName [
 { #category : #'private - computation' }
 PhexDataPoint >> compute [
 	self subclassResponsibility 
-]
-
-{ #category : #accessing }
-PhexDataPoint >> dataType [
-
-	^ dataType
 ]
 
 { #category : #accessing }
