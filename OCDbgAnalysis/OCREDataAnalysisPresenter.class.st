@@ -675,7 +675,7 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 			 yourself)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #export }
 OCREDataAnalysisPresenter >> stonExport [
 
 	'data.ston' asFileReference writeStream
@@ -683,7 +683,7 @@ OCREDataAnalysisPresenter >> stonExport [
 		close
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #export }
 OCREDataAnalysisPresenter >> stonImport [
 	ExperimentResults materializeFromSTON.
 	experiment := ExperimentResults current.
