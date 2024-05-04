@@ -12,9 +12,14 @@ Class {
 	#category : #'OCDbgAnalysis-NewModel'
 }
 
+{ #category : #'accessing - defaults' }
+PhexDataPoint class >> defaultName [
+	^'A phex scalar data point'
+]
+
 { #category : #'private - computation' }
 PhexDataPoint >> compute [
-	^self subclassResponsibility 
+	self subclassResponsibility 
 ]
 
 { #category : #accessing }
@@ -32,6 +37,23 @@ PhexDataPoint >> dataType: anObject [
 { #category : #accessing }
 PhexDataPoint >> dataValue [
 	^value
+]
+
+{ #category : #accessing }
+PhexDataPoint >> defaultName [
+	^self class defaultName
+]
+
+{ #category : #accessing }
+PhexDataPoint >> name [
+	^self defaultName
+]
+
+{ #category : #'private - computation' }
+PhexDataPoint >> printOn: aStream [
+	aStream << self name
+
+	
 ]
 
 { #category : #accessing }
