@@ -44,6 +44,13 @@ PhexDataPoint >> defaultName [
 	^self class defaultName
 ]
 
+{ #category : #computation }
+PhexDataPoint >> empty [
+
+	rawData := OrderedCollection new.
+	value := 0
+]
+
 { #category : #accessing }
 PhexDataPoint >> name [
 	^self defaultName
