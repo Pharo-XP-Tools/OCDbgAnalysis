@@ -5,7 +5,8 @@ Class {
 	#name : #PhexToolDataPoint,
 	#superclass : #PhexDataPoint,
 	#instVars : [
-		'toolName'
+		'toolName',
+		'rawValue'
 	],
 	#category : #'OCDbgAnalysis-NewModel'
 }
@@ -13,13 +14,24 @@ Class {
 { #category : #'private - computation' }
 PhexToolDataPoint >> compute [
 
-	value := dataType compute: rawData
+	rawValue := dataType compute: rawData.
+	value := dataType transform: rawValue
 ]
 
 { #category : #accessing }
 PhexToolDataPoint >> name [
 
 	^ toolName ifNil: [ super name ]
+]
+
+{ #category : #'private - computation' }
+PhexToolDataPoint >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream space.	
+	aStream <<'('.
+	value printOn: aStream.
+	aStream <<')'.
 ]
 
 { #category : #accessing }
