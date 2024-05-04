@@ -27,7 +27,8 @@ ExperimentResults class >> browse [
 
 { #category : #cache }
 ExperimentResults class >> cache: aPhexParticipation [
-
+	
+aPhexParticipation ifNil:[^self].
 	self dataCache at: aPhexParticipation id put: aPhexParticipation.
 	^aPhexParticipation
 ]
@@ -534,6 +535,50 @@ ExperimentResults >> postTaskCSVFormat [
 { #category : #'data export' }
 ExperimentResults >> postTaskSurveySize [
 	^11
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> rebuildHistoryFor: task [
+
+	task ifNil: [ ^ self ].
+	task eventsHistory buildWindows.
+
+	(task detectedInterruptions select: [ :i | i decision notNil and:[i decision] ]) do: [
+		:interruption |
+		| startWindow stopWindow |
+		(self shouldConsiderInterruption: interruption) ifTrue:[
+		
+		startWindow := task eventsHistory windows
+			               detect: [ :w |
+				               w activePeriods anySatisfy: [ :p |
+					               p events includes: interruption timeGapStartEvent ] ]
+			               ifNone: [ nil ].
+
+		stopWindow := task eventsHistory windows
+			              detect: [ :w |
+				              w activePeriods anySatisfy: [ :p |
+					              p events includes: interruption timeGapStartEvent ] ]
+			              ifNone: [ nil ].
+		
+		(startWindow == stopWindow and:[stopWindow notNil]) 
+			ifTrue:[stopWindow addIdleTime: interruption computedIdleTime].					
+				
+		(startWindow isNil and:[stopWindow notNil]) ifTrue: [ self halt ].
+		(startWindow notNil and:[stopWindow isNil]) ifTrue: [ self halt ].
+		((startWindow notNil and: [ stopWindow notNil ]) 
+			and: [ startWindow windowId ~= stopWindow windowId]) 
+				ifTrue: [ self halt ]]
+
+		].
+
+]
+
+{ #category : #asserting }
+ExperimentResults >> shouldConsiderInterruption: anIdleTimeControl [
+
+	^ (anIdleTimeControl timeGapStartEvent class = DSMouseLeaveWindowRecord 
+		and: [ anIdleTimeControl timeGapStopEvent class = DSMouseEnterWindowRecord ]) 
+			not
 ]
 
 { #category : #accessing }

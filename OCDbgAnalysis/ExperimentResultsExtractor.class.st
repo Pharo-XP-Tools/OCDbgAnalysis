@@ -223,6 +223,7 @@ ExperimentResultsExtractor >> extractResultsWithProgress: dataPath [
 		result := ParticipantResult newFromData: data.
 		result id: dir reference path basename.
 		result participant surveys: (self extractSurveysFromData: data).
+		result tasks isEmpty ifTrue:[self halt].
 		result tasks notEmpty ifTrue: [ participantResults add: result ] ].
 	^ self
 ]

@@ -616,9 +616,17 @@ OCREDataAnalysisPresenter >> reload [
 		every: 0.1 seconds.
 	[
 	[
-	experiment := ExperimentResults on:
-		              (xpResults extractResultsWithProgress: dir).
-	ExperimentResults current: experiment ] ensure: [
+	| results |
+	results := xpResults extractResultsWithProgress: dir.
+	experiment := ExperimentResults on: results.
+
+
+	ExperimentResults current
+		ifNil: [ ExperimentResults current: experiment ]
+		ifNotNil: [ :xp |
+		
+		xp participations addAll: experiment participations.
+			experiment := xp. ] ] ensure: [
 		self doAnalysisAndUpdate ] ] fork
 ]
 
