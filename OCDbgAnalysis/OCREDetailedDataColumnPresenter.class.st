@@ -9,7 +9,8 @@ Class {
 		'dataSize',
 		'average',
 		'stDev',
-		'data'
+		'data',
+		'title'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -24,6 +25,11 @@ OCREDetailedDataColumnPresenter >> data: aCollection [
 OCREDetailedDataColumnPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
+		add: (SpBoxLayout newLeftToRight
+				   add: title;
+				   add: '';
+				   yourself)
+		  expand: false fill: false;
 		  add: (SpBoxLayout newLeftToRight
 				   add: 'Data size';
 				   add: dataSize;
@@ -46,13 +52,14 @@ OCREDetailedDataColumnPresenter >> defaultLayout [
 { #category : #initialize }
 OCREDetailedDataColumnPresenter >> fillPresenters [
 
-	data ifEmpty: [ ^ self ].
-	average text: data average asFloat.
-	stDev text: data stdev asFloat.
-	dataSize text: data size.
+	data ifNil: [ ^ self ].
+	data isEmpty ifTrue: [  ^self] .
+	average text: ((data collect: #rawValue) average asFloat truncateTo: 0.01 )printString.
+	stDev text: ((data collect: #rawValue) stdev asFloat truncateTo: 0.01) printString.
+	dataSize text: data size printString.
 	dataText text: (String streamContents: [ :str |
-			 data do: [ :s |
-				 str << s countDebugActions printString.
+			(data collect: #value)  do: [ :s |
+				 str << (s rawValue truncateTo: 0.01) printString.
 				 str cr ] ])
 ]
 
@@ -74,4 +81,10 @@ OCREDetailedDataColumnPresenter >> initializePresenters [
 		            editable: false;
 		            yourself.
 	self fillPresenters
+]
+
+{ #category : #accessing }
+OCREDetailedDataColumnPresenter >> title: aString [
+
+	title := aString
 ]
