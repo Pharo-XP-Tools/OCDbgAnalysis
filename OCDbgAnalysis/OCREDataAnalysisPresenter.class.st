@@ -18,7 +18,8 @@ Class {
 		'meansDebugActionBars',
 		'meanTimesBars',
 		'controlsMeanTimesBars',
-		'controlsMeanDebugActionsBars'
+		'controlsMeanDebugActionsBars',
+		'taskAnalysisPresenter'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -123,8 +124,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 				   positionOfSlider: 50 percent;
 				   add: dataDirs;
 				   add: buttonBar)
-				height: self class toolbarHeight + 5
-		  "expand: false fill: false padding: 10";
+		  height: self class toolbarHeight + 5;
 		  add: (SpPanedLayout newLeftToRight
 				   positionOfSlider: 50 percent;
 				   add: (SpPanedLayout newTopToBottom
@@ -136,10 +136,10 @@ OCREDataAnalysisPresenter >> defaultLayout [
 						    add: (SpBoxLayout newTopToBottom
 								     add: (SpBoxLayout newLeftToRight
 										      add: 'Participants' expand: false fill: false;
-										      add: self participationsGeneralInfo											      
+										      add: self participationsGeneralInfo
 										      expand: false
 										      fill: false;
-											   add: participantsToolbar height: 16;
+										      add: participantsToolbar height: 16;
 										      yourself)
 								     expand: false
 								     fill: false
@@ -147,20 +147,7 @@ OCREDataAnalysisPresenter >> defaultLayout [
 								     add: participantsTable;
 								     yourself);
 						    yourself);
-				   add: (SpPanedLayout newTopToBottom
-						    positionOfSlider: 50 percent;
-						    add: (SpBoxLayout newLeftToRight
-								     add: violins;
-									  add: meanTimesBars;
-								     add: debugActions;								     
-									  add: meansDebugActionBars;
-								     yourself);
-						    add: (SpBoxLayout newLeftToRight
-								     add: controlsViolins;
-								     add: controlsMeanTimesBars;
-								     add: experience;
-								     yourself);
-						    yourself);
+				   add: taskAnalysisPresenter;
 				   yourself);
 		  yourself
 ]
@@ -232,9 +219,10 @@ OCREDataAnalysisPresenter >> initializePresenters [
 			 yourself).
 
 	tasksTable items: experiment buildTaskResults.
-	tasksTable transmitDo: [ :task | self plotChartsForTask: task ].
+	tasksTable transmitDo: [ :task | self showAnalysisForTask: task ].
 
-
+	taskAnalysisPresenter := OCREMetricAnalysisPresenter on: OrderedCollection new.
+	
 	participantsTable := self newTable.
 	participantsTable contextMenu: self menu.
 	"	participantsTable addColumn: ((SpCheckBoxTableColumn new
@@ -639,9 +627,7 @@ OCREDataAnalysisPresenter >> setDefaultLayout [
 { #category : #initialization }
 OCREDataAnalysisPresenter >> setModelBeforeInitialization: anExperimentResult [
 
-	experiment := anExperimentResult.
-	self flag: 'adapt if necessary or remove'
-	"experiment collectDeveloperExperience"
+	experiment := anExperimentResult
 ]
 
 { #category : #specs }
@@ -673,6 +659,11 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 							   yourself);
 					  yourself);
 			 yourself)
+]
+
+{ #category : #updating }
+OCREDataAnalysisPresenter >> showAnalysisForTask: task [
+	taskAnalysisPresenter updateData: (experiment analysisResults at: task name)
 ]
 
 { #category : #export }
