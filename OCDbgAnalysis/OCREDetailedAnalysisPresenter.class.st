@@ -15,19 +15,6 @@ Class {
 OCREDetailedAnalysisPresenter >> defaultLayout [
 
 	^ SpBoxLayout newLeftToRight
-		  add: controlDataPresenter expand: true fill: true;
-		  add: treatmentDataPresenter expand: true fill: true;
-		  yourself
-]
-
-{ #category : #initialization }
-OCREDetailedAnalysisPresenter >> initializePresenters [
-
-	controlDataPresenter := OCREDetailedDataColumnPresenter new.
-	controlDataPresenter title: 'CONTROL'.
-	treatmentDataPresenter := OCREDetailedDataColumnPresenter new.
-	treatmentDataPresenter title: 'TREATMENT'
-	
 ]
 
 { #category : #accessing }
