@@ -26,6 +26,26 @@ PhexToolUsageResults >> actionsDV: anObject [
 ]
 
 { #category : #accessing }
+PhexToolUsageResults >> chartsFor: aVariable [
+
+
+	|plot c t |
+	
+	c  := (aVariable controlData collect: #rawValue).
+	t  := (aVariable treatmentData collect: #rawValue).	
+			
+	plot := (RSBarPlot barHeights: {c average asFloat. t average asFloat. }) 
+					errors: (ExperimentResults confidenceIntervals: {c. t}).
+
+	plot horizontalTick fromNames: #( 'control' 'treatment').
+	plot title: aVariable varName, ' 95% CI'.
+
+	^plot asPresenter
+	
+	
+]
+
+{ #category : #accessing }
 PhexToolUsageResults >> occurencesDV [
 
 	^ occurencesDV
@@ -50,7 +70,8 @@ PhexToolUsageResults >> presenters [
 			(OCREDetailedDataColumnPresenter new
 				 title: 'TREATMENT';
 				 data: timeDV treatmentData;
-				 yourself) }.
+				 yourself).
+			(self chartsFor: timeDV) }.
 
 	presenters at: actionsDV varName put: {
 			(OCREDetailedDataColumnPresenter new
@@ -60,7 +81,8 @@ PhexToolUsageResults >> presenters [
 			(OCREDetailedDataColumnPresenter new
 				 title: 'TREATMENT';
 				 data: actionsDV treatmentData;
-				 yourself) }.
+				 yourself).
+			(self chartsFor: actionsDV) }.
 
 	presenters at: occurencesDV varName put: {
 			(OCREDetailedDataColumnPresenter new
@@ -70,7 +92,8 @@ PhexToolUsageResults >> presenters [
 			(OCREDetailedDataColumnPresenter new
 				 title: 'TREATMENT';
 				 data: occurencesDV treatmentData;
-				 yourself) }.
+				 yourself).
+			(self chartsFor: occurencesDV) }.
 	^ presenters
 ]
 
