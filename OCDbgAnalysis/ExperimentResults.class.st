@@ -41,6 +41,12 @@ ExperimentResults class >> cleanCache [
 	current := nil
 ]
 
+{ #category : #analysis }
+ExperimentResults class >> confidenceIntervals: datas [
+
+	^ datas collect: [ :data | 1.96 * (data stdev / data size sqrt) ]
+]
+
 { #category : #'instance creation' }
 ExperimentResults class >> current [
 
