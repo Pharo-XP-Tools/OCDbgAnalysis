@@ -40,6 +40,11 @@ PhexDependentVariable class >> usage: data [
 ]
 
 { #category : #accessing }
+PhexDependentVariable >> controlData [
+	^data first
+]
+
+{ #category : #accessing }
 PhexDependentVariable >> data [
 
 	^ data
@@ -56,6 +61,11 @@ PhexDependentVariable >> printOn: aStream [
 	aStream << 'Dependant variable:'.
 	aStream space.
 	aStream << varName
+]
+
+{ #category : #accessing }
+PhexDependentVariable >> treatmentData [
+	^data second
 ]
 
 { #category : #accessing }

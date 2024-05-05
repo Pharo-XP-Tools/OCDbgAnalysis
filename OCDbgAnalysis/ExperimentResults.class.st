@@ -86,6 +86,12 @@ ExperimentResults class >> replaceWith: anExperiment [
 	current participations do: [ :p | self cache: p ]
 ]
 
+{ #category : #accessing }
+ExperimentResults >> analysisResults [
+
+	^ analysisResults
+]
+
 { #category : #'data analysis' }
 ExperimentResults >> buildTaskResults [
 	
@@ -253,7 +259,7 @@ ExperimentResults >> demographicSurveySize [
 ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataType: dataType [
 	"array first = control data, array second = treatment data"
 
-	| controlData treatmentData controlWindows treatmentWindows possibleTypes |
+	| controlData treatmentData controlWindows treatmentWindows possibleTypes results |
 	controlData := aTaskDataArray first.
 	treatmentData := aTaskDataArray second.
 
@@ -269,11 +275,18 @@ ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataTy
 
 
 
+	results := Dictionary new.
+	results at: #control put: (self
+			 collectDetailedDataMetricFor: controlWindows
+			 possibleTypes: possibleTypes
+			 dataType: dataType).
 
-	^ self
-		  collectDetailedDataMetricFor: controlWindows
-		  possibleTypes: possibleTypes
-		  dataType: dataType
+	results at: #treatment put: (self
+			 collectDetailedDataMetricFor: treatmentWindows
+			 possibleTypes: possibleTypes
+			 dataType: dataType).
+
+	^ results
 ]
 
 { #category : #'data analysis' }
@@ -303,7 +316,6 @@ ExperimentResults >> doToolUsageAnalysis [
 	| taskList |
 	taskList := controls keys.
 
-
 	taskList do: [ :taskName |
 		| time actions usage |
 		time := self
@@ -326,13 +338,13 @@ ExperimentResults >> doToolUsageAnalysis [
 					         (treatments at: taskName) }
 			         named: taskName
 			         dataType: PhexToolUsageCalculator.
-		time keysDo: [ :toolName |
+		(time at: #control) keysDo: [ :toolName |
 			| toolUsageResults |
 			toolUsageResults := PhexToolUsageResults new.
 			toolUsageResults toolName: toolName.
-			toolUsageResults timeDV: (PhexDependentVariable time: (time at: toolName)).
-			toolUsageResults actionsDV:	(PhexDependentVariable actions: (actions at: toolName)).
-			toolUsageResults occurencesDV:	(PhexDependentVariable usage: (usage at: toolName)).
+			toolUsageResults timeDV: (PhexDependentVariable time: {((time at: #control ) at: toolName). ((time at: #treatment) at: toolName)}).
+			toolUsageResults actionsDV:	(PhexDependentVariable actions: {((actions at: #control)at: toolName). ((actions at: #treatment) at: toolName)}).
+			toolUsageResults occurencesDV:	(PhexDependentVariable usage: {((usage at: #control)at: toolName). ((usage at: #treatment) at: toolName)}).
 			(analysisResults at: taskName ifAbsentPut: [ OrderedCollection new ]) 
 																					add: toolUsageResults ] ]
 ]
