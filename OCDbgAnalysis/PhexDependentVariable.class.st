@@ -7,7 +7,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'varName',
-		'data'
+		'data',
+		'dvPrinter'
 	],
 	#category : #'OCDbgAnalysis-NewModel'
 }
@@ -27,6 +28,7 @@ PhexDependentVariable class >> time: data [
 	^ self new
 		  varName: 'Time';
 		  data: data;
+		  dvPrinter: PhexTaskTimeCalculator;
 		  yourself
 ]
 
@@ -56,11 +58,45 @@ PhexDependentVariable >> data: anObject [
 	data := anObject
 ]
 
+{ #category : #accessing }
+PhexDependentVariable >> dvPrinter [
+
+	^ dvPrinter ifNil:[PhexMetricCalculator]
+]
+
+{ #category : #accessing }
+PhexDependentVariable >> dvPrinter: anObject [
+
+	dvPrinter := anObject
+]
+
 { #category : #printing }
 PhexDependentVariable >> printOn: aStream [
 	aStream << 'Dependant variable:'.
 	aStream space.
 	aStream << varName
+]
+
+{ #category : #accessing }
+PhexDependentVariable >> printSummary [
+
+	|cResult tResult ratio|
+	cResult := (self controlData collect: #rawValue) average. 
+	tResult := (self treatmentData collect: #rawValue) average. 
+	ratio := (tResult/cResult) - 1.
+	^String streamContents: [ :str|
+		
+		str << 'control average = '.
+		str << (self dvPrinter phexPrint: cResult).
+		str cr.
+		str << 'treatment average = '.
+		str << (self dvPrinter phexPrint: tResult).
+		str cr.
+		str << 'ratio treatment/control = '.
+		ratio > 0 ifTrue:[str << '+'].
+		str << (ratio*100) rounded printString.
+		str << '%'
+		 ]
 ]
 
 { #category : #accessing }

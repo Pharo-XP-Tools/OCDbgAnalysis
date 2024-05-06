@@ -43,7 +43,7 @@ PhexAnalysisResult >> chartsFor: aVariable [
 
 	dataViolins xTickLabels: #( 'control' 'treatment' ).
 	dataViolins title: aVariable varName.
-	dataViolins bandwidth: 50.
+	dataViolins bandwidth: 100.
 	layout add: dataViolins asPresenter.
 
 	^ layout
@@ -55,7 +55,7 @@ PhexAnalysisResult >> presenters [
 	| presenters |
 	presenters := Dictionary new.
 	self analyzedVariables do: [ :v |
-		presenters at: v varName put: {
+		presenters at: v put: {
 				(OCREDetailedDataColumnPresenter new
 					 title: 'CONTROL';
 					 data: v controlData;

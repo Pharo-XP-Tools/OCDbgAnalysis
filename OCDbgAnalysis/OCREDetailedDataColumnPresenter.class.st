@@ -10,7 +10,8 @@ Class {
 		'average',
 		'stDev',
 		'data',
-		'title'
+		'title',
+		'summary'
 	],
 	#category : #'OCDbgAnalysis-Presenters'
 }
@@ -54,7 +55,7 @@ OCREDetailedDataColumnPresenter >> fillPresenters [
 
 	data ifNil: [ ^ self ].
 	data isEmpty ifTrue: [  ^self] .
-	average text: ((data collect: #rawValue) average asFloat truncateTo: 0.01 )printString.
+	average text: ((data collect: #rawValue) average asFloat truncateTo: 0.01) printString.
 	stDev text: ((data collect: #rawValue) stdev asFloat truncateTo: 0.01) printString.
 	dataSize text: data size printString.
 	dataText text: (String streamContents: [ :str |
@@ -67,6 +68,9 @@ OCREDetailedDataColumnPresenter >> fillPresenters [
 OCREDetailedDataColumnPresenter >> initializePresenters [
 
 	data := OrderedCollection new.
+	summary := self newTextInput
+		            editable: false;
+		            yourself.
 	average := self newTextInput
 		           editable: false;
 		           yourself.

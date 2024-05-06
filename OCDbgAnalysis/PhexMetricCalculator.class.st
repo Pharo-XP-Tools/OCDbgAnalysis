@@ -18,6 +18,11 @@ PhexMetricCalculator class >> compute: data [
 ]
 
 { #category : #'as yet unclassified' }
+PhexMetricCalculator class >> phexPrint: anObject [
+	^anObject asFloat printString
+]
+
+{ #category : #'as yet unclassified' }
 PhexMetricCalculator class >> transform: aRawValue [
 	^aRawValue
 ]

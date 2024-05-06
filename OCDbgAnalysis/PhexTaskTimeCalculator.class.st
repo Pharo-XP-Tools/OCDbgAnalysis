@@ -11,6 +11,12 @@ PhexTaskTimeCalculator class >> compute: data [
 ]
 
 { #category : #'as yet unclassified' }
+PhexTaskTimeCalculator class >> phexPrint: anObject [
+
+	^anObject asDuration printString
+]
+
+{ #category : #'as yet unclassified' }
 PhexTaskTimeCalculator class >> transform: aRawValue [
 	^aRawValue seconds
 ]
