@@ -131,12 +131,12 @@ ExperimentResults >> collectDetailedDataMetricFor: data possibleTypes: possibleT
 					 ifPresent: [ :tdata |
 						 PhexToolDataPoint new
 							 rawData: tdata;
-							 toolName: type;
+							 analysisName: type;
 							 dataType: dataType;
 							 recompute ]
 					 ifAbsent: [
 						 PhexToolDataPoint new
-							 toolName: type;
+							 analysisName: type;
 							 empty ]) ] ].
 	^ typeDict
 ]
@@ -347,7 +347,7 @@ ExperimentResults >> doToolUsageAnalysis [
 		(time at: #control) keysDo: [ :toolName |
 			| toolUsageResults |
 			toolUsageResults := PhexToolUsageResults new.
-			toolUsageResults toolName: toolName.
+			toolUsageResults analysisName: toolName.
 			toolUsageResults timeDV: (PhexDependentVariable time: {((time at: #control ) at: toolName). ((time at: #treatment) at: toolName)}).
 			toolUsageResults actionsDV:	(PhexDependentVariable actions: {((actions at: #control)at: toolName). ((actions at: #treatment) at: toolName)}).
 			toolUsageResults occurencesDV:	(PhexDependentVariable usage: {((usage at: #control)at: toolName). ((usage at: #treatment) at: toolName)}).

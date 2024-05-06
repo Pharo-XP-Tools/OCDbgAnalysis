@@ -11,6 +11,12 @@ Class {
 	#category : #'OCDbgAnalysis-NewModel'
 }
 
+{ #category : #accessing }
+PhexToolDataPoint >> analysisName: anObject [
+
+	toolName := anObject
+]
+
 { #category : #'private - computation' }
 PhexToolDataPoint >> compute [
 
@@ -37,10 +43,4 @@ PhexToolDataPoint >> printOn: aStream [
 { #category : #accessing }
 PhexToolDataPoint >> rawValue [
 	^ rawValue ifNil:[0]
-]
-
-{ #category : #accessing }
-PhexToolDataPoint >> toolName: anObject [
-
-	toolName := anObject
 ]

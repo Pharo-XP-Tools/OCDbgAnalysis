@@ -39,7 +39,7 @@ OCREMetricAnalysisPresenter >> initializePresenters [
 	table addColumn:
 		((SpStringTableColumn
 			  title: 'Metric'
-			  evaluated: [ :item | item toolName ])
+			  evaluated: [ :item | item analysisName ])
 			 sortFunction: nil;
 			 yourself).			
 	table items: data.
