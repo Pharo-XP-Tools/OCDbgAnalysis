@@ -25,24 +25,31 @@ PhexToolUsageResults >> actionsDV: anObject [
 	actionsDV := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #spec }
 PhexToolUsageResults >> chartsFor: aVariable [
 
+	| layout c t barChart dataViolins |
+	layout := SpBoxLayout newLeftToRight.
 
-	|plot c t |
-	
-	c  := (aVariable controlData collect: #rawValue).
-	t  := (aVariable treatmentData collect: #rawValue).	
-			
-	plot := (RSBarPlot barHeights: {c average asFloat. t average asFloat. }) 
-					errors: (ExperimentResults confidenceIntervals: {c. t}).
+	c := aVariable controlData collect: #rawValue.
+	t := aVariable treatmentData collect: #rawValue.
 
-	plot horizontalTick fromNames: #( 'control' 'treatment').
-	plot title: aVariable varName, ' 95% CI'.
+	barChart := (RSBarPlot barHeights: {c average asFloat. t average asFloat }) 
+								 errors: (ExperimentResults confidenceIntervals: { c. t }).
 
-	^plot asPresenter
-	
-	
+	barChart horizontalTick fromNames: #( 'control' 'treatment' ).
+	barChart title: aVariable varName , ' 95% CI'.
+
+	layout add: barChart asPresenter.
+
+	dataViolins := RSViolinPlot data: { c. t }.
+
+	dataViolins xTickLabels: #( 'control' 'treatment' ).
+	dataViolins title: aVariable varName.
+	dataViolins bandwidth: 50.
+	layout add: dataViolins asPresenter.
+
+	^ layout
 ]
 
 { #category : #accessing }
@@ -57,7 +64,7 @@ PhexToolUsageResults >> occurencesDV: anObject [
 	occurencesDV := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #spec }
 PhexToolUsageResults >> presenters [
 
 	| presenters |
