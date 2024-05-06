@@ -313,7 +313,57 @@ ExperimentResults >> doTasksAnalysis [
 	
 	"Analyze and cache results"
 	analysisResults := Dictionary new.
+	self doTasksDVAnalysis.
 	self doToolUsageAnalysis
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> doTasksDVAnalysis [
+
+	| taskList |
+	taskList := controls keys.
+
+	taskList do: [ :taskName |
+		| analysis cData tData timeCDataPoints timeTDataPoints actionsCDataPoints actionsTDataPoints|
+		analysis := PhexTaskDVResults new.
+		analysis analysisName: 'Task stats'.
+
+		cData := controls at: taskName.
+		tData := treatments at: taskName.
+			
+		timeCDataPoints := (cData collect: [ :next | 
+									PhexToolDataPoint new
+										rawData: next ;
+							 			analysisName: 'Time';
+							 			dataType: PhexTaskTimeCalculator;
+							 			recompute ]).
+		timeTDataPoints := (tData collect: [ :next | 
+									PhexToolDataPoint new
+							 			rawData: next;
+							 			analysisName: 'Time';
+							 			dataType: PhexTaskTimeCalculator;
+							 			recompute ]).
+									
+		actionsCDataPoints := (cData collect: [ :next | 
+									PhexToolDataPoint new
+										rawData: next ;
+							 			analysisName: 'Debug Actions';
+							 			dataType: PhexTaskActionsCalculator;
+							 			recompute ]).
+		actionsTDataPoints := (tData collect: [ :next | 
+									PhexToolDataPoint new
+							 			rawData: next;
+							 			analysisName: 'Debug Actions';
+							 			dataType: PhexTaskActionsCalculator;
+							 			recompute ]).							
+								
+
+
+		analysis timeDV: (PhexDependentVariable time: {timeCDataPoints. timeTDataPoints}).
+		analysis actionsDV: (PhexDependentVariable actions: {actionsCDataPoints. actionsTDataPoints}).
+		
+		(analysisResults at: taskName ifAbsentPut: [ OrderedCollection new ])
+			addFirst: analysis ]
 ]
 
 { #category : #'data analysis' }
