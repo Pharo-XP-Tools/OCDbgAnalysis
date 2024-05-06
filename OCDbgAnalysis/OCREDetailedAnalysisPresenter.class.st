@@ -36,12 +36,12 @@ OCREDetailedAnalysisPresenter >> updateData [
 		| subsubLayout |
 		subsubLayout := SpBoxLayout newLeftToRight.
 		subLayout := SpBoxLayout newTopToBottom.
-		subLayout add: title asText allBold expand: false fill: false.
+		subLayout add: (SpLabelPresenter new label: title; addStyle: 'flat'; addStyle: 'title'; yourself)  expand: false fill: false padding: 5.
 		subsubLayout add: presenters first expand: true fill: true.
 		subsubLayout add: presenters second expand: true fill: true.		
-		subLayout add: subsubLayout.
+		subLayout add: subsubLayout .
 		subLayout add: presenters last.
-		newLayout add: subLayout ].
+		newLayout add: subLayout expand: true fill: true padding: 4 ].
 
 	self layout: newLayout
 ]
