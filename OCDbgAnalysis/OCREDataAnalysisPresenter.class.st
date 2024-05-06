@@ -663,7 +663,12 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 
 { #category : #updating }
 OCREDataAnalysisPresenter >> showAnalysisForTask: task [
-	taskAnalysisPresenter updateData: (experiment analysisResults at: task name)
+
+	| data |
+	data := task
+		        ifNil: [ OrderedCollection new ]
+		        ifNotNil: [ experiment analysisResults at: task name ].
+	taskAnalysisPresenter updateData: data
 ]
 
 { #category : #export }

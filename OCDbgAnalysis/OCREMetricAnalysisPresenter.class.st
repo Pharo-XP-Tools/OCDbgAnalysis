@@ -36,16 +36,17 @@ OCREMetricAnalysisPresenter >> defaultLayout [
 OCREMetricAnalysisPresenter >> initializePresenters [
 
 	table := self newTable.
-	table addColumn:
-		((SpStringTableColumn
+	table addColumn: ((SpStringTableColumn
 			  title: 'Metric'
 			  evaluated: [ :item | item analysisName ])
 			 sortFunction: nil;
-			 yourself).			
+			 displayColor: [ :item |
+				 item analysisName = 'Task stats'
+					 ifTrue: [ Color blue ]
+					 ifFalse: [ Color black ] ] yourself).
 	table items: data.
-	table transmitDo: [:metric| self analyzeResults: metric].
+	table transmitDo: [ :metric | self analyzeResults: metric ].
 	detailedAnalysisPane := OCREDetailedAnalysisPresenter new
-
 ]
 
 { #category : #'accessing - model' }

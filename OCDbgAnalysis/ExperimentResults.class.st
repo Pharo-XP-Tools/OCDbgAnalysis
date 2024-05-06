@@ -109,7 +109,7 @@ ExperimentResults >> buildTaskResults [
 		taskResult name: taskName.
 		taskResult controlData: ((controls at: taskName) collect:[:t| t duration]).
 		taskResult treatmentData: ((treatments at: taskName) collect:[:t| t duration]).
-		taskResult ratio: ((taskResult controlAvg / taskResult treatmentAvg) asFloat truncateTo: 0.000001).	
+		taskResult ratio: ((taskResult treatmentAvg / taskResult controlAvg) asFloat truncateTo: 0.000001).	
 		taskResult averageDebuggingActionsCount: 
 			{(controls at: taskName) collect: [:next| next countDebugActions ].  
 			(treatments at: taskName) collect: [:next| next countDebugActions ]}]
