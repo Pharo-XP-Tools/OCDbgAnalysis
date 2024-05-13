@@ -83,7 +83,7 @@ PhexDependentVariable >> printSummary [
 	|cResult tResult ratio|
 	cResult := (self controlData collect: #rawValue) average. 
 	tResult := (self treatmentData collect: #rawValue) average. 
-	ratio := (tResult/cResult) - 1.
+	ratio := [(tResult/cResult) - 1] on: ZeroDivide do: [0].
 	^String streamContents: [ :str|
 		
 		str << 'control average = '.

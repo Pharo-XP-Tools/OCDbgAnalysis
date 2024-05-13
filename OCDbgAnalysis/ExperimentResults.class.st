@@ -9,7 +9,8 @@ Class {
 		'controls',
 		'treatments',
 		'participantsExperience',
-		'analysisResults'
+		'analysisResults',
+		'toolsDetailedDiagrams'
 	],
 	#classInstVars : [
 		'dataCache',
@@ -90,6 +91,48 @@ ExperimentResults class >> replaceWith: anExperiment [
 	self cleanCache.
 	current := anExperiment.
 	current participations do: [ :p | self cache: p ]
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> analyseToolRelativeActionsAndTime [
+
+	toolsDetailedDiagrams := (analysisResults keys collect: [ :taskName |
+		                          | tools |
+		                          tools := (analysisResults at: taskName)
+			                                   reject: [ :each |
+			                                   each analysisName = 'Task stats' ].
+		                          taskName -> (self analyseTools: tools forTaskNamed: taskName) ]) asDictionary.
+	^ toolsDetailedDiagrams
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> analyseTools: tools forTaskNamed: taskName [
+
+	|  totalTimeSpent controlTimeData treatmentTimeData ratios results |
+
+	totalTimeSpent := Dictionary new.
+	controlTimeData := tools collect: [ :each| each timeDV controlData ]. 
+	totalTimeSpent at: 'control' put: (controlTimeData inject: 0 into: [ :sum :next| sum + (next collect: #rawValue) sum ]).
+	treatmentTimeData  := tools collect: [ :each| each timeDV treatmentData ]. 
+	totalTimeSpent at: 'treatment' put: (treatmentTimeData inject: 0 into: [ :sum :next| sum + (next collect: #rawValue) sum ]).
+	
+	ratios := Dictionary new.
+	tools do: [ :ta| |name time|
+		name := ta analysisName.
+		time := ta timeDV.
+		ratios at: name put: {
+			 (((time controlData collect: #rawValue) sum)/(totalTimeSpent at: 'control')). 
+			(((time treatmentData collect: #rawValue) sum)/(totalTimeSpent at: 'treatment'))  }
+		
+		 ].
+	self assert: (ratios values collect: #first) sum = 1.
+	self assert: (ratios values collect: #second) sum = 1.
+	
+  results := Dictionary new.
+  results at: 'Comparison' put: (self kiviatForToolsUsage: ratios).
+  results at: 'Control' put: (self pieForToolUsage: (ratios keys collect: [ :k| k -> (ratios at: k) first]) asDictionary).
+  results at: 'Treatement' put: (self pieForToolUsage: (ratios keys collect: [ :k| k -> (ratios at: k) second]) asDictionary).
+  ^results
 ]
 
 { #category : #accessing }
@@ -539,6 +582,64 @@ ExperimentResults >> initialize [
 	participations := OrderedCollection new
 ]
 
+{ #category : #'data analysis' }
+ExperimentResults >> kiviatForToolsUsage: ratios [
+
+	| controlData treatmentData tData cData canvas kiviat lb |
+	controlData := Dictionary new.
+	ratios keysDo: [ :k | controlData at: k put: (self percentageFromRatio: (ratios at: k) first) ].
+
+	treatmentData := Dictionary new.
+	ratios keysDo: [ :k |treatmentData at: k put: (self percentageFromRatio: (ratios at: k) second) ].
+
+	tData := treatmentData associations.
+	cData := controlData associations.
+
+	canvas := RSCanvas new.
+
+	kiviat := RSKiviat new.
+	kiviat addRow: (cData collect: #value).
+	kiviat axisNames: (cData collect: #key).
+	kiviat addRow: (tData collect: #value).
+	kiviat axisNames: (tData collect: #key).
+	kiviat usePolygonBorder.
+	kiviat useDots.
+
+	lb := RSLegend new.
+	lb container: canvas.
+
+	kiviat palette correctColors.
+	kiviat values doWithIndex: [ :a :index |
+		lb
+			text: (index = 1
+					 ifTrue: [ 'Control' ]
+					 ifFalse: [ 'Treatment' ])
+			withBoxColor: (kiviat palette scale: a) ].
+
+	lb legendDo: [ :s |
+		s
+			scaleBy: 2;
+			withBorder;
+			padding: 10 ].
+	lb location above.
+	lb build.
+
+	canvas add: (kiviat asShapeFor: '').
+
+	canvas nodes @ (RSLabeled new shapeBuilder: [ :model |
+		 RSLabel new
+			 color: 'black';
+			 fontSize: 8;
+			 text: model;
+			 yourself ]).
+
+	RSGridLayout new
+		gapSize: 5;
+		on: canvas nodes.
+	canvas @ RSCanvasController.
+	^ canvas
+]
+
 { #category : #'data export' }
 ExperimentResults >> participantExportFormat [
 	|format|
@@ -575,6 +676,53 @@ ExperimentResults >> participations [
 ExperimentResults >> participations: anObject [
 
 	participations := anObject
+]
+
+{ #category : #utils }
+ExperimentResults >> percentageFromRatio: ratio [
+
+	^ (ratio asFloat * 100) truncated
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> pieForToolUsage: ratios [
+
+	| othersNames othersCumulated data pie pieLabel |
+	othersNames := ratios keys select: [ :k |
+		               (ratios at: k) asFloat < 0.05 ].
+	othersCumulated := (othersNames collect: [ :k | ratios at: k ])
+		                   flattened sum.
+	data := Dictionary new.
+	(ratios keys reject: [ :k | othersNames includes: k ]) do: [ :k |
+		data at: k put: (self percentageFromRatio: (ratios at: k)) ].
+	data
+		at: 'Others (<5%)'
+		put: (self percentageFromRatio: othersCumulated).
+
+	"pie"
+	data := data associations.
+	pie := RSPie new
+		       objects: data;
+		       slice: #value.
+	pie sliceShape
+		externalRadius: 240;
+		innerRadius: 170;
+		segmentSpacing: 0.4.
+	pie sliceColor: NSScale category20.
+
+	pieLabel := RSPieLabeledInteraction new.
+	pieLabel labelShape fontSize: 13.
+	pieLabel labelText: [ :obj |
+		obj key , ' ' , (obj value * 100 / pie totalSum) rounded asString
+		, ' %' ].
+
+	pie build.
+	pie canvas
+		when: RSExtentChangedEvent
+		do: [ pie canvas zoomToFit ]
+		for: self.
+	pie shapes @ pieLabel.
+	^ pie canvas
 ]
 
 { #category : #'data export' }
