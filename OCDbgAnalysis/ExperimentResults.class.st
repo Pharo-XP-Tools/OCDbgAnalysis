@@ -149,7 +149,6 @@ ExperimentResults >> analysisResults [
 ExperimentResults >> buildTaskResults [
 	
 
-	self doTasksAnalysis.	
 	^controls keys collect: [ :taskName|  
 		|taskResult|		
 		taskResult := TasksResults new.
