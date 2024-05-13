@@ -658,8 +658,10 @@ ExperimentResults >> kiviatForToolsUsage: ratios [
 		k = 'Unknown Window' ifTrue:[toolName := 'Popups']. 
 		treatmentData at: toolName put: (self percentageFromRatio: (ratios at: k) second) ].
 
-	tData := treatmentData associations reject:[:association| association value < 2].
-	cData := controlData associations reject:[:association| association value < 2]..
+	tData :=( treatmentData associations reject:[:association| association value < 2]) asOrderedCollection.
+	tData add: ('Others' -> ((treatmentData associations select:[:association| association value < 2]) collect: #value) sum).
+	cData := (controlData associations reject:[:association| association value < 2]) asOrderedCollection.
+	cData add:  ('Others' -> ((controlData associations select:[:association| association value < 2]) collect: #value) sum).
 
 	canvas := RSCanvas new.
 
