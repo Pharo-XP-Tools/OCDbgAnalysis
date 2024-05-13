@@ -643,13 +643,23 @@ ExperimentResults >> kiviatForToolsUsage: ratios [
 
 	| controlData treatmentData tData cData canvas kiviat lb |
 	controlData := Dictionary new.
-	ratios keysDo: [ :k | controlData at: k put: (self percentageFromRatio: (ratios at: k) first) ].
+	ratios keysDo: [ :k |
+		|toolName|
+		toolName := k.
+		k = 'External Window' ifTrue:[toolName := 'Experiment Window']. 
+		k = 'Unknown Window' ifTrue:[toolName := 'Popups']. 
+		 controlData at: toolName put: (self percentageFromRatio: (ratios at: k) first) ].
 
 	treatmentData := Dictionary new.
-	ratios keysDo: [ :k |treatmentData at: k put: (self percentageFromRatio: (ratios at: k) second) ].
+	ratios keysDo: [ :k |
+		|toolName|
+		toolName := k.
+		k = 'External Window' ifTrue:[toolName := 'Experiment Window']. 
+		k = 'Unknown Window' ifTrue:[toolName := 'Popups']. 
+		treatmentData at: toolName put: (self percentageFromRatio: (ratios at: k) second) ].
 
-	tData := treatmentData associations.
-	cData := controlData associations.
+	tData := treatmentData associations reject:[:association| association value < 2].
+	cData := controlData associations reject:[:association| association value < 2]..
 
 	canvas := RSCanvas new.
 
@@ -744,13 +754,17 @@ ExperimentResults >> percentageFromRatio: ratio [
 ExperimentResults >> pieForToolUsage: ratios [
 
 	| othersNames othersCumulated data pie pieLabel |
-	othersNames := ratios keys select: [ :k |
-		               (ratios at: k) asFloat < 0.05 ].
+	othersNames := ratios keys select: [ :k | (#('External Window' 'Implementors') includes: k) not and:[
+		               (ratios at: k) asFloat <= 0.02] ].
 	othersCumulated := (othersNames collect: [ :k | ratios at: k ])
 		                   flattened sum.
 	data := Dictionary new.
 	(ratios keys reject: [ :k | othersNames includes: k ]) do: [ :k |
-		data at: k put: (self percentageFromRatio: (ratios at: k)) ].
+		|toolName|
+		toolName := k.
+		k = 'External Window' ifTrue:[toolName := 'Experiment Window']. 
+		k = 'Unknown Window' ifTrue:[toolName := 'Popups']. 
+		data at: toolName put: (self percentageFromRatio: (ratios at: k)) ].
 	data
 		at: 'Others (<5%)'
 		put: (self percentageFromRatio: othersCumulated).
