@@ -117,9 +117,13 @@ ExperimentResults >> analyseTools: tools forTaskNamed: taskName [
 	totalTimeSpent at: 'treatment' put: (treatmentTimeData inject: 0 into: [ :sum :next| sum + (next collect: #rawValue) sum ]).
 	
 	ratios := Dictionary new.
-	tools do: [ :ta| |name time|
+	tools do: [ :ta| |name time ct tt|
 		name := ta analysisName.
 		time := ta timeDV.
+		ct :=  (((time controlData collect: #rawValue) sum)/(totalTimeSpent at: 'control')).
+		tt := (((time treatmentData collect: #rawValue) sum)/(totalTimeSpent at: 'treatment')).
+		ct asFloat < 0 ifTrue:[self halt].
+		tt asFloat < 0 ifTrue:[self halt].
 		ratios at: name put: {
 			 (((time controlData collect: #rawValue) sum)/(totalTimeSpent at: 'control')). 
 			(((time treatmentData collect: #rawValue) sum)/(totalTimeSpent at: 'treatment'))  }
@@ -313,10 +317,10 @@ ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataTy
 	treatmentData := aTaskDataArray second.
 
 	controlWindows := controlData collect: [ :data |
-		                  data eventsHistory filteredWindows groupedBy:
+		                  data eventsHistory windows groupedBy:
 			                  #type ].
 	treatmentWindows := treatmentData collect: [ :data |
-		                    data eventsHistory filteredWindows groupedBy:
+		                    data eventsHistory windows groupedBy:
 			                    #type ].
 
 	possibleTypes := (controlWindows flattened collect: #type) asSet.
@@ -352,7 +356,9 @@ ExperimentResults >> doTasksAnalysis [
 		             :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
 	treatments := ((participations collect: [ :p | p treatment ])
 		               select: [ :t | t notNil and:[t isValid] ]) groupedBy: [ :t | t title ].
-		
+	
+	"Ensuring the true idle time, manually retained, is known by the window record model"	
+	self ensureTrueIdleTimesInWindowRecords.
 	
 	"Analyze and cache results"
 	analysisResults := Dictionary new.
@@ -446,6 +452,57 @@ ExperimentResults >> doToolUsageAnalysis [
 			toolUsageResults occurencesDV:	(PhexDependentVariable usage: {((usage at: #control)at: toolName). ((usage at: #treatment) at: toolName)}).
 			(analysisResults at: taskName ifAbsentPut: [ OrderedCollection new ]) 
 																					add: toolUsageResults ] ]
+]
+
+{ #category : #'data analysis' }
+ExperimentResults >> ensureTrueIdleTimesInWindowRecords [
+
+	| tasksWithTrueIdleTime pbs |
+	pbs := OrderedCollection new.
+	tasksWithTrueIdleTime := (controls values flattened
+		                          asOrderedCollection
+		                          addAll: treatments values flattened;
+		                          yourself) select: #hasTrueInterruptions.
+	tasksWithTrueIdleTime do: [ :task |
+		| interruptions interruptionsTimePerWindow |
+		task eventsHistory windows do:[:win| win trueIdleTime: nil].
+		interruptionsTimePerWindow := Dictionary new.
+		interruptions := task trueInterruptions select: [ :i |
+			                 (i timeGapStartEvent windowId
+			                 = i timeGapStopEvent windowId ) and:[i timeGapStartEvent class ~= DSMouseLeaveWindowRecord]].
+		
+		interruptions do: [ :i |
+			| timeForWindowId |
+			timeForWindowId := interruptionsTimePerWindow
+				                   at: i timeGapStartEvent windowId
+				                   ifAbsentPut: [ 0 ].
+
+			interruptionsTimePerWindow
+				at: i timeGapStartEvent windowId
+				put: i computedIdleTime asSeconds + timeForWindowId ].
+
+
+		interruptionsTimePerWindow keysAndValuesDo: [ :winId :seconds |
+			task eventsHistory windows
+				detect: [ :win | win windowId = winId ]
+				ifFound: [ :win | win trueIdleTime: (win totalTime asSeconds = 0 ifTrue:[0] ifFalse:[seconds]) asSeconds ] ].
+			
+		(task eventsHistory windows select: [ :win |
+			 win totalTime asSeconds < win trueIdleTime asSeconds ])
+			ifNotEmpty: [:col| pbs add: task -> col. self halt ].
+
+		"Second pass, for cases where we miss a window with an unmonitored idle time"
+		task eventsHistory windows
+			detect: [ :w |
+				(interruptionsTimePerWindow keys includes: w windowId) not and: [
+					w totalTime > task duration and: [
+						w trueIdleTime < task retainedIdleTime ] ] ]
+			ifFound: [ :win |
+				win trueIdleTime:
+					(win trueIdleTime asSeconds + task retainedIdleTime asSeconds
+						 min: task retainedIdleTime asSeconds) asSeconds ] ].
+				
+			pbs ifNotEmpty: [ self halt ]
 ]
 
 { #category : #'data export' }

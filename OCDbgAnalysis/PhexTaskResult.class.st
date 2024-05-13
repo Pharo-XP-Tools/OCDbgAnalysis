@@ -185,6 +185,12 @@ PhexTaskResult >> fromTaskStats: aTaskStats [
 ]
 
 { #category : #time }
+PhexTaskResult >> hasTrueInterruptions [
+
+	^ self trueInterruptions notEmpty
+]
+
+{ #category : #time }
 PhexTaskResult >> hasUncheckedInterruptions [
 
 	^ detectedInterruptions anySatisfy: [ :d | d decision isNil ]
@@ -245,6 +251,13 @@ PhexTaskResult >> title [
 PhexTaskResult >> title: anObject [
 
 	title := anObject
+]
+
+{ #category : #time }
+PhexTaskResult >> trueInterruptions [
+
+	^ detectedInterruptions select: [ :e |
+		  e decision notNil and: [ e decision ] ]
 ]
 
 { #category : #accessing }

@@ -9,11 +9,14 @@ Class {
 
 { #category : #initialize }
 PhexToolTimeCalculator class >> compute: data [
-
-	^ data
+|r|
+	r :=  data
 		  inject: 0
 		  into: [ :sum :next |
-		  sum + (next totalTime - next idleTime) asSeconds ]
+		  sum + (next totalTime - next trueIdleTime) asSeconds ].
+	r asSeconds > 10 hours ifTrue:[self halt].
+	r < 0 ifTrue:[self halt].
+	^r
 ]
 
 { #category : #'as yet unclassified' }
@@ -24,5 +27,5 @@ PhexToolTimeCalculator class >> phexPrint: anObject [
 
 { #category : #'as yet unclassified' }
 PhexToolTimeCalculator class >> transform: aRawValue [
-	^aRawValue seconds
+	^aRawValue asSeconds
 ]

@@ -18,5 +18,5 @@ PhexTaskTimeCalculator class >> phexPrint: anObject [
 
 { #category : #'as yet unclassified' }
 PhexTaskTimeCalculator class >> transform: aRawValue [
-	^aRawValue seconds
+	^aRawValue asSeconds
 ]
