@@ -405,12 +405,25 @@ OCREDataAnalysisPresenter >> openDiagrams [
 OCREDataAnalysisPresenter >> participationsGeneralInfo [
 
 	^ String streamContents: [ :s |
+			|validation validParticipations validControls validTreatments|
+			validation := [ :t| t notNil and:[t isValid] ]. 
+			validParticipations := experiment participations select:[:p|
+				(validation value:  p controlTask) and:[(validation value:  p treatmentTask)] ].
+			validControls := experiment participations select:[:p| (validation value:  p controlTask)  ].
+			validTreatments := experiment participations select:[:p| (validation value:  p treatmentTask)  ].
+			
 		  s << experiment participations size asString.
 		  s << ' participations - '.
-		  s << (experiment participations select: [ :p |
-			   p treatmentTask notNil and: [ p treatmentTask isValid ] ]) size
-			  asString.
-		  s << ' valid participations' asString ]
+		  s << validParticipations size asString.
+		  s << ' valid participations, '.
+		 s << validControls size asString.
+		  s << ' valid controls, '.
+		 s << validTreatments size asString.
+		  s << ' valid treatments.'.
+		
+		
+		
+		 ]
 ]
 
 { #category : #charts }
