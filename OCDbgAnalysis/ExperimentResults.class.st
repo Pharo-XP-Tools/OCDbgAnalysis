@@ -746,6 +746,284 @@ ExperimentResults >> participations: anObject [
 	participations := anObject
 ]
 
+{ #category : #'data export' }
+ExperimentResults >> participationsControlsExportForComparisonOfTask: aTaskName in: aCollection [
+
+	| validCheck validControl validTreatment |
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	validControl := participations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                p controlTask title = aTaskName ] ].
+	
+	aCollection add: {
+			aTaskName.
+			(aTaskName , ' time (in min)').
+			(aTaskName , ' actions') }.
+
+	validControl do: [ :t |
+		aCollection add: {
+				aTaskName.
+				t controlTask duration asMinutes printString.
+				t controlTask countDebugActions printString } ].
+
+	
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsCorrectnessExportForBetweenComparison [
+
+	| results csv fields |
+	results := OrderedCollection new.
+	#( 'Ammolite' 'Lights Out' ) do: [ :aTaskName |
+		self participationsExportCorrectnessForComparisonOfTask: aTaskName in: results ].
+	fields := results removeFirst.
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsCorrectnessExportForWithinComparison [
+
+	| results csv fields validCheck valids |
+	results := OrderedCollection new.
+	
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	valids := participations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                 (validCheck value: p treatmentTask) ] ].
+	
+	valids do: [ :t |
+		results add: {
+				'C'.
+				t controlTask correctness printString.
+				'T'.
+				t treatmentTask correctness printString.
+				 } ].	
+
+	fields := #('Control' 'Control correctness' 'Treatment' 'Treatment correctness').
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportControlsForBetweenComparison [
+
+	| results csv fields |
+	results := OrderedCollection new.
+	#( 'Ammolite' 'Lights Out' ) do: [ :aTaskName |
+		self participationsControlsExportForComparisonOfTask: aTaskName in: results ].
+	fields := results removeFirst.
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportCorrectnessForComparisonOfTask: aTaskName in: aCollection [
+
+	| validCheck validControl validTreatment |
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	validControl := participations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                p controlTask title = aTaskName ] ].
+	validTreatment := participations select: [ :p |
+		                  (validCheck value: p treatmentTask) and: [
+			                  p treatmentTask title = aTaskName ] ].
+
+	aCollection add: {
+			aTaskName.
+			(aTaskName , ' Correctness') }.
+
+	validControl do: [ :t |
+		aCollection add: {
+				'C'.
+				t controlTask correctness printString.
+				 } ].
+
+	validTreatment do: [ :t |
+		aCollection add: {
+				'T'.
+				t treatmentTask correctness printString } ]
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForBetweenComparison [
+
+	| results csv fields |
+	results := OrderedCollection new.
+	#( 'Ammolite' 'Lights Out' ) do: [ :aTaskName |
+		self participationsExportForComparisonOfTask: aTaskName in: results ].
+	fields := results removeFirst.
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForBetweenComparisonExperts [
+
+	| results csv fields |
+	results := OrderedCollection new.
+	#( 'Ammolite' 'Lights Out' ) do: [ :aTaskName |
+		self participationsExportForComparisonOfTaskExperts: aTaskName in: results ].
+	fields := results removeFirst.
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForBetweenComparisonNotExperts [
+
+	| results csv fields |
+	results := OrderedCollection new.
+	#( 'Ammolite' 'Lights Out' ) do: [ :aTaskName |
+		self participationsExportForComparisonOfTaskNotExperts: aTaskName in: results ].
+	fields := results removeFirst.
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForComparisonOfTask: aTaskName in: aCollection [
+
+	| validCheck validControl validTreatment |
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	validControl := participations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                p controlTask title = aTaskName ] ].
+	validTreatment := participations select: [ :p |
+		                  (validCheck value: p treatmentTask) and: [
+			                  p treatmentTask title = aTaskName ] ].
+
+	aCollection add: {
+			aTaskName.
+			(aTaskName , ' time (in min)').
+			(aTaskName , ' actions') }.
+
+	validControl do: [ :t |
+		aCollection add: {
+				'C'.
+				t controlTask duration asMinutes printString.
+				t controlTask countDebugActions printString } ].
+
+	validTreatment do: [ :t |
+		aCollection add: {
+				'T'.
+				t treatmentTask duration asMinutes printString.
+				t treatmentTask countDebugActions printString } ]
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForComparisonOfTaskExperts: aTaskName in: aCollection [
+
+	| notExpertsParticipations validCheck validControl validTreatment |
+	notExpertsParticipations := participations select:[:p| p pharoExperience > 2].
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	validControl := notExpertsParticipations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                p controlTask title = aTaskName ] ].
+	validTreatment := notExpertsParticipations select: [ :p |
+		                  (validCheck value: p treatmentTask) and: [
+			                  p treatmentTask title = aTaskName ] ].
+
+	aCollection add: {
+			aTaskName.
+			(aTaskName , ' time (in min)').
+			(aTaskName , ' actions') }.
+
+	validControl do: [ :t |
+		aCollection add: {
+				'C'.
+				t controlTask duration asMinutes printString.
+				t controlTask countDebugActions printString } ].
+
+	validTreatment do: [ :t |
+		aCollection add: {
+				'T'.
+				t treatmentTask duration asMinutes printString.
+				t treatmentTask countDebugActions printString } ]
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForComparisonOfTaskNotExperts: aTaskName in: aCollection [
+
+	| notExpertsParticipations validCheck validControl validTreatment |
+	notExpertsParticipations := participations select:[:p| p pharoExperience > 0 and: [p pharoExperience < 3 ] ].
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	validControl := notExpertsParticipations select: [ :p |
+		                (validCheck value: p controlTask) and: [
+			                p controlTask title = aTaskName ] ].
+	validTreatment := notExpertsParticipations select: [ :p |
+		                  (validCheck value: p treatmentTask) and: [
+			                  p treatmentTask title = aTaskName ] ].
+
+	aCollection add: {
+			aTaskName.
+			(aTaskName , ' time (in min)').
+			(aTaskName , ' actions') }.
+
+	validControl do: [ :t |
+		aCollection add: {
+				'C'.
+				t controlTask duration asMinutes printString.
+				t controlTask countDebugActions printString } ].
+
+	validTreatment do: [ :t |
+		aCollection add: {
+				'T'.
+				t treatmentTask duration asMinutes printString.
+				t treatmentTask countDebugActions printString } ]
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsExportForWithinComparison [
+
+	| valid csv |
+	valid := participations select: [ :p |
+		(p controlTask title = 'Ammolite') and:
+		        [ {
+			         p controlTask.
+			         p treatmentTask } allSatisfy: [ :t |
+			         t notNil and: [ t isValid ] ]] ].
+	csv := String streamContents: [ :str|
+		
+		valid do:[:p|
+			str << p controlTask duration asMinutes printString.
+			str << ';'.
+			str << p treatmentTask duration asMinutes printString.
+			str << ';'.
+			str << p controlTask countDebugActions printString. 
+			str << ';'.
+			str << p treatmentTask countDebugActions printString.
+			str cr
+			]
+		
+		 ].
+	^csv
+]
+
 { #category : #utils }
 ExperimentResults >> percentageFromRatio: ratio [
 
