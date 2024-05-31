@@ -11,6 +11,30 @@ Class {
 	#category : #'OCDbgAnalysis-Presenters'
 }
 
+{ #category : #'as yet unclassified' }
+OCREExperienceScatterPlots class >> queryIdForClass: aSeekerClassName [
+
+	| dict |
+	dict := Dictionary new.
+	dict at: 'SkAllMessageSendsLC' put: 'I.1'.
+	dict at: 'SkAllMessageSendsWithSelectorLC' put: 'I.2'.
+	dict at: 'SkAllReceivedMessagesLC' put: 'I.3'.
+	
+	dict at: 'SkAllInstanceCreationsLC' put: 'II.1'.
+	dict at: 'SkAllInstanceCreationsOfClassLC' put: 'II.2'.	
+	dict at: 'SkAllInstanceCreationsOfExceptionLC' put: 'II.3'.
+	
+	dict at: 'SkChangesOfAnyVariableLC' put: 'III.1'.
+	dict at: 'SkChangesOfVariableByNameLC' put: 'III.2'.
+	dict at: 'SkChangesOfAnyObjectOfClassLC' put: 'III.3'.	
+	
+	dict at: 'SkChangesOfSelfLC' put: 'IV.1'.	
+	dict at: 'SkChangesOfObjectLC' put: 'IV.2'.	
+	dict at: 'SkChangesOfInstanceVariableLC' put: 'IV.3'.
+	
+	^dict at: aSeekerClassName
+]
+
 { #category : #layout }
 OCREExperienceScatterPlots >> defaultLayout [
 
