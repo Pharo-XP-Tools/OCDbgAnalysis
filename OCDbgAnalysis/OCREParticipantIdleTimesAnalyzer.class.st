@@ -45,6 +45,22 @@ OCREParticipantIdleTimesAnalyzer >> defaultLayout [
 		  yourself
 ]
 
+{ #category : #'as yet unclassified' }
+OCREParticipantIdleTimesAnalyzer >> fixItemWithReading: aSpMenuItemPresenter [
+
+	| text |
+	text := 'Case 4: computed and declared interruption are not consistent. 
+The participant spends about {1} doing nothing or reading a text presenter, or just after moved their mouse over a text editor and starts navigating. 
+It is possible that the participant was reading text. 
+Decision: not an interruption.' format:
+		        { idleTimesList selectedItem computedIdleTime
+			        humanReadablePrintString }.
+
+	comment text: text.
+	selectedIdleTime decision: false.
+	self updateSelectedIdleTime: selectedIdleTime
+]
+
 { #category : #initialization }
 OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 
@@ -55,6 +71,7 @@ OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 			ifNotNil: [ item decision ifTrue:[ Color blue] ifFalse:[Color black] ] ].
 	idleTimesList whenSelectedDo: [ :s | self updateSelectedIdleTime: s ].
 	idleTimesList items: idleTimes.
+	idleTimesList  contextMenu: self menu.
 
 	eventInspector := self newPresenter.
 	eventInspector layout: SpBoxLayout newTopToBottom.
@@ -93,6 +110,18 @@ OCREParticipantIdleTimesAnalyzer >> initializeWindow: w [
 
 	super initializeWindow: w.
 	w title: 'Idle time analyzer'
+]
+
+{ #category : #initialization }
+OCREParticipantIdleTimesAnalyzer >> menu [
+
+	^ self newMenu
+		  addItem: [ :anItem |
+			  anItem
+				  name: 'Case4: reading ';
+				  iconName: #testGreen;
+				  action: [ self fixItemWithReading: anItem ] ];
+		  yourself
 ]
 
 { #category : #'accessing - model' }
