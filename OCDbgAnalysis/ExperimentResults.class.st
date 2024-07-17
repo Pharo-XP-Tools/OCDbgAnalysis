@@ -608,6 +608,15 @@ ExperimentResults >> exportParticipantDataToCSV [
 		close
 ]
 
+{ #category : #'as yet unclassified' }
+ExperimentResults >> exportTaskAndExperimentFeedback [
+
+	| feedback |
+	feedback := OrderedCollection new.
+	self participations collect: [ :p| self halt ].
+	
+]
+
 { #category : #'data extraction' }
 ExperimentResults >> extractContactInformation [
 
@@ -706,6 +715,26 @@ ExperimentResults >> kiviatForToolsUsage: ratios [
 		on: canvas nodes.
 	canvas @ RSCanvasController.
 	^ canvas
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> obtainPersonnalDataAndAnonymize [
+
+	| personnalData |
+	personnalData := self participations collect: [ :p |
+		                 | emails |
+		                 emails := { nil. nil }.
+		                 p contactInfo ifNotNil: [ :survey |
+			                 survey answers second answer ifNotNil: [ :ans |
+				                 emails at: 1 put: ans ].
+			                 survey answers third answer ifNotNil: [ :ans |
+				                 emails at: 2 put: ans ] ].
+		                 emails ].
+	self halt.
+	self participations do: [ :p |
+		p contactInfo ifNotNil: [ :survey |
+			survey answers second answer: ''.
+			survey answers third answer: '' ] ]
 ]
 
 { #category : #'data export' }
@@ -811,6 +840,49 @@ ExperimentResults >> participationsCorrectnessExportForWithinComparison [
 		nextPutAll: results.
 
 	^ csv contents
+]
+
+{ #category : #'data export' }
+ExperimentResults >> participationsCorrectnessExportForWithinComparisonBySequence [
+
+	| results csv fields validCheck valids |
+	results := OrderedCollection new.	
+	validCheck := [ :t | t notNil and: [ t isValid ] ].
+	
+	valids := participations select: [ :p | (validCheck value: p controlTask) and: [validCheck value: p treatmentTask ] ].
+	
+	(valids select: [ :p | p controlTask title = 'Ammolite' ]) do: [ :t |
+		results add: {
+				'C'.
+				t controlTask correctness printString.
+				'T'.
+				t treatmentTask correctness printString.
+				 } ].	
+
+	fields := #('Control S1' 'Control correctness S1' 'Treatment S1' 'Treatment correctness S1').
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+
+	csv contents inspect.
+	
+	results := OrderedCollection new.
+	(valids select: [ :p | p treatmentTask title = 'Ammolite' ]) do: [ :t |
+		results add: {
+				'C'.
+				t controlTask correctness printString.
+				'T'.
+				t treatmentTask correctness printString.
+				 } ].	
+
+	fields := #('Control S2' 'Control correctness S2' 'Treatment S2' 'Treatment correctness S2').
+	csv := WriteStream on: String new.
+	(NeoCSVWriter on: csv)
+		nextPut: fields;
+		nextPutAll: results.
+		
+	csv contents inspect.
 ]
 
 { #category : #'data export' }
@@ -1002,7 +1074,7 @@ ExperimentResults >> participationsExportForWithinComparison [
 
 	| valid csv |
 	valid := participations select: [ :p |
-		(p controlTask title = 'Ammolite') and:
+		(p controlTask title ~= 'Ammolite') and:
 		        [ {
 			         p controlTask.
 			         p treatmentTask } allSatisfy: [ :t |
