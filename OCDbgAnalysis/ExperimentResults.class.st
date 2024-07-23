@@ -93,6 +93,12 @@ ExperimentResults class >> replaceWith: anExperiment [
 	current participations do: [ :p | self cache: p ]
 ]
 
+{ #category : #'ston-core' }
+ExperimentResults class >> stonAllInstVarNames [
+
+	^ #( participations controls treatments participantsExperience )
+]
+
 { #category : #'data analysis' }
 ExperimentResults >> analyseToolRelativeActionsAndTime [
 

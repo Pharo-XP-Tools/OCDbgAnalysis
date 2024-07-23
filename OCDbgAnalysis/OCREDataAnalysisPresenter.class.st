@@ -264,6 +264,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 				 item controlTask hasUncheckedInterruptions
 					 ifTrue: [ Color red ]
 					 ifFalse: [ Color black ] ];
+				displayBackgroundColor: [ :p |
+				 p controlTask ifNil:[Color lightRed] 
+					ifNotNil:[:t|				 
+					 (t correctness ifNil:[false])				
+						 	ifTrue: [ Color white ]
+					 		ifFalse: [ Color yellow ]] ];
 			 sortFunction: nil;
 			 yourself).
 
@@ -288,6 +294,12 @@ OCREDataAnalysisPresenter >> initializePresenters [
 						  item treatmentTask hasUncheckedInterruptions ])
 					 ifTrue: [ Color red ]
 					 ifFalse: [ Color black ] ];
+				displayBackgroundColor: [ :p |
+				  p treatmentTask ifNil:[Color lightRed] 
+					ifNotNil:[:t|				 
+					 (t correctness ifNil:[false])				
+						 	ifTrue: [ Color white ]
+					 		ifFalse: [ Color yellow ]]];
 			 sortFunction: nil;
 			 yourself).
 
