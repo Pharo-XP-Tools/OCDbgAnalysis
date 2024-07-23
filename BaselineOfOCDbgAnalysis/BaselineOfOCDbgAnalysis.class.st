@@ -41,7 +41,7 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 	"Note that the repository of the next baseline is not in the Pharo-XP-Tools github"
 	Metacello new
 		baseline: 'DebuggingSpy';
-		repository: 'github://Pharo-XP-Tools/DebuggingSpy';
+		repository: 'github://Pharo-XP-Tools/DebuggingSpy:P11';
 		load.
 
 	Metacello new
