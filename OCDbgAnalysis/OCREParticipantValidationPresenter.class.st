@@ -8,6 +8,12 @@ Class {
 	#category : #'OCDbgAnalysis-Presenters'
 }
 
+{ #category : #accessing }
+OCREParticipantValidationPresenter class >> defaultExtent [
+
+	^ 600@400
+]
+
 { #category : #'accessing - model' }
 OCREParticipantValidationPresenter >> defaultLayout [
 

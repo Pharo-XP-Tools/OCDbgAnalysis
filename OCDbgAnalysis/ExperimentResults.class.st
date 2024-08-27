@@ -550,6 +550,31 @@ ExperimentResults >> experimentFeedbackSurveySize [
 	^16
 ]
 
+{ #category : #'as yet unclassified' }
+ExperimentResults >> export [
+
+	^ ExperimentResultsExport new 
+		results: self; 
+		yourself
+]
+
+{ #category : #'as yet unclassified' }
+ExperimentResults >> exportDetailedToolsMetricsInCSV [
+
+
+	^ self participations collect: [ :p |
+		p -> { 
+			#control -> (p controlTask 
+				ifNotNil: [ :t | t eventsHistory windows groupedBy: #type ] 
+				ifNil: [ OrderedCollection new ]) .
+			#treatment -> (p treatmentTask
+				ifNotNil: [ :t | t eventsHistory windows groupedBy: #type ] 
+				ifNil: [ OrderedCollection new ]  
+			) .
+		}
+	] as: Dictionary.
+]
+
 { #category : #'data export' }
 ExperimentResults >> exportParticipantDataToCSV [
 
