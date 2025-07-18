@@ -1,10 +1,11 @@
 Class {
-	#name : #BaselineOfOCDbgAnalysis,
-	#superclass : #BaselineOf,
-	#category : #BaselineOfOCDbgAnalysis
+	#name : 'BaselineOfOCDbgAnalysis',
+	#superclass : 'BaselineOf',
+	#category : 'BaselineOfOCDbgAnalysis',
+	#package : 'BaselineOfOCDbgAnalysis'
 }
 
-{ #category : #baselines }
+{ #category : 'baselines' }
 BaselineOfOCDbgAnalysis >> baseline: spec [
 	<baseline>
 	spec for: #'common' do: [
@@ -14,7 +15,7 @@ BaselineOfOCDbgAnalysis >> baseline: spec [
 			package: 'OCDbgAnalysis' ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 BaselineOfOCDbgAnalysis >> postload: loader package: packageSpec [
 
 	(StPlayground new
@@ -24,7 +25,7 @@ OCDbgExampleCode loadDataFromPath: ''/Users/maxw/Documents/ocrex1pilot/User-a1ef
 		 yourself) open
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 
 	"This preload hook will execute the required baselines. (We are not using the built-in dependencies system of baselines)"
@@ -37,12 +38,6 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
 		load.
 
 	"without the onWarning: line, you must choose the 'load' button in both appearing dialogs."
-
-	"Note that the repository of the next baseline is not in the Pharo-XP-Tools github"
-	Metacello new
-		baseline: 'DebuggingSpy';
-		repository: 'github://Pharo-XP-Tools/DebuggingSpy:P11';
-		load.
 
 	Metacello new
 		baseline: 'DSSpyEventRecorder';
@@ -57,14 +52,5 @@ BaselineOfOCDbgAnalysis >> preload: loader package: packageSpec [
                 "ensureDownloadedData;
                 ensureExtractedData"
 '.
-	"JSON tools from our fork"
-	"Metacello new
-		repository: 'github://Pharo-XP-Tools/NeoJSON/repository';
-		baseline: 'NeoJSON';
-		load"
-		
-	[Metacello new
-    baseline: 'Roassal';
-    repository: 'github://pharo-graphics/Roassal';
-    load: 'Full'.] on: MCMergeOrLoadWarning do: [:warning | warning load ]
+
 ]
