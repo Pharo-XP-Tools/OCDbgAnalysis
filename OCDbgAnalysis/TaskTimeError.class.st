@@ -57,6 +57,12 @@ TaskTimeError >> initialize [
 	comment := String new
 ]
 
+{ #category : 'printing' }
+TaskTimeError >> printOn: aStream [
+
+	duration printHumanReadableOn: aStream
+]
+
 { #category : 'accessing' }
 TaskTimeError >> start [
 
