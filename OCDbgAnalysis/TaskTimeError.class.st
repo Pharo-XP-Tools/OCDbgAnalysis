@@ -7,7 +7,8 @@ Class {
 		'stop',
 		'duration',
 		'count',
-		'comment'
+		'comment',
+		'tag'
 	],
 	#category : 'OCDbgAnalysis-ExportModel',
 	#package : 'OCDbgAnalysis',
@@ -85,6 +86,18 @@ TaskTimeError >> stop [
 TaskTimeError >> stop: anObject [
 
 	stop := anObject
+]
+
+{ #category : 'accessing' }
+TaskTimeError >> tag [
+
+	^ tag
+]
+
+{ #category : 'accessing' }
+TaskTimeError >> tag: anObject [
+
+	tag := anObject 
 ]
 
 { #category : 'accessing' }
