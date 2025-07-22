@@ -6,23 +6,25 @@ My subclasses should reimplement thess methods to compute adequate metric data p
 
 "
 Class {
-	#name : #PhexMetricCalculator,
-	#superclass : #Object,
-	#category : #'OCDbgAnalysis-NewModel'
+	#name : 'PhexMetricCalculator',
+	#superclass : 'Object',
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 PhexMetricCalculator class >> compute: data [
 
 	^self subclassResponsibility 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexMetricCalculator class >> phexPrint: anObject [
 	^anObject asFloat printString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexMetricCalculator class >> transform: aRawValue [
 	^aRawValue
 ]

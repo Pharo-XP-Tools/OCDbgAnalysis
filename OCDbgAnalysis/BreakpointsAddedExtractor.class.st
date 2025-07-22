@@ -1,10 +1,12 @@
 Class {
-	#name : #BreakpointsAddedExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'BreakpointsAddedExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsAddedExtractor >> extract [
 
 	| taskEvents |
@@ -14,7 +16,7 @@ BreakpointsAddedExtractor >> extract [
 	^ taskEvents count: [ :evt | (evt isKindOf: DSAbstractBreakpointEventRecord) and: [ evt objectCentric not and: [ evt eventName = 'BreakpointAdded' ] ]  ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsAddedExtractor >> targetField [
 
 	^ #breakpointsAdded

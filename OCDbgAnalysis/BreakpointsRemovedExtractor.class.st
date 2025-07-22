@@ -1,10 +1,12 @@
 Class {
-	#name : #BreakpointsRemovedExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'BreakpointsRemovedExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsRemovedExtractor >> extract [
 
 	| taskEvents |
@@ -14,7 +16,7 @@ BreakpointsRemovedExtractor >> extract [
 	^ taskEvents count: [ :evt | (evt isKindOf: DSAbstractBreakpointEventRecord) and: [ evt objectCentric not and: [ evt eventName = 'BreakpointRemoved' ] ]  ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsRemovedExtractor >> targetField [
 
 	^ #breakpointsRemoved

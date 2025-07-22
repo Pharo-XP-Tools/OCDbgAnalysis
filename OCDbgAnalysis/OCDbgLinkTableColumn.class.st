@@ -1,12 +1,14 @@
 Class {
-	#name : #OCDbgLinkTableColumn,
-	#superclass : #SpLinkTableColumn,
+	#name : 'OCDbgLinkTableColumn',
+	#superclass : 'SpLinkTableColumn',
 	#traits : 'SpTDecoratedText',
 	#classTraits : 'SpTDecoratedText classTrait',
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #visiting }
+{ #category : 'visiting' }
 OCDbgLinkTableColumn >> acceptColumnVisitor: aBuilder [
 
 	^ aBuilder visitOCDbgLinkColumn: self

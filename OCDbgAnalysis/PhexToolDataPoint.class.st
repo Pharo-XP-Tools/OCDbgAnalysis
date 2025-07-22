@@ -2,35 +2,37 @@
 I model a scalar data point computed from DSWindow tool events.
 "
 Class {
-	#name : #PhexToolDataPoint,
-	#superclass : #PhexDataPoint,
+	#name : 'PhexToolDataPoint',
+	#superclass : 'PhexDataPoint',
 	#instVars : [
 		'toolName',
 		'rawValue'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolDataPoint >> analysisName: anObject [
 
 	toolName := anObject
 ]
 
-{ #category : #'private - computation' }
+{ #category : 'private - computation' }
 PhexToolDataPoint >> compute [
 
 	rawValue := dataType compute: rawData.
 	value := dataType transform: rawValue
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolDataPoint >> name [
 
 	^ toolName ifNil: [ super name ]
 ]
 
-{ #category : #'private - computation' }
+{ #category : 'private - computation' }
 PhexToolDataPoint >> printOn: aStream [
 
 	super printOn: aStream.
@@ -40,7 +42,7 @@ PhexToolDataPoint >> printOn: aStream [
 	aStream <<')'.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolDataPoint >> rawValue [
 	^ rawValue ifNil:[0]
 ]

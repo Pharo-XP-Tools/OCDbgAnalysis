@@ -1,6 +1,6 @@
 Class {
-	#name : #ParticipantResult,
-	#superclass : #Object,
+	#name : 'ParticipantResult',
+	#superclass : 'Object',
 	#instVars : [
 		'tasks',
 		'participant',
@@ -12,16 +12,18 @@ Class {
 		'shortId',
 		'demographicSurvey'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult class >> neoJsonMapping: mapper [
 	mapper for: self do: [ :mapping |
 		mapping mapInstVars: #(tasks participant)]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ParticipantResult class >> newFromData: aCollection [
 
 	| result dstasks taskStats |
@@ -35,7 +37,7 @@ ParticipantResult class >> newFromData: aCollection [
 	^ result
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ParticipantResult class >> newFromData: aCollection withUserID: userId [
 
 	| result dstasks taskStats |
@@ -51,7 +53,7 @@ ParticipantResult class >> newFromData: aCollection withUserID: userId [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult class >> resultsCollectionFromFiles: aCollection [
 
 	| allParticipantsResult |
@@ -63,7 +65,7 @@ ParticipantResult class >> resultsCollectionFromFiles: aCollection [
 	^ allParticipantsResult
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ParticipantResult >> = anObject [
 
 	self == anObject ifTrue: [ ^ true ].
@@ -72,19 +74,19 @@ ParticipantResult >> = anObject [
 	^ self tasks = anObject tasks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> controlScore [
 
 	^ controlScore
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> controlScore: anObject [
 
 	controlScore := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> controlTask [
 
 	| taskStat |
@@ -94,7 +96,7 @@ ParticipantResult >> controlTask [
 	^ taskStat
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> controlTaskInfos [
 
 	| task str |
@@ -110,7 +112,7 @@ ParticipantResult >> controlTaskInfos [
 	^ str contents
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ParticipantResult >> dataChecked [
 
 	controlScore := tasks first correctness.
@@ -119,12 +121,12 @@ ParticipantResult >> dataChecked [
 	^ controlScore notNil and: [ treatmentScore notNil ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> dateStarted [
 	^tasks first events first dateTime 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> demographicSurvey [
 
 	^ demographicSurvey ifNil: [
@@ -134,12 +136,12 @@ ParticipantResult >> demographicSurvey [
 			                       ifNone: [ nil ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> experience [
 	^participant participantDeclaredExperience
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> hasValidDemographicSurvey [
 
 	^ (self demographicSurvey isNil or: [
@@ -147,57 +149,57 @@ ParticipantResult >> hasValidDemographicSurvey [
 			   a answer answer = 'No choice' ] ]) not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> id [
 
 	^ id
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> id: anObject [
 
 	id := anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ParticipantResult >> isControlTaskValid [
 
 	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks first taskInfo title)
 		  and: [ tasks first isValid ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ParticipantResult >> isParticipationValid [
 
 	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks last taskInfo title)
 		  and: [ tasks last isValid ]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 ParticipantResult >> isTreatmentTaskValid [
 
 	^ (#( 'Lights Out' 'Ammolite' ) includes: tasks last taskInfo title)
 		  and: [ tasks last isValid ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> ocBreakpointsAdded [
 	^participant ocBreakpointsAdded 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> participant [
 
 	^ participant
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> participant: anObject [
 
 	participant := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 ParticipantResult >> printCorrectness [
 
 	^ String streamContents: [ :str |
@@ -206,60 +208,60 @@ ParticipantResult >> printCorrectness [
 		  str << (treatmentScore ifTrue:['1'] ifFalse:['0']) ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> rawData [
 
 	^ rawData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> rawData: anObject [
 
 	rawData := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> shortId [
 	^shortId ifNil:[shortId := id readStream upTo: $-; upTo: $-; upTo: $-; upTo: $-; upTo: $-]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> shouldCount [
 
 	^ shouldCount ifNil: [ shouldCount := true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> shouldCount: anObject [
 
 	shouldCount := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> tasks [
 
 	^ tasks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> tasks: anObject [
 
 	tasks := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> treatmentScore [
 
 	^ treatmentScore
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantResult >> treatmentScore: anObject [
 
 	treatmentScore := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> treatmentTask [
 
 	| taskStat |
@@ -269,7 +271,7 @@ ParticipantResult >> treatmentTask [
 	^ taskStat
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantResult >> treatmentTaskInfos [
 
 	| task str |

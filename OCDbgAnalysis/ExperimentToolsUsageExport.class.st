@@ -1,14 +1,16 @@
 Class {
-	#name : #ExperimentToolsUsageExport,
-	#superclass : #Object,
+	#name : 'ExperimentToolsUsageExport',
+	#superclass : 'Object',
 	#instVars : [
 		'results',
 		'filename'
 	],
-	#category : #'OCDbgAnalysis-Exports'
+	#category : 'OCDbgAnalysis-Exports',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Exports'
 }
 
-{ #category : #private }
+{ #category : 'private' }
 ExperimentToolsUsageExport >> computeMetricsPerTask: aTask [
 
 	| metrics |
@@ -24,7 +26,7 @@ ExperimentToolsUsageExport >> computeMetricsPerTask: aTask [
 	^ metrics 
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ExperimentToolsUsageExport >> computeMetricsPerWindowGroup: aGroup forTask: aTask [
 
 	| type | 
@@ -39,7 +41,7 @@ ExperimentToolsUsageExport >> computeMetricsPerWindowGroup: aGroup forTask: aTas
 	}
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ExperimentToolsUsageExport >> computeTaskWindowsByType: aTask [
 
 	| windows |
@@ -51,37 +53,37 @@ ExperimentToolsUsageExport >> computeTaskWindowsByType: aTask [
 	^ 	windows sort: [ :a :b | a key < b key ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentToolsUsageExport >> filename [
 
 	^ filename
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentToolsUsageExport >> filename: aFilename [
 
 	filename := aFilename
 ]
 
-{ #category : #removing }
+{ #category : 'removing' }
 ExperimentToolsUsageExport >> removeNonWhitespaces: aString [
 
 	^ ('[\w|-]+' asRegex matchesIn: aString) joinUsing: '_'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentToolsUsageExport >> results [
 
 	^ results
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentToolsUsageExport >> results: anObject [
 
 	results := anObject
 ]
 
-{ #category : #services }
+{ #category : 'services' }
 ExperimentToolsUsageExport >> save [
 
 	| table  |

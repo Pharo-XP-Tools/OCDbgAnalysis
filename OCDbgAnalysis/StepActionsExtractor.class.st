@@ -1,10 +1,12 @@
 Class {
-	#name : #StepActionsExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'StepActionsExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 StepActionsExtractor >> extract [
 
 	| taskEvents |
@@ -14,7 +16,7 @@ StepActionsExtractor >> extract [
 	^ taskEvents count: [ :evt | evt class = DSStepActionRecord ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 StepActionsExtractor >> targetField [
 
 	^ #stepActions

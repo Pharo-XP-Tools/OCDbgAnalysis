@@ -1,10 +1,12 @@
 Class {
-	#name : #TaskAnswerExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'TaskAnswerExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 TaskAnswerExtractor >> extract [
 
 	| dsTask |
@@ -15,7 +17,7 @@ TaskAnswerExtractor >> extract [
 	^ dsTask answer
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TaskAnswerExtractor >> targetField [
 
 	^ #answer

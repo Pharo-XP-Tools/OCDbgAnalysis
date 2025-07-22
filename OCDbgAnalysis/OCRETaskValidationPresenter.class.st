@@ -1,6 +1,6 @@
 Class {
-	#name : #OCRETaskValidationPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCRETaskValidationPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'task',
 		'success',
@@ -12,10 +12,12 @@ Class {
 		'validityComment',
 		'correctnessLabel'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCRETaskValidationPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -34,7 +36,7 @@ OCRETaskValidationPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCRETaskValidationPresenter >> initializePresenters [
 	title := self newLabel label: task title.
 	success := self newLabel
@@ -69,7 +71,7 @@ OCRETaskValidationPresenter >> initializePresenters [
 	validityComment whenTextChangedDo: [ :newValue| task validityComment: newValue ].
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCRETaskValidationPresenter >> setModelBeforeInitialization: aTask [
 
 	task := aTask

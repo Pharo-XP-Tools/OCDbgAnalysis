@@ -1,13 +1,15 @@
 Class {
-	#name : #CSVTable,
-	#superclass : #Object,
+	#name : 'CSVTable',
+	#superclass : 'Object',
 	#instVars : [
 		'table'
 	],
-	#category : #'OCDbgAnalysis-Exports'
+	#category : 'OCDbgAnalysis-Exports',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Exports'
 }
 
-{ #category : #translating }
+{ #category : 'translating' }
 CSVTable >> headers [
 
 	^ (self rows flatCollect: [ :r | r asDictionary keys ]) asSet.
@@ -15,13 +17,13 @@ CSVTable >> headers [
 	
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 CSVTable >> initialize [
 
 	table := OrderedCollection new
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 CSVTable >> newRow [
 
 	| row |
@@ -33,7 +35,7 @@ CSVTable >> newRow [
 	^ row
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 CSVTable >> newRow: aAssociations [
 
 	^ self newRow 
@@ -41,13 +43,13 @@ CSVTable >> newRow: aAssociations [
 		yourself.
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 CSVTable >> rows [
 
 	^ table
 ]
 
-{ #category : #translating }
+{ #category : 'translating' }
 CSVTable >> writeOn: aWriteStream [
 
 	| headers items |

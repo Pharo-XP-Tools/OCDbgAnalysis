@@ -1,10 +1,12 @@
 Class {
-	#name : #TestSucessRawExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'TestSucessRawExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 TestSucessRawExtractor >> extract [
 
 	| dsTaskSucess |
@@ -16,7 +18,7 @@ TestSucessRawExtractor >> extract [
 	^ dsTaskSucess success
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TestSucessRawExtractor >> targetField [
 
 	^ #testSuccessRaw

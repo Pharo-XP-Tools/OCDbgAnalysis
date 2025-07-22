@@ -1,15 +1,17 @@
 Class {
-	#name : #CollectedTasks,
-	#superclass : #Object,
+	#name : 'CollectedTasks',
+	#superclass : 'Object',
 	#instVars : [
 		't1',
 		't2',
 		'tasks'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #adding }
+{ #category : 'adding' }
 CollectedTasks >> addTaskStats: aTaskStat [
 
 	aTaskStat isValid ifFalse:[^self].
@@ -19,37 +21,37 @@ CollectedTasks >> addTaskStats: aTaskStat [
 		self t2 add: aTaskStat ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> t1 [
 
 	^ t1 ifNil:[t1 := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> t1: anObject [
 
 	t1 := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> t2 [
 
 	^ t2 ifNil:[t2 := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> t2: anObject [
 
 	t2 := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> tasks [
 
 	^ tasks
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 CollectedTasks >> tasks: anObject [
 
 	tasks := anObject

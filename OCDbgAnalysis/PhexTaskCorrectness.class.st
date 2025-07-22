@@ -4,16 +4,18 @@ By default, I am neither correct or incorrect and isCorrect returns nil.
 
 "
 Class {
-	#name : #PhexTaskCorrectness,
-	#superclass : #PhexTaskCheck,
+	#name : 'PhexTaskCorrectness',
+	#superclass : 'PhexTaskCheck',
 	#instVars : [
 		'isCorrect',
 		'correctnessTest'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCorrectness >> correctnessTest [
 
 	^ correctnessTest ifNil: [
@@ -25,19 +27,19 @@ PhexTaskCorrectness >> correctnessTest [
 			                     ifNotNil: [ :e | e successBoolean ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCorrectness >> correctnessTest: anObject [
 
 	correctnessTest := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCorrectness >> isCorrect [
 
 	^ isCorrect
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCorrectness >> isCorrect: anObject [
 
 	isCorrect := anObject

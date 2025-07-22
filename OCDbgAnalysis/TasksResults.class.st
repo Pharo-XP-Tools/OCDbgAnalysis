@@ -1,6 +1,6 @@
 Class {
-	#name : #TasksResults,
-	#superclass : #Object,
+	#name : 'TasksResults',
+	#superclass : 'Object',
 	#instVars : [
 		'name',
 		'controlAvg',
@@ -10,101 +10,103 @@ Class {
 		'treatmentData',
 		'averageDebuggingActionsCount'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> averageDebuggingActionsCount [
 
 	^ averageDebuggingActionsCount
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> averageDebuggingActionsCount: anObject [
 
 	averageDebuggingActionsCount := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> collectControlValues [
 
 	^ controlData collect: [ :d | d minutes + (d seconds / 60) asFloat ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> collectTreatmentValues [
 
 	^ treatmentData collect: [ :d | d minutes + (d seconds / 60) asFloat ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> controlAvg [
 
 	^ controlAvg
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> controlAvg: anObject [
 
 	controlAvg := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> controlData [
 
 	^ controlData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> controlData: data [
 	controlData := data.
 	controlAvg := data average
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> name [
 
 	^ name
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> name: anObject [
 
 	name := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> ratio [
 
 	^ ratio
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> ratio: aFloat [
 
 	
 	ratio := ((aFloat - 1) roundTo: 0.0001) * 100
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> treatmentAvg [
 
 	^ treatmentAvg
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> treatmentAvg: anObject [
 
 	treatmentAvg := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> treatmentData [
 
 	^ treatmentData
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TasksResults >> treatmentData: data [
 	treatmentData := data.
 	treatmentAvg  := data average

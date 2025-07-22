@@ -1,6 +1,6 @@
 Class {
-	#name : #OCREDataAnalysisPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREDataAnalysisPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'tasksTable',
 		'participantsTable',
@@ -21,10 +21,12 @@ Class {
 		'controlsMeanDebugActionsBars',
 		'taskAnalysisPresenter'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter class >> defaultSpec [
 
 		^ SpPanedLayout newLeftToRight
@@ -38,7 +40,7 @@ OCREDataAnalysisPresenter class >> defaultSpec [
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCREDataAnalysisPresenter class >> plotMeansBarChartFor: participants [
 	|validParticipants controlData treatmentData plot|
 	validParticipants := participants select:[:p| p tasks size = 4].
@@ -59,7 +61,7 @@ OCREDataAnalysisPresenter class >> plotMeansBarChartFor: participants [
 	^plot
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREDataAnalysisPresenter >> buildParticipantsToolbar [
 
 	participantsToolbar := self newToolbar.
@@ -71,7 +73,7 @@ OCREDataAnalysisPresenter >> buildParticipantsToolbar [
 	participantsToolbar beIcons
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 
 	(OCREParticipantValidationPresenter on: aParticipantResult)
@@ -79,7 +81,7 @@ OCREDataAnalysisPresenter >> checkData: aParticipantResult [
 		open
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREDataAnalysisPresenter >> chooseAndLoad [
 
 	| f |
@@ -91,13 +93,13 @@ OCREDataAnalysisPresenter >> chooseAndLoad [
 		dataDirs items: ExperimentResultsExtractor dataDirs ]
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> confidenceIntervals: datas [
 
 	^ datas collect: [ :data | 1.96 * (data stdev / data size sqrt) ]
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 
 	(participant treatmentTask notNil and: [participant treatmentTask isValid]) ifFalse: [ ^ Color black ].
@@ -111,12 +113,12 @@ OCREDataAnalysisPresenter >> correctnessColorFor: participant [
 	^ Color red
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> countParticipant: aParticipantResult [ 
 	aParticipantResult shouldCount: true
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -152,24 +154,24 @@ OCREDataAnalysisPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> doAnalysis [
 	experiment doTasksAnalysis.
 	experiment collectDeveloperExperience
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREDataAnalysisPresenter >> doAnalysisAndUpdate [
 	self doAnalysis.
 	self updateAllViews 
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> dontCountParticipant: aParticipantResult [ 
 	aParticipantResult shouldCount: false
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREDataAnalysisPresenter >> fixTimes [
 
 	| interruptions |
@@ -185,7 +187,7 @@ OCREDataAnalysisPresenter >> fixTimes [
 		open
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREDataAnalysisPresenter >> initializePresenters [
 
 	tasksTable := self newTable.
@@ -382,13 +384,13 @@ OCREDataAnalysisPresenter >> initializePresenters [
 	self buildParticipantsToolbar
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREDataAnalysisPresenter >> initializeWindow: aWindowPresenter [
 
 	aWindowPresenter title: 'Experimental results'
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> menu [
 
 	^ self newMenu
@@ -407,13 +409,13 @@ OCREDataAnalysisPresenter >> menu [
 		  yourself
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> openDiagrams [
 
 	(OCREExperienceScatterPlots on: experiment participations) open
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREDataAnalysisPresenter >> participationsGeneralInfo [
 
 	^ String streamContents: [ :s |
@@ -438,7 +440,7 @@ OCREDataAnalysisPresenter >> participationsGeneralInfo [
 		 ]
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plot: aTasksResults [
 
 	| transformBlock dataViolins |
@@ -460,7 +462,7 @@ OCREDataAnalysisPresenter >> plot: aTasksResults [
 	violins := dataViolins asPresenter
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 
 	aTaskResult ifNil: [ ^ self ].
@@ -472,7 +474,7 @@ OCREDataAnalysisPresenter >> plotChartsForTask: aTaskResult [
 	self setDefaultLayout
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotControls [
 
 	|control1 control2 transformBlock dataViolins plot controlBar1 controlBar2|
@@ -508,7 +510,7 @@ OCREDataAnalysisPresenter >> plotControls [
 	controlsMeanTimesBars := plot asPresenter
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotDebugActionsCount: aTasksResults [
 
 	debugActions := self newRoassal.
@@ -520,7 +522,7 @@ OCREDataAnalysisPresenter >> plotDebugActionsCount: aTasksResults [
 		                asPresenter
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotExperienceBarChart [
 
 	| dataLabels data |
@@ -540,7 +542,7 @@ OCREDataAnalysisPresenter >> plotExperienceBarChart [
 		              asPresenter
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotMeanDebugActionsWith95IC: aTasksResults [
 
 	| control treatment plot|
@@ -561,7 +563,7 @@ OCREDataAnalysisPresenter >> plotMeanDebugActionsWith95IC: aTasksResults [
 	meansDebugActionBars := plot asPresenter
 ]
 
-{ #category : #charts }
+{ #category : 'charts' }
 OCREDataAnalysisPresenter >> plotMeanTimesWith95IC: aTasksResults [
 
 	| transformBlock control treatment plot |
@@ -587,7 +589,7 @@ OCREDataAnalysisPresenter >> plotMeanTimesWith95IC: aTasksResults [
 	meanTimesBars := plot asPresenter
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 
 	| controlCorrectness treatmentCorrectness |
@@ -612,7 +614,7 @@ OCREDataAnalysisPresenter >> printCorrectnessFor: participant [
 				   ifFalse: [ '0' ]) ] ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREDataAnalysisPresenter >> reload [
 
 	| dir xpResults |
@@ -643,19 +645,19 @@ OCREDataAnalysisPresenter >> reload [
 		self doAnalysisAndUpdate ] ] fork
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> setDefaultLayout [
 
 	self layout: self defaultLayout
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREDataAnalysisPresenter >> setModelBeforeInitialization: anExperimentResult [
 
 	experiment := anExperimentResult
 ]
 
-{ #category : #specs }
+{ #category : 'specs' }
 OCREDataAnalysisPresenter >> setProgressLayout [
 
 	self layout: (SpBoxLayout newTopToBottom
@@ -686,7 +688,7 @@ OCREDataAnalysisPresenter >> setProgressLayout [
 			 yourself)
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 OCREDataAnalysisPresenter >> showAnalysisForTask: task [
 
 	| data |
@@ -696,7 +698,7 @@ OCREDataAnalysisPresenter >> showAnalysisForTask: task [
 	taskAnalysisPresenter updateData: data
 ]
 
-{ #category : #export }
+{ #category : 'export' }
 OCREDataAnalysisPresenter >> stonExport [
 
 	'data.ston' asFileReference writeStream
@@ -704,7 +706,7 @@ OCREDataAnalysisPresenter >> stonExport [
 		close
 ]
 
-{ #category : #export }
+{ #category : 'export' }
 OCREDataAnalysisPresenter >> stonImport [
 	ExperimentResults materializeFromSTON.
 	experiment := ExperimentResults current.
@@ -713,7 +715,7 @@ OCREDataAnalysisPresenter >> stonImport [
 	
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 OCREDataAnalysisPresenter >> updateAllViews [
 
 	|index|
@@ -730,7 +732,7 @@ OCREDataAnalysisPresenter >> updateAllViews [
 	tasksTable selection selectIndexes: {index}
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> useConsolidatedTimes [
 
 "	TaskStats allInstances do: [ :t | t useConsolidatedTimes ].
@@ -738,7 +740,7 @@ OCREDataAnalysisPresenter >> useConsolidatedTimes [
 	self updateAllViews"
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 OCREDataAnalysisPresenter >> useRawTimes [
 	"TaskStats allInstances do: [ :t | t useRawTimes ].
 	self doAnalysis.

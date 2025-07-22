@@ -1,10 +1,12 @@
 Class {
-	#name : #TestSucessExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'TestSucessExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 TestSucessExtractor >> extract [
 
 	| dsTaskSucess |
@@ -16,7 +18,7 @@ TestSucessExtractor >> extract [
 	^ dsTaskSucess successBoolean
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TestSucessExtractor >> targetField [
 
 	^ #testSuccess

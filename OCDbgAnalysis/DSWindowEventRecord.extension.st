@@ -1,6 +1,6 @@
-Extension { #name : #DSWindowEventRecord }
+Extension { #name : 'DSWindowEventRecord' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 DSWindowEventRecord >> windowId [
 
 	^ windowId

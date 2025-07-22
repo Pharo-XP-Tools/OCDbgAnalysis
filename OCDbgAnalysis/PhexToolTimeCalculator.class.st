@@ -2,12 +2,14 @@
 I compute the time spent in a given tool.
 "
 Class {
-	#name : #PhexToolTimeCalculator,
-	#superclass : #PhexMetricCalculator,
-	#category : #'OCDbgAnalysis-NewModel'
+	#name : 'PhexToolTimeCalculator',
+	#superclass : 'PhexMetricCalculator',
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 PhexToolTimeCalculator class >> compute: data [
 |r|
 	r :=  data
@@ -19,13 +21,13 @@ PhexToolTimeCalculator class >> compute: data [
 	^r
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexToolTimeCalculator class >> phexPrint: anObject [
 
 	^anObject asDuration printString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexToolTimeCalculator class >> transform: aRawValue [
 	^aRawValue asSeconds
 ]

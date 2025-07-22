@@ -1,25 +1,27 @@
 Class {
-	#name : #ExperimentResultsExport,
-	#superclass : #Object,
+	#name : 'ExperimentResultsExport',
+	#superclass : 'Object',
 	#instVars : [
 		'results'
 	],
-	#category : #'OCDbgAnalysis-Exports'
+	#category : 'OCDbgAnalysis-Exports',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Exports'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExport >> results [
 
 	^ results
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExport >> results: anObject [
 
 	results := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResultsExport >> toolUsagePerParticipation [
 
 	^ ExperimentToolsUsageExport new 

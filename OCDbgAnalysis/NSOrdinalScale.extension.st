@@ -1,6 +1,6 @@
-Extension { #name : #NSOrdinalScale }
+Extension { #name : 'NSOrdinalScale' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 NSOrdinalScale >> correctColors [
 
 	| col |

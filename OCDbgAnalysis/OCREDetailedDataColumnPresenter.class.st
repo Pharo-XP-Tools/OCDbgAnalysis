@@ -2,8 +2,8 @@
 I present data from the OCRE experiment in a formatted column.
 "
 Class {
-	#name : #OCREDetailedDataColumnPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREDetailedDataColumnPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'dataText',
 		'dataSize',
@@ -13,16 +13,18 @@ Class {
 		'title',
 		'summary'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREDetailedDataColumnPresenter >> data: aCollection [
 	data := aCollection.
 	
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OCREDetailedDataColumnPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -50,7 +52,7 @@ OCREDetailedDataColumnPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 OCREDetailedDataColumnPresenter >> fillPresenters [
 
 	data ifNil: [ ^ self ].
@@ -64,7 +66,7 @@ OCREDetailedDataColumnPresenter >> fillPresenters [
 				 str cr ] ])
 ]
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 OCREDetailedDataColumnPresenter >> initializePresenters [
 
 	data := OrderedCollection new.
@@ -87,7 +89,7 @@ OCREDetailedDataColumnPresenter >> initializePresenters [
 	self fillPresenters
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREDetailedDataColumnPresenter >> title: aString [
 
 	title := aString

@@ -1,20 +1,22 @@
 Class {
-	#name : #OCREParticipantValidationPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREParticipantValidationPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'participant',
 		'experimentResultsBrowser'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREParticipantValidationPresenter class >> defaultExtent [
 
 	^ 600@400
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREParticipantValidationPresenter >> defaultLayout [
 
 	layout := SpBoxLayout newTopToBottom.
@@ -25,13 +27,13 @@ OCREParticipantValidationPresenter >> defaultLayout [
 	^ layout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREParticipantValidationPresenter >> experimentResultsBrowser: anObject [
 
 	experimentResultsBrowser := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantValidationPresenter >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -40,7 +42,7 @@ OCREParticipantValidationPresenter >> initializeWindow: aWindowPresenter [
 		whenClosedDo: [ experimentResultsBrowser update ]
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREParticipantValidationPresenter >> setModelBeforeInitialization: aParticipantResult [
 
 	participant := aParticipantResult

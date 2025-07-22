@@ -2,29 +2,31 @@
 I hold the dependant variables model for the usage of a specific tool
 "
 Class {
-	#name : #PhexToolUsageResults,
-	#superclass : #PhexAnalysisResult,
+	#name : 'PhexToolUsageResults',
+	#superclass : 'PhexAnalysisResult',
 	#instVars : [
 		'timeDV',
 		'actionsDV',
 		'occurencesDV'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> actionsDV [
 
 	^ actionsDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> actionsDV: anObject [
 
 	actionsDV := anObject
 ]
 
-{ #category : #spec }
+{ #category : 'spec' }
 PhexToolUsageResults >> analyzedVariables [
 
 	^ {
@@ -33,25 +35,25 @@ PhexToolUsageResults >> analyzedVariables [
 		  occurencesDV }
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> occurencesDV [
 
 	^ occurencesDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> occurencesDV: anObject [
 
 	occurencesDV := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> timeDV [
 
 	^ timeDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexToolUsageResults >> timeDV: anObject [
 
 	timeDV := anObject

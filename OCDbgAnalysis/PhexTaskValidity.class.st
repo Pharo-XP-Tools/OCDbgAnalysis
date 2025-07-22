@@ -4,15 +4,17 @@ By default, I am valid (true).
 
 "
 Class {
-	#name : #PhexTaskValidity,
-	#superclass : #PhexTaskCheck,
+	#name : 'PhexTaskValidity',
+	#superclass : 'PhexTaskCheck',
 	#instVars : [
 		'isValid'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskValidity >> computeValidity [
 
 	| usedOCBP |
@@ -28,13 +30,13 @@ PhexTaskValidity >> computeValidity [
 	^ isValid
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskValidity >> isValid [
 
 	^ isValid ifNil: [ self computeValidity ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskValidity >> isValid: aBoolean [
 
 	isValid := aBoolean

@@ -1,10 +1,12 @@
 Class {
-	#name : #OCDbgEvents,
-	#superclass : #Object,
-	#category : #'OCDbgAnalysis-Events'
+	#name : 'OCDbgEvents',
+	#superclass : 'Object',
+	#category : 'OCDbgAnalysis-Events',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Events'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> findTaskEndIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
 
 	aNumber to: aCollection size do: [ :i | 
@@ -15,7 +17,7 @@ OCDbgEvents class >> findTaskEndIndexFor: aTaskUUID inCollection: aCollection st
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> findTaskStartIndexFor: aTaskUUID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
@@ -28,7 +30,7 @@ OCDbgEvents class >> findTaskStartIndexFor: aTaskUUID inCollection: aCollection 
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> findWindowClosedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
@@ -41,7 +43,7 @@ OCDbgEvents class >> findWindowClosedtIndexFor: windowID inCollection: aCollecti
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> findWindowOpenedtIndexFor: windowID inCollection: aCollection startingAt: aNumber [
 
 	"This method assumes that aCollection is sorted by time"
@@ -54,7 +56,7 @@ OCDbgEvents class >> findWindowOpenedtIndexFor: windowID inCollection: aCollecti
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> loadDataFromPath: aString [
 "Note that this method removes duplicated uuid"
 	^ (((EREventTool default unpackAll: aString asFileReference) key 
@@ -64,19 +66,19 @@ OCDbgEvents class >> loadDataFromPath: aString [
 	"'/Users/maxw/Documents/ocrex1pilot/User-a1eff302-b2a0-0d00-b9ea-48310c48fda453911402438000'"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectBrowseContext: aCollection [
 
 	^ aCollection select: [ :each | each class = DSBrowseContextRecord ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectFullBrowse: aCollection [
 
 	^ aCollection select: [ :each | each class = DSFullBrowseRecord ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectTasksEnding: aCollection [
 	"self halt.
 	
@@ -84,7 +86,7 @@ OCDbgEvents class >> selectTasksEnding: aCollection [
 	^ aCollection select: [ :each | each class = DSEndingTaskRecord ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectTasksEvents: aTaskUUID inCollection: aCollection [
 
 	| taskStartIndex taskEndingIndex |
@@ -101,13 +103,13 @@ OCDbgEvents class >> selectTasksEvents: aTaskUUID inCollection: aCollection [
 	^ aCollection copyFrom: taskStartIndex to: taskEndingIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectTasksStarts: aCollection [
 
 ^ aCollection select: [ :each| each class=DSStartTaskRecord]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectUnique: aCollection [
 
 	| rememberedIDs newCollection |
@@ -120,13 +122,13 @@ OCDbgEvents class >> selectUnique: aCollection [
 	^ newCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectWindowClosed: aCollection [
 
 	^ aCollection select: [ :each | each class = DSWindowClosedRecord  ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgEvents class >> selectWindowOpened: aCollection [
 
 	^ aCollection select: [ :each | each class = DSWindowOpenedRecord ]

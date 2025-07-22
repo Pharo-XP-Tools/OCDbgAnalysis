@@ -1,10 +1,12 @@
 Class {
-	#name : #PhexTaskActionsCalculator,
-	#superclass : #PhexMetricCalculator,
-	#category : #'OCDbgAnalysis-NewModel'
+	#name : 'PhexTaskActionsCalculator',
+	#superclass : 'PhexMetricCalculator',
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #initialize }
+{ #category : 'initialize' }
 PhexTaskActionsCalculator class >> compute: data [
 
 	^data countDebugActions

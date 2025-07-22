@@ -1,18 +1,18 @@
-Extension { #name : #OrderedCollection }
+Extension { #name : 'OrderedCollection' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectTasksEnding [
 
 	^ OCDbgEvents selectTasksEnding: self
 ]
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectTasksStarting [
 
 	^ OCDbgEvents selectTasksStarts: self
 ]
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 OrderedCollection >> ocdSelectUnique [
 
 	^ OCDbgEvents selectUnique: self

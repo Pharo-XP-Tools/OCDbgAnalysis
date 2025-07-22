@@ -2,8 +2,8 @@
 I hold a Phex experiment results and provide API to explore them. 
 "
 Class {
-	#name : #ExperimentResults,
-	#superclass : #Object,
+	#name : 'ExperimentResults',
+	#superclass : 'Object',
 	#instVars : [
 		'participations',
 		'controls',
@@ -16,17 +16,19 @@ Class {
 		'dataCache',
 		'current'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #spec }
+{ #category : 'spec' }
 ExperimentResults class >> browse [
 	<script>
 
 	(OCREDataAnalysisPresenter on: self current) open
 ]
 
-{ #category : #cache }
+{ #category : 'cache' }
 ExperimentResults class >> cache: aPhexParticipation [
 	
 aPhexParticipation ifNil:[^self].
@@ -34,7 +36,7 @@ aPhexParticipation ifNil:[^self].
 	^aPhexParticipation
 ]
 
-{ #category : #private }
+{ #category : 'private' }
 ExperimentResults class >> cleanCache [
 
 	<script>
@@ -42,40 +44,40 @@ ExperimentResults class >> cleanCache [
 	current := nil
 ]
 
-{ #category : #analysis }
+{ #category : 'analysis' }
 ExperimentResults class >> confidenceIntervals: datas [
 
 	^ datas collect: [ :data | 1.96 * (data stdev / data size sqrt) ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ExperimentResults class >> current [
 
 	^ current ifNil:[current := self new]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ExperimentResults class >> current: anObject [
 	current := anObject
 ]
 
-{ #category : #cache }
+{ #category : 'cache' }
 ExperimentResults class >> dataCache [
 
 	^ dataCache ifNil: [ dataCache := Dictionary new ]
 ]
 
-{ #category : #cache }
+{ #category : 'cache' }
 ExperimentResults class >> isCached: aString [ 
 	^self dataCache keys includes: aString
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ExperimentResults class >> materializeFromSTON [
 	^self replaceWith: (STON fromString: 'data.ston' asFileReference contents)
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ExperimentResults class >> on: anExperimentResultsExtractor [
 
 	^self new
@@ -85,7 +87,7 @@ ExperimentResults class >> on: anExperimentResultsExtractor [
 		  yourself
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 ExperimentResults class >> replaceWith: anExperiment [
 
 	self cleanCache.
@@ -93,13 +95,13 @@ ExperimentResults class >> replaceWith: anExperiment [
 	current participations do: [ :p | self cache: p ]
 ]
 
-{ #category : #'ston-core' }
+{ #category : 'ston-core' }
 ExperimentResults class >> stonAllInstVarNames [
 
 	^ #( participations controls treatments participantsExperience )
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> analyseToolRelativeActionsAndTime [
 
 	toolsDetailedDiagrams := (analysisResults keys collect: [ :taskName |
@@ -111,7 +113,7 @@ ExperimentResults >> analyseToolRelativeActionsAndTime [
 	^ toolsDetailedDiagrams
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> analyseTools: tools forTaskNamed: taskName [
 
 	|  totalTimeSpent controlTimeData treatmentTimeData ratios results |
@@ -145,13 +147,13 @@ ExperimentResults >> analyseTools: tools forTaskNamed: taskName [
   ^results
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResults >> analysisResults [
 
 	^ analysisResults
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> buildTaskResults [
 	
 
@@ -169,7 +171,7 @@ ExperimentResults >> buildTaskResults [
 
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> collectDetailedDataMetricFor: data possibleTypes: possibleTypes dataType: dataType [
 	"array first = control data, array second = treatment data"
 
@@ -193,7 +195,7 @@ ExperimentResults >> collectDetailedDataMetricFor: data possibleTypes: possibleT
 	^ typeDict
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> collectDeveloperExperience [
 
 	participantsExperience := OrderedCollection new.
@@ -210,13 +212,13 @@ ExperimentResults >> collectDeveloperExperience [
 		xp ifNotNil: [ participantsExperience add: xp answer ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResults >> controls [
 
 	^ controls ifNil: [ controls := OrderedCollection new ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> convertSurveyAnswersToDictionary: aPhexSurveyResult [
 
 	| dict |
@@ -226,7 +228,7 @@ ExperimentResults >> convertSurveyAnswersToDictionary: aPhexSurveyResult [
 	^ dict
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> convertSurveysToCSV [
 
 	| csvs experimentFeedback demographicSurvey controlTasks treatmentTasks ammoliteControlSurveys ammoliteTreatmentSurveys lightsOutControlSurveys lightsOutTreatmentSurveys|
@@ -263,7 +265,7 @@ ExperimentResults >> convertSurveysToCSV [
 		filename asFileReference writeStream nextPutAll: data; close ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> convertSurveysToCSV: surveys [
 
 	| dicts questions csv |
@@ -291,7 +293,7 @@ ExperimentResults >> convertSurveysToCSV: surveys [
 	^ csv
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> demographicSurveyCSVFormat [
 
 	^ {
@@ -308,12 +310,12 @@ ExperimentResults >> demographicSurveyCSVFormat [
 		   -> 19) }
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> demographicSurveySize [
 	^8
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataType: dataType [
 	"array first = control data, array second = treatment data"
 
@@ -347,7 +349,7 @@ ExperimentResults >> detailedToolAnalysisFor: aTaskDataArray named: title dataTy
 	^ results
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> doTasksAnalysis [
 	
 	"Ensure the history is correctly rebuilt"
@@ -371,7 +373,7 @@ ExperimentResults >> doTasksAnalysis [
 	self doToolUsageAnalysis
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> doTasksDVAnalysis [
 
 	| taskList |
@@ -420,7 +422,7 @@ ExperimentResults >> doTasksDVAnalysis [
 			addFirst: analysis ]
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> doToolUsageAnalysis [
 
 	| taskList |
@@ -459,7 +461,7 @@ ExperimentResults >> doToolUsageAnalysis [
 																					add: toolUsageResults ] ]
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> ensureTrueIdleTimesInWindowRecords [
 
 	| tasksWithTrueIdleTime pbs |
@@ -510,7 +512,7 @@ ExperimentResults >> ensureTrueIdleTimesInWindowRecords [
 			pbs ifNotEmpty: [ self halt ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> experimentFeedbackCSVFormat [
 
 	^ {
@@ -545,12 +547,12 @@ ExperimentResults >> experimentFeedbackCSVFormat [
 		   -> 35) }
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> experimentFeedbackSurveySize [
 	^16
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResults >> export [
 
 	^ ExperimentResultsExport new 
@@ -558,7 +560,7 @@ ExperimentResults >> export [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResults >> exportDetailedToolsMetricsInCSV [
 
 
@@ -575,7 +577,7 @@ ExperimentResults >> exportDetailedToolsMetricsInCSV [
 	] as: Dictionary.
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> exportParticipantDataToCSV [
 
 	| format csvs out taskExport surveyExport fws |
@@ -639,7 +641,7 @@ ExperimentResults >> exportParticipantDataToCSV [
 		close
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResults >> exportTaskAndExperimentFeedback [
 
 	| feedback |
@@ -648,7 +650,7 @@ ExperimentResults >> exportTaskAndExperimentFeedback [
 	
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResults >> extractContactInformation [
 
 	| infos dict |
@@ -668,17 +670,17 @@ ExperimentResults >> extractContactInformation [
 	dict inspect
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> hardCodedParticipantExportFormat [
 	^#('id' 'control task name' 'control task correctness' 'control task validity' 'control task time in seconds' 'control task answer' 'control task actions' 'ct-task-easiness' 'ct-task-length' 'ct-task-interruption' 'ct-bug-found' 'ct-bug-description' 'ct-debugger-help' 'ct-debugger-enjoy' 'ct-debugger-efficient' 'ct-debugger-intuitive' 'ct-debugger-easiness' 'ct-debugger-learn' 'treatment task name' 'treatment task correctness' 'treatment task validity' 'treatment task time in seconds' 'treatment task answer' 'treatment task actions' 'tt-task-easiness' 'tt-task-length' 'tt-task-interruption' 'tt-bug-found' 'tt-bug-description' 'tt-debugger-help' 'tt-debugger-enjoy' 'tt-debugger-efficient' 'tt-debugger-intuitive' 'tt-debugger-easiness' 'tt-debugger-learn' 'experiment-easiness' 'experiment-length' 'ocd-help' 'ocd-performance' 'ocd-productivity' 'ocd-effectiveness' 'ocd-easiness' 'ocd-usefulness' 'learn-ocd' 'ocd-tasks-help' 'ocd-interaction' 'ocd-skills' 'ocd-debugging' 'ocd-use' 'ocd-future' 'ocd-over-classical' 'education' 'job-position' 'program-exp' 'pharo-exp' 'code-frequency' 'pharo-frequency' 'debugger-familiarity' 'debugger-ocd-familarity' )
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 ExperimentResults >> initialize [
 	participations := OrderedCollection new
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> kiviatForToolsUsage: ratios [
 
 	| controlData treatmentData tData cData canvas kiviat lb |
@@ -748,7 +750,7 @@ ExperimentResults >> kiviatForToolsUsage: ratios [
 	^ canvas
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResults >> obtainPersonnalDataAndAnonymize [
 
 	| personnalData |
@@ -768,7 +770,7 @@ ExperimentResults >> obtainPersonnalDataAndAnonymize [
 			survey answers third answer: '' ] ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participantExportFormat [
 	|format|
 	format := OrderedCollection new.
@@ -794,19 +796,19 @@ ExperimentResults >> participantExportFormat [
 	^format
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResults >> participations [
 
 	^ participations ifNil:[participations := OrderedCollection new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResults >> participations: anObject [
 
 	participations := anObject
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsControlsExportForComparisonOfTask: aTaskName in: aCollection [
 
 	| validCheck validControl validTreatment |
@@ -829,7 +831,7 @@ ExperimentResults >> participationsControlsExportForComparisonOfTask: aTaskName 
 	
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsCorrectnessExportForBetweenComparison [
 
 	| results csv fields |
@@ -845,7 +847,7 @@ ExperimentResults >> participationsCorrectnessExportForBetweenComparison [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsCorrectnessExportForWithinComparison [
 
 	| results csv fields validCheck valids |
@@ -873,7 +875,7 @@ ExperimentResults >> participationsCorrectnessExportForWithinComparison [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsCorrectnessExportForWithinComparisonBySequence [
 
 	| results csv fields validCheck valids |
@@ -916,7 +918,7 @@ ExperimentResults >> participationsCorrectnessExportForWithinComparisonBySequenc
 	csv contents inspect.
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportControlsForBetweenComparison [
 
 	| results csv fields |
@@ -932,7 +934,7 @@ ExperimentResults >> participationsExportControlsForBetweenComparison [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportCorrectnessForComparisonOfTask: aTaskName in: aCollection [
 
 	| validCheck validControl validTreatment |
@@ -960,7 +962,7 @@ ExperimentResults >> participationsExportCorrectnessForComparisonOfTask: aTaskNa
 				t treatmentTask correctness printString } ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForBetweenComparison [
 
 	| results csv fields |
@@ -976,7 +978,7 @@ ExperimentResults >> participationsExportForBetweenComparison [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForBetweenComparisonExperts [
 
 	| results csv fields |
@@ -992,7 +994,7 @@ ExperimentResults >> participationsExportForBetweenComparisonExperts [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForBetweenComparisonNotExperts [
 
 	| results csv fields |
@@ -1008,7 +1010,7 @@ ExperimentResults >> participationsExportForBetweenComparisonNotExperts [
 	^ csv contents
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForComparisonOfTask: aTaskName in: aCollection [
 
 	| validCheck validControl validTreatment |
@@ -1038,7 +1040,7 @@ ExperimentResults >> participationsExportForComparisonOfTask: aTaskName in: aCol
 				t treatmentTask countDebugActions printString } ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForComparisonOfTaskExperts: aTaskName in: aCollection [
 
 	| notExpertsParticipations validCheck validControl validTreatment |
@@ -1069,7 +1071,7 @@ ExperimentResults >> participationsExportForComparisonOfTaskExperts: aTaskName i
 				t treatmentTask countDebugActions printString } ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForComparisonOfTaskNotExperts: aTaskName in: aCollection [
 
 	| notExpertsParticipations validCheck validControl validTreatment |
@@ -1100,7 +1102,7 @@ ExperimentResults >> participationsExportForComparisonOfTaskNotExperts: aTaskNam
 				t treatmentTask countDebugActions printString } ]
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> participationsExportForWithinComparison [
 
 	| valid csv |
@@ -1127,13 +1129,13 @@ ExperimentResults >> participationsExportForWithinComparison [
 	^csv
 ]
 
-{ #category : #utils }
+{ #category : 'utils' }
 ExperimentResults >> percentageFromRatio: ratio [
 
 	^ (ratio asFloat * 100) truncated
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> pieForToolUsage: ratios [
 
 	| othersNames othersCumulated data pie pieLabel |
@@ -1178,7 +1180,7 @@ ExperimentResults >> pieForToolUsage: ratios [
 	^ pie canvas
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> postTaskCSVFormat [
 
 	^ {
@@ -1201,12 +1203,12 @@ ExperimentResults >> postTaskCSVFormat [
 		   -> 11) }
 ]
 
-{ #category : #'data export' }
+{ #category : 'data export' }
 ExperimentResults >> postTaskSurveySize [
 	^11
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResults >> rebuildHistoryFor: task [
 
 	task ifNil: [ ^ self ].
@@ -1242,7 +1244,7 @@ ExperimentResults >> rebuildHistoryFor: task [
 
 ]
 
-{ #category : #asserting }
+{ #category : 'asserting' }
 ExperimentResults >> shouldConsiderInterruption: anIdleTimeControl [
 
 	^ (anIdleTimeControl timeGapStartEvent class = DSMouseLeaveWindowRecord 
@@ -1250,7 +1252,7 @@ ExperimentResults >> shouldConsiderInterruption: anIdleTimeControl [
 			not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResults >> treatments [
 
 	^ treatments ifNil: [ treatments := OrderedCollection new ]

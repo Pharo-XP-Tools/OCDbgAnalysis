@@ -1,6 +1,6 @@
 Class {
-	#name : #OCREParticipantIdleTimesAnalyzer,
-	#superclass : #SpPresenter,
+	#name : 'OCREParticipantIdleTimesAnalyzer',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'idleTimesList',
 		'idleTimes',
@@ -14,10 +14,12 @@ Class {
 		'deduceButton',
 		'keepButton'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 OCREParticipantIdleTimesAnalyzer >> defaultLayout [
 
 	^ SpPanedLayout newLeftToRight
@@ -45,7 +47,7 @@ OCREParticipantIdleTimesAnalyzer >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCREParticipantIdleTimesAnalyzer >> fixItemWithReading: aSpMenuItemPresenter [
 
 	| text |
@@ -61,7 +63,7 @@ Decision: not an interruption.' format:
 	self updateSelectedIdleTime: selectedIdleTime
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 
 	idleTimesList := self newList.
@@ -105,14 +107,14 @@ OCREParticipantIdleTimesAnalyzer >> initializePresenters [
 	idleTimesList selectIndex: 1
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantIdleTimesAnalyzer >> initializeWindow: w [
 
 	super initializeWindow: w.
 	w title: 'Idle time analyzer'
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantIdleTimesAnalyzer >> menu [
 
 	^ self newMenu
@@ -124,13 +126,13 @@ OCREParticipantIdleTimesAnalyzer >> menu [
 		  yourself
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREParticipantIdleTimesAnalyzer >> setModelBeforeInitialization: aIdleTimesCollection [
 
 	idleTimes := aIdleTimesCollection
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 OCREParticipantIdleTimesAnalyzer >> updateSelectedIdleTime: s [
 
 	selectedIdleTime := s.

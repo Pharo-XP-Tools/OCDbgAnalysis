@@ -1,13 +1,15 @@
 Class {
-	#name : #TaskInfo,
-	#superclass : #Object,
+	#name : 'TaskInfo',
+	#superclass : 'Object',
 	#instVars : [
 		'title'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskInfo class >> neoJsonMapping: mapper [
 
 	"#time . #correctness . #breakpointsInstalled . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
@@ -17,7 +19,7 @@ TaskInfo class >> neoJsonMapping: mapper [
 		do: [ :mapping | mapping mapInstVars: #( title ) ]
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TaskInfo class >> newForTask: dstask fromData: aCollection [
 
 	^ self new
@@ -25,7 +27,7 @@ TaskInfo class >> newForTask: dstask fromData: aCollection [
 		  yourself
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TaskInfo >> = anObject [
 
 	self == anObject ifTrue: [ ^ true ].
@@ -35,18 +37,18 @@ TaskInfo >> = anObject [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskInfo >> taskName [
 	self shouldBeImplemented.
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskInfo >> title [
 
 	^ title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskInfo >> title: anObject [
 
 	title := anObject

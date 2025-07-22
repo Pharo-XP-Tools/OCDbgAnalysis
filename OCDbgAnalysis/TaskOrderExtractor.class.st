@@ -1,10 +1,12 @@
 Class {
-	#name : #TaskOrderExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'TaskOrderExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 TaskOrderExtractor >> extract [
 
 	| tasks |
@@ -13,7 +15,7 @@ TaskOrderExtractor >> extract [
 	^ tasks find: task
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TaskOrderExtractor >> targetField [
 
 	^ #order

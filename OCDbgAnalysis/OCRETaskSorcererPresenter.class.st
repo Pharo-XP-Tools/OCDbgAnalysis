@@ -1,6 +1,6 @@
 Class {
-	#name : #OCRETaskSorcererPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCRETaskSorcererPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'participantResult',
 		'taskEnding',
@@ -10,10 +10,12 @@ Class {
 		'buttonBar',
 		'experimentResultsBrowser'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -26,13 +28,13 @@ OCRETaskSorcererPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCRETaskSorcererPresenter >> experimentResultsBrowser: anObject [
 
 	experimentResultsBrowser := anObject
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> filterEvents: filter [
 
 	| history finishTaskHistory |
@@ -49,7 +51,7 @@ OCRETaskSorcererPresenter >> filterEvents: filter [
 	rawData items: (history windowsHistory at: finishTaskHistory)
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> initializePresenters [
 
 	taskNames := self newDropList.
@@ -86,7 +88,7 @@ OCRETaskSorcererPresenter >> initializePresenters [
 			yourself)
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> newTaskDataMenu [
 
 	^ self newMenu addItem: [ :anItem |
@@ -96,7 +98,7 @@ OCRETaskSorcererPresenter >> newTaskDataMenu [
 			  action: [ newTaskData selectedItem inspect ] ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCRETaskSorcererPresenter >> proposeFixForTask: aPhexTask events: events finishHistory: finishHistory [ 
 	|answer transaction|
 	"Find where to insert the task"
@@ -121,7 +123,7 @@ OCRETaskSorcererPresenter >> proposeFixForTask: aPhexTask events: events finishH
 	"If fix is validated => insert task, recompute task stats for participant"
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> rawDataMenu [
 
 	^ self newMenu addItem: [ :anItem |
@@ -131,12 +133,12 @@ OCRETaskSorcererPresenter >> rawDataMenu [
 			  action: [ rawData selectedItem inspect ] ]
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCRETaskSorcererPresenter >> setModelBeforeInitialization: aParticipantResult [
 	participantResult := aParticipantResult
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCRETaskSorcererPresenter >> tryToFixTask [
 
 	| taskName taskStart taskStartIndex taskEventsRange taskSwitchingEvent taskEvents |
@@ -165,7 +167,7 @@ OCRETaskSorcererPresenter >> tryToFixTask [
 		finishHistory: rawData items
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCRETaskSorcererPresenter >> validateFix [
 
 	| dstasks dst taskStats |

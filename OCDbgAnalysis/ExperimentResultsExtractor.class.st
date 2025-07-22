@@ -1,6 +1,6 @@
 Class {
-	#name : #ExperimentResultsExtractor,
-	#superclass : #Object,
+	#name : 'ExperimentResultsExtractor',
+	#superclass : 'Object',
 	#instVars : [
 		'participantResults',
 		'emails',
@@ -15,39 +15,41 @@ Class {
 		'dataCache',
 		'temp'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExtractor class >> addDataDir: aDirectoryPath [
 
 	self dataDirs add: aDirectoryPath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExtractor class >> dataDirs [
 	^dataDirs ifNil:[dataDirs := OrderedCollection new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResultsExtractor class >> extractAndOpenResults: dataPath [
 	
 	^(self extractResults: dataPath) inspect
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResultsExtractor class >> extractResults: dataPath [
 	
 	^self new extractResultsFromPath: dataPath asFileReference 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ExperimentResultsExtractor class >> extractResultsWithProgress: dataPath [
 	
 	^self new extractResultsWithProgress: dataPath asFileReference 
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResultsExtractor >> buildTaskResults [
 	
 	|t1 t2 debuggingActionCount|
@@ -73,7 +75,7 @@ ExperimentResultsExtractor >> buildTaskResults [
 	^ { t1. t2 }
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResultsExtractor >> buildTaskResultsFor: participantsSubset [
 	
 	|t1 t2 debuggingActionCount|
@@ -99,7 +101,7 @@ ExperimentResultsExtractor >> buildTaskResultsFor: participantsSubset [
 	^ { t1. t2 }
 ]
 
-{ #category : #surveys }
+{ #category : 'surveys' }
 ExperimentResultsExtractor >> collectAlmostInvalidSurveys [
 
 	| dict |
@@ -111,7 +113,7 @@ ExperimentResultsExtractor >> collectAlmostInvalidSurveys [
 	^ dict
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> collectControlTasksFrom: participants [
 
 	controlTasks := ControlTasks new.
@@ -122,7 +124,7 @@ ExperimentResultsExtractor >> collectControlTasksFrom: participants [
 			controlTasks addTaskStats: task ]
 ]
 
-{ #category : #'data analysis' }
+{ #category : 'data analysis' }
 ExperimentResultsExtractor >> collectDeveloperExperience [
 
 	participantsExperience := OrderedCollection new.
@@ -145,7 +147,7 @@ ExperimentResultsExtractor >> collectDeveloperExperience [
 			xp ifNotNil: [ participantsExperience add: xp answer answer ] ] ]
 ]
 
-{ #category : #surveys }
+{ #category : 'surveys' }
 ExperimentResultsExtractor >> collectInvalidSurveys [
 
 	| dict |
@@ -157,21 +159,21 @@ ExperimentResultsExtractor >> collectInvalidSurveys [
 	^ dict
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> collectTasksForAnalysis [
 
 	self collectControlTasksFrom: participantResults.
 	self collectTreatmentTasksFrom: participantResults
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> collectTasksForAnalysisFor: participantsSubset [
 
 	self collectControlTasksFrom: participantsSubset.
 	self collectTreatmentTasksFrom: participantsSubset
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> collectTreatmentTasksFrom: participants [
 
 	treatmentTasks := TreatmentTasks new.
@@ -182,13 +184,13 @@ ExperimentResultsExtractor >> collectTreatmentTasksFrom: participants [
 		treatmentTasks addTaskStats: task ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> dataEntriesFrom: dataPath [
 
 	^ dataPath entries select: [ :e | e isDirectory ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> dataExtractionProgress [
 
 	^ [ (participantResults size / dataSize) ]
@@ -196,7 +198,7 @@ ExperimentResultsExtractor >> dataExtractionProgress [
 		  do: [ 0 ]
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> extractResultsFromPath: dataPath [
 
 	participantResults := self class dataCache values asOrderedCollection.
@@ -210,7 +212,7 @@ ExperimentResultsExtractor >> extractResultsFromPath: dataPath [
 	^ self
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> extractResultsWithProgress: dataPath [
 
 	| dataEntries |
@@ -228,25 +230,25 @@ ExperimentResultsExtractor >> extractResultsWithProgress: dataPath [
 	^ self
 ]
 
-{ #category : #'data extraction' }
+{ #category : 'data extraction' }
 ExperimentResultsExtractor >> extractSurveysFromData: data [
 
 	^ data select: [ :e | e class = DSSurveyRecord ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExtractor >> participantResults [
 
 	^ participantResults
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExtractor >> participantResults: anObject [
 
 	participantResults := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ExperimentResultsExtractor >> participantsExperience [
 
 	^ participantsExperience

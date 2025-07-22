@@ -1,6 +1,6 @@
-Extension { #name : #DSAbstractTaskRecord }
+Extension { #name : 'DSAbstractTaskRecord' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 DSAbstractTaskRecord >> task [
 
 	^ task

@@ -2,29 +2,31 @@
 I hold the dependant variables model for the main DV analysis of Phex xp
 "
 Class {
-	#name : #PhexTaskDVResults,
-	#superclass : #PhexAnalysisResult,
+	#name : 'PhexTaskDVResults',
+	#superclass : 'PhexAnalysisResult',
 	#instVars : [
 		'timeDV',
 		'actionsDV',
 		'correctnessDV'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> actionsDV [
 
 	^ actionsDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> actionsDV: anObject [
 
 	actionsDV := anObject
 ]
 
-{ #category : #spec }
+{ #category : 'spec' }
 PhexTaskDVResults >> analyzedVariables [
 
 	^ {
@@ -33,25 +35,25 @@ PhexTaskDVResults >> analyzedVariables [
 		  "correctnessDV "}
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> correctnessDV [
 
 	^ correctnessDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> correctnessDV: anObject [
 
 	correctnessDV := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> timeDV [
 
 	^ timeDV
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskDVResults >> timeDV: anObject [
 
 	timeDV := anObject

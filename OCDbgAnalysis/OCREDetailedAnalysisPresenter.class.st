@@ -1,6 +1,6 @@
 Class {
-	#name : #OCREDetailedAnalysisPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREDetailedAnalysisPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'diagramsPresenter',
 		'controlDataPresenter',
@@ -8,23 +8,25 @@ Class {
 		'metricData',
 		'metricsPresenters'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #layout }
+{ #category : 'layout' }
 OCREDetailedAnalysisPresenter >> defaultLayout [
 
 	^ SpBoxLayout newLeftToRight
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREDetailedAnalysisPresenter >> metricData: anObject [
 
 	metricData := anObject.
 	metricsPresenters := metricData presenters
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 OCREDetailedAnalysisPresenter >> updateData [
 
 	| newLayout subLayout |

@@ -1,14 +1,16 @@
 Class {
-	#name : #MetricExtractor,
-	#superclass : #Object,
+	#name : 'MetricExtractor',
+	#superclass : 'Object',
 	#instVars : [
 		'task',
 		'data'
 	],
-	#category : #'OCDbgAnalysis-Metrics'
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 MetricExtractor class >> newForTask: task fromData: aCollection [
 
 	"task is a DSTask"
@@ -19,19 +21,19 @@ MetricExtractor class >> newForTask: task fromData: aCollection [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MetricExtractor >> data [
 
 	^ data
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MetricExtractor >> data: anObject [
 
 	data := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MetricExtractor >> extract [
 
 	"Should return the metric after extracting and calculating it from all the data"
@@ -39,7 +41,7 @@ MetricExtractor >> extract [
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 MetricExtractor >> targetField [
 
 	"should return the name of the metric (and matching the stat instance variable name)"
@@ -47,13 +49,13 @@ MetricExtractor >> targetField [
 	^ self subclassResponsibility
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MetricExtractor >> task [
 
 	^ task
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 MetricExtractor >> task: anObject [
 
 	task := anObject

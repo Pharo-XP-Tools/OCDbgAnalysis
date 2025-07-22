@@ -1,6 +1,6 @@
-Extension { #name : #SpRoassalInspectorPresenter }
+Extension { #name : 'SpRoassalInspectorPresenter' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpRoassalInspectorPresenter >> fillPresenters [
 "compatibility for bad design..."
 	^self

@@ -2,34 +2,36 @@
 I model an answer to a survey question
 "
 Class {
-	#name : #PhexSurveyAnswerResult,
-	#superclass : #Object,
+	#name : 'PhexSurveyAnswerResult',
+	#superclass : 'Object',
 	#instVars : [
 		'question',
 		'answer',
 		'choices'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexSurveyAnswerResult >> answer [
 
 	^ answer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexSurveyAnswerResult >> answer: anObject [
 
 	answer := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexSurveyAnswerResult >> choices: aCollection [ 
 	choices := aCollection
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 PhexSurveyAnswerResult >> printOn: aStream [
 
 	aStream << question.
@@ -37,13 +39,13 @@ PhexSurveyAnswerResult >> printOn: aStream [
 	aStream << answer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexSurveyAnswerResult >> question [
 
 	^ question
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexSurveyAnswerResult >> question: anObject [
 
 	question := anObject

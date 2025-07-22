@@ -1,6 +1,6 @@
 Class {
-	#name : #OCREExperienceScatterPlots,
-	#superclass : #SpPresenter,
+	#name : 'OCREExperienceScatterPlots',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'participants',
 		'ammoliteC',
@@ -8,10 +8,12 @@ Class {
 		'loC',
 		'loT'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCREExperienceScatterPlots class >> queryIdForClass: aSeekerClassName [
 
 	| dict |
@@ -35,7 +37,7 @@ OCREExperienceScatterPlots class >> queryIdForClass: aSeekerClassName [
 	^dict at: aSeekerClassName
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OCREExperienceScatterPlots >> defaultLayout [
 
 	^ SpPanedLayout newTopToBottom
@@ -50,7 +52,7 @@ OCREExperienceScatterPlots >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREExperienceScatterPlots >> initializePresenters [
 	|ammoliteCData ammoliteTData loCData loTData labelConverter|
 	
@@ -111,7 +113,7 @@ OCREExperienceScatterPlots >> initializePresenters [
 	
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREExperienceScatterPlots >> setModelBeforeInitialization: aCollection [
 	participants := aCollection 
 ]

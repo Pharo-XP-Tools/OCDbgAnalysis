@@ -1,10 +1,12 @@
 Class {
-	#name : #BreakpointsHitExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'BreakpointsHitExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsHitExtractor >> extract [
 
 	| taskEvents |
@@ -16,7 +18,7 @@ BreakpointsHitExtractor >> extract [
 			  evt objectCentric not and: [ evt eventName = 'BreakpointHit' ] ] ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 BreakpointsHitExtractor >> targetField [
 
 	^ #breakpointsHit

@@ -1,6 +1,6 @@
 Class {
-	#name : #TaskTimeError,
-	#superclass : #Object,
+	#name : 'TaskTimeError',
+	#superclass : 'Object',
 	#instVars : [
 		'taskStats',
 		'start',
@@ -9,83 +9,85 @@ Class {
 		'count',
 		'comment'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> comment [
 
 	^ comment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> comment: anObject [
 
 	comment := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> count [
 
 	^ count
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> count: anObject [
 
 	count := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> duration [
 
 	^ duration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> duration: anObject [
 
 	duration := anObject
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 TaskTimeError >> initialize [ 	
 	super initialize.
 	count := true.
 	comment := String new
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> start [
 
 	^ start
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> start: anObject [
 
 	start := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> stop [
 
 	^ stop
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> stop: anObject [
 
 	stop := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> taskStats [
 
 	^ taskStats
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskTimeError >> taskStats: anObject [
 
 	taskStats := anObject

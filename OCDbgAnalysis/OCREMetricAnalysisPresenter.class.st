@@ -1,6 +1,6 @@
 Class {
-	#name : #OCREMetricAnalysisPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREMetricAnalysisPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'data',
 		'table',
@@ -9,10 +9,12 @@ Class {
 		'actionsBars',
 		'detailedAnalysisPane'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #analyze }
+{ #category : 'analyze' }
 OCREMetricAnalysisPresenter >> analyzeResults: metrics [
 
 	metrics ifNil: [ ^ self ].
@@ -20,7 +22,7 @@ OCREMetricAnalysisPresenter >> analyzeResults: metrics [
 	detailedAnalysisPane updateData
 ]
 
-{ #category : #layout }
+{ #category : 'layout' }
 OCREMetricAnalysisPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -32,7 +34,7 @@ OCREMetricAnalysisPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREMetricAnalysisPresenter >> initializePresenters [
 
 	table := self newTable.
@@ -49,7 +51,7 @@ OCREMetricAnalysisPresenter >> initializePresenters [
 	detailedAnalysisPane := OCREDetailedAnalysisPresenter new
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREMetricAnalysisPresenter >> printRatio: symbol for: taskName in: metric [
 
 	|control cAvg treatment tAvg ratio|
@@ -67,13 +69,13 @@ OCREMetricAnalysisPresenter >> printRatio: symbol for: taskName in: metric [
 	
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREMetricAnalysisPresenter >> setModelBeforeInitialization: aCollectionOfData [
 	data := aCollectionOfData 
 	
 ]
 
-{ #category : #updating }
+{ #category : 'updating' }
 OCREMetricAnalysisPresenter >> updateData: newData [
 	data := newData.
 	table items: data.

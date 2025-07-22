@@ -1,6 +1,6 @@
-Extension { #name : #Object }
+Extension { #name : 'Object' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 Object >> asJSON [
 
 	"Should test later recursive serialization"
@@ -14,7 +14,7 @@ Object >> asJSON [
 	
 ]
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 Object class >> newFromJSON: aString [
 
 	^ (NeoJSONReader on: aString readStream)

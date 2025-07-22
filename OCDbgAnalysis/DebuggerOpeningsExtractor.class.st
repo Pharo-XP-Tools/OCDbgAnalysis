@@ -1,10 +1,12 @@
 Class {
-	#name : #DebuggerOpeningsExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'DebuggerOpeningsExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 DebuggerOpeningsExtractor >> extract [
 
 	| taskEvents |
@@ -14,7 +16,7 @@ DebuggerOpeningsExtractor >> extract [
 	^ taskEvents count: [ :evt | evt class = DSDebuggerOpeningRecord  ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 DebuggerOpeningsExtractor >> targetField [
 
 	^ #debuggerOpenings

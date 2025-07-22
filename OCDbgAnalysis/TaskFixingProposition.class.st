@@ -1,32 +1,34 @@
 Class {
-	#name : #TaskFixingProposition,
-	#superclass : #Object,
+	#name : 'TaskFixingProposition',
+	#superclass : 'Object',
 	#instVars : [
 		'endingTask',
 		'insertionPoint'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskFixingProposition >> endingTask [
 
 	^ endingTask
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskFixingProposition >> endingTask: anObject [
 
 	endingTask := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskFixingProposition >> insertionPoint [
 
 	^ insertionPoint
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskFixingProposition >> insertionPoint: anObject [
 
 	insertionPoint := anObject

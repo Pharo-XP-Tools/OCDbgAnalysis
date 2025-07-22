@@ -1,12 +1,12 @@
-Extension { #name : #SpMorphicTableColumnVisitor }
+Extension { #name : 'SpMorphicTableColumnVisitor' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpMorphicTableColumnVisitor >> visitOCDbgActionColumn: aTableColumn [
 
 	self halt
 ]
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpMorphicTableColumnVisitor >> visitOCDbgLinkColumn: aTableColumn [
 
 	self visitStringColumn: aTableColumn

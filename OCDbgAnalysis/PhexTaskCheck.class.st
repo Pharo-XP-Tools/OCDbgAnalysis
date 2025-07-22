@@ -4,16 +4,18 @@ I provide a check with an aspect of a task, e.g., its validity.
 The comment field describe why the decision was made.
 "
 Class {
-	#name : #PhexTaskCheck,
-	#superclass : #Object,
+	#name : 'PhexTaskCheck',
+	#superclass : 'Object',
 	#instVars : [
 		'task',
 		'comment'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhexTaskCheck class >> onTaskResult: aPhexTaskResult [
 
 	^ self new
@@ -21,25 +23,25 @@ PhexTaskCheck class >> onTaskResult: aPhexTaskResult [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCheck >> comment [
 
 	^ comment ifNil:[comment := String new]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCheck >> comment: anObject [
 
 	comment := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCheck >> task [
 
 	^ task
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskCheck >> task: anObject [
 
 	task := anObject

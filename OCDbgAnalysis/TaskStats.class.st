@@ -1,6 +1,6 @@
 Class {
-	#name : #TaskStats,
-	#superclass : #Object,
+	#name : 'TaskStats',
+	#superclass : 'Object',
 	#instVars : [
 		'breakpointsAdded',
 		'breakpointsRemoved',
@@ -25,10 +25,12 @@ Class {
 		'rawDuration',
 		'retainedIdleTime'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats class >> neoJsonMapping: mapper [
 "#time . #correctness . #breakpointsAdded . #breakpointsHit . #stepsInDebugger . #inspectingObjects . #debuggerOpenings"
 	mapper for: self do: [ :mapping |
@@ -50,7 +52,7 @@ TaskStats class >> neoJsonMapping: mapper [
 		mapping listOfType: ByteArray ]"
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 TaskStats class >> newForTask: task fromData: aCollection [
 
 	"task is a DSTask"
@@ -68,7 +70,7 @@ TaskStats class >> newForTask: task fromData: aCollection [
 	^ taskStats
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 TaskStats >> = anObject [
 
 	self == anObject ifTrue: [ ^ true ].
@@ -79,201 +81,201 @@ TaskStats >> = anObject [
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> alternateDuration [
 
 	^ alternateDuration ifNil:[self recomputeDurationWithoutTaskAnswerTime]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> answer [
 	^ answer
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> asSeconds [
 
 	^ (DSRecordHistory on: events) collectTimeDiscrepancies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsAdded [
 
 	^ breakpointsAdded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsAdded: anObject [
 
 	breakpointsAdded := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsHit [
 
 	^ breakpointsHit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsHit: anObject [
 
 	breakpointsHit := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsRemoved [
 
 	^ breakpointsRemoved
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> breakpointsRemoved: anObject [
 
 	breakpointsRemoved := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> calculateInterruptionTimes [
 
 	^ (DSRecordHistory on: events) detectTimeDiscrepancies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> collectTimeDiscrepancies [
 
 	^ (DSRecordHistory on: events) collectTimeDiscrepancies
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> correctness [
 	^correctness 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> correctness: aBoolean [
 
 	correctness := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> debuggerOpenings [
 
 	^ debuggerOpenings
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> debuggerOpenings: anObject [
 
 	debuggerOpenings := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> duration [
 
 	^ duration
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> duration: anObject [
 
 	duration := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> events [
 
 	^ events
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TaskStats >> forceValid [
 	valid := true
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> inspectingObjects [
 
 	^ inspectingObjects
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> inspectingObjects: anObject [
 
 	inspectingObjects := anObject
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 TaskStats >> isValid [
 
 	^ valid ifNil: [ valid := true ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> manualRevisionSuccess [
 
 	^ manualRevisionSuccess
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> manualRevisionSuccess: anObject [
 
 	manualRevisionSuccess := anObject
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 TaskStats >> notValid [
 	valid := false
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsAdded [
 
 	^ ocBreakpointsAdded
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsAdded: anObject [
 
 	ocBreakpointsAdded := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsHit [
 
 	^ ocBreakpointsHit
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsHit: anObject [
 
 	ocBreakpointsHit := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsRemoved [
 
 	^ ocBreakpointsRemoved
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> ocBreakpointsRemoved: anObject [
 
 	ocBreakpointsRemoved := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> order [
 
 	^ order
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> order: anObject [
 
 	order := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 TaskStats >> printOn: aStream [
 
 	aStream << taskInfo title.
@@ -283,13 +285,13 @@ TaskStats >> printOn: aStream [
 	aStream << ')'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> rawDuration [
 
 	^ rawDuration ifNil:[rawDuration := duration]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 TaskStats >> recomputeDurationWithoutTaskAnswerTime [
 
 	| finishTaskEvents |
@@ -304,78 +306,78 @@ TaskStats >> recomputeDurationWithoutTaskAnswerTime [
 	                       - events first dateTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> retainedIdleTime [
 
 	^ self calculateInterruptionTimes
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> retainedIdleTime: anObject [
 
 	retainedIdleTime := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> stepActions [
 
 	^ stepActions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> stepActions: anObject [
 
 	stepActions := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> taskInfo [
 
 	^ taskInfo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> taskInfo: anObject [
 
 	taskInfo := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> taskName [
 	^taskInfo title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> testSuccess [
 
 	^ testSuccess
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> testSuccess: anObject [
 
 	testSuccess := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> testSuccessRaw [
 
 	^ testSuccessRaw
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> testSuccessRaw: anObject [
 
 	testSuccessRaw := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> useConsolidatedTimes [
 
 	duration := self alternateDuration - self retainedIdleTime asSeconds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 TaskStats >> useRawTimes [
 	duration := self rawDuration 
 ]

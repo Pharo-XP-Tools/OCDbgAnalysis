@@ -1,10 +1,12 @@
 Class {
-	#name : #OCBreakpointsRemovedExtractor,
-	#superclass : #MetricExtractor,
-	#category : #'OCDbgAnalysis-Metrics'
+	#name : 'OCBreakpointsRemovedExtractor',
+	#superclass : 'MetricExtractor',
+	#category : 'OCDbgAnalysis-Metrics',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Metrics'
 }
 
-{ #category : #api }
+{ #category : 'api' }
 OCBreakpointsRemovedExtractor >> extract [
 
 	| taskEvents |
@@ -16,7 +18,7 @@ OCBreakpointsRemovedExtractor >> extract [
 			  evt objectCentric and: [ evt eventName = 'BreakpointRemoved' ] ] ]
 ]
 
-{ #category : #api }
+{ #category : 'api' }
 OCBreakpointsRemovedExtractor >> targetField [
 
 	^ #ocBreakpointsRemoved

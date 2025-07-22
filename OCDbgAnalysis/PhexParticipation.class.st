@@ -2,8 +2,8 @@
 I hold the data of a participation to a Phex Experiment
 "
 Class {
-	#name : #PhexParticipation,
-	#superclass : #Object,
+	#name : 'PhexParticipation',
+	#superclass : 'Object',
 	#instVars : [
 		'id',
 		'events',
@@ -15,10 +15,12 @@ Class {
 		'contactInfo',
 		'shortId'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhexParticipation class >> fromParticipantResult: aParticipantResult [
 	|participation|
 	participation := self new.
@@ -26,7 +28,7 @@ PhexParticipation class >> fromParticipantResult: aParticipantResult [
 	^participation
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 PhexParticipation >> buildFrom: aParticipantResult [
 
 	| surveys postTaskSurveys |
@@ -59,7 +61,7 @@ PhexParticipation >> buildFrom: aParticipantResult [
 	contactInfo := surveys detect:[:s|  s answers size = 4] ifNone:[nil]
 ]
 
-{ #category : #building }
+{ #category : 'building' }
 PhexParticipation >> buildFromTimeOrderedDSEventsArray: anArray [
 	
 	anArray size = 10 ifFalse:[self halt].	
@@ -83,22 +85,22 @@ PhexParticipation >> buildFromTimeOrderedDSEventsArray: anArray [
 	contactInfo :=  (PhexSurveyResult from: anArray last first).
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> contactInfo [
 	^ contactInfo
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> control [
 	^controlTask 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> controlTask [
 	^ controlTask
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexParticipation >> controlTaskInfos [
 
 	| str |
@@ -112,33 +114,33 @@ PhexParticipation >> controlTaskInfos [
 	^ str contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexParticipation >> dateStarted [
 	^events first dateTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> demographicSurvey [
 	^ demographicSurvey
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> events [
 	^ events
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexParticipation >> eventsHistory [
 
 	^ DSRecordHistory on: events
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> experimentFeedback [
 	^ experimentFeedback
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexParticipation >> hasValidDemographicSurvey [
 
 	^ (self demographicSurvey isNil or: [
@@ -146,23 +148,23 @@ PhexParticipation >> hasValidDemographicSurvey [
 			   a answer = 'No choice' ] ]) not
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> id [
 	^ id
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexParticipation >> isControlTaskValid [
 	^controlTask notNil and:[controlTask isValid]
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexParticipation >> isTreatmentTaskValid [
 
 	^ treatmentTask notNil and: [ treatmentTask isValid ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexParticipation >> pharoExperience [
 
 	| xp |
@@ -190,7 +192,7 @@ PhexParticipation >> pharoExperience [
 	^ -1
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> shortId [
 	^shortId ifNil:[shortId := 
 		String streamContents: [ :str|
@@ -202,27 +204,27 @@ PhexParticipation >> shortId [
 			 ]]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> shortId: anUndefinedObject [ 
 	shortId := anUndefinedObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> treatment [
 	^treatmentTask 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> treatmentTask [
 	^ treatmentTask
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexParticipation >> treatmentTask: aPhexTaskResult [ 
 	treatmentTask := aPhexTaskResult
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 PhexParticipation >> treatmentTaskInfos [
 
 	| str |

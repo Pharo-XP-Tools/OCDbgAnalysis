@@ -1,1 +1,1 @@
-Package { #name : #OCDbgAnalysis }
+Package { #name : 'OCDbgAnalysis' }

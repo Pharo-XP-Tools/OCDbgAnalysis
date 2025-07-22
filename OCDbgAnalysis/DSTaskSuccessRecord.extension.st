@@ -1,6 +1,6 @@
-Extension { #name : #DSTaskSuccessRecord }
+Extension { #name : 'DSTaskSuccessRecord' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 DSTaskSuccessRecord >> successBoolean [
 
 	"#success sometimes contains an array. This method ensured that a boolean is returned"

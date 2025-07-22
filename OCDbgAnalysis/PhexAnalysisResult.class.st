@@ -2,27 +2,29 @@
 I hold the dependant variables model for a specific analysis
 "
 Class {
-	#name : #PhexAnalysisResult,
-	#superclass : #Object,
+	#name : 'PhexAnalysisResult',
+	#superclass : 'Object',
 	#instVars : [
 		'analysisName'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexAnalysisResult >> analysisName [
 
 	^ analysisName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexAnalysisResult >> analysisName: anObject [
 
 	analysisName := anObject
 ]
 
-{ #category : #spec }
+{ #category : 'spec' }
 PhexAnalysisResult >> chartsFor: aVariable [
 
 	| layout c t barChart dataViolins |
@@ -49,7 +51,7 @@ PhexAnalysisResult >> chartsFor: aVariable [
 	^ layout
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexAnalysisResult >> presenters [
 
 	| presenters |
@@ -68,7 +70,7 @@ PhexAnalysisResult >> presenters [
 	^ presenters
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 PhexAnalysisResult >> printOn: aStream [
 	aStream << analysisName
 ]

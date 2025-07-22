@@ -1,6 +1,6 @@
-Extension { #name : #SpBoxLayout }
+Extension { #name : 'SpBoxLayout' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpBoxLayout >> fillPresenters [
 	"compatibility"
 	^self

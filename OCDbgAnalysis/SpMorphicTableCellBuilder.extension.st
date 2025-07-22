@@ -1,6 +1,6 @@
-Extension { #name : #SpMorphicTableCellBuilder }
+Extension { #name : 'SpMorphicTableCellBuilder' }
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpMorphicTableCellBuilder >> visitOCDbgActionColumn: aTableColumn [
 
 	| morph |
@@ -16,7 +16,7 @@ SpMorphicTableCellBuilder >> visitOCDbgActionColumn: aTableColumn [
 	self addCellMorph: morph column: aTableColumn
 ]
 
-{ #category : #'*OCDbgAnalysis' }
+{ #category : '*OCDbgAnalysis' }
 SpMorphicTableCellBuilder >> visitOCDbgLinkColumn: aTableColumn [
 
 	| presenter morph |

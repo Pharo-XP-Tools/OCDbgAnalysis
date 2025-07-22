@@ -1,13 +1,15 @@
 Class {
-	#name : #ParticipantInfo,
-	#superclass : #Object,
+	#name : 'ParticipantInfo',
+	#superclass : 'Object',
 	#instVars : [
 		'surveys'
 	],
-	#category : #'OCDbgAnalysis-ExportModel'
+	#category : 'OCDbgAnalysis-ExportModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'ExportModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantInfo class >> neoJsonMapping: mapper [
 
 	mapper for: self do: [ :mapping | 
@@ -21,7 +23,7 @@ ParticipantInfo class >> neoJsonMapping: mapper [
 		mapping encoder: [ :dateAndTime | dateAndTime printString ] ]
 ]
 
-{ #category : #comparing }
+{ #category : 'comparing' }
 ParticipantInfo >> = anObject [
 
 	self == anObject ifTrue: [ ^ true ].
@@ -29,7 +31,7 @@ ParticipantInfo >> = anObject [
 	^true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantInfo >> participantDeclaredExperience [
 
 	| demographicSurvey |
@@ -61,7 +63,7 @@ ParticipantInfo >> participantDeclaredExperience [
 	^ -1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 ParticipantInfo >> participantDeclaredExperienceLabels [
 
 	| demographicSurvey |
@@ -84,13 +86,13 @@ ParticipantInfo >> participantDeclaredExperienceLabels [
 	^ 'None'
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantInfo >> surveys [
 
 	^ surveys
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 ParticipantInfo >> surveys: anObject [
 
 	surveys := anObject

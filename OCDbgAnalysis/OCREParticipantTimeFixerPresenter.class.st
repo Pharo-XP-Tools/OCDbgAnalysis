@@ -1,15 +1,17 @@
 Class {
-	#name : #OCREParticipantTimeFixerPresenter,
-	#superclass : #SpPresenter,
+	#name : 'OCREParticipantTimeFixerPresenter',
+	#superclass : 'SpPresenter',
 	#instVars : [
 		'experimentResultsBrowser',
 		'table',
 		'data'
 	],
-	#category : #'OCDbgAnalysis-Presenters'
+	#category : 'OCDbgAnalysis-Presenters',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Presenters'
 }
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREParticipantTimeFixerPresenter >> autoFixCase1: collectionOfIdleTimes [
 
 	| comment |
@@ -21,7 +23,7 @@ Decision: interruption.'.
 		idleTime comment: comment ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREParticipantTimeFixerPresenter >> autoFixCase2: collectionOfIdleTimes [
 
 	| comment |
@@ -34,7 +36,7 @@ Decision: interruption.'.
 		idleTime comment: comment ]
 ]
 
-{ #category : #actions }
+{ #category : 'actions' }
 OCREParticipantTimeFixerPresenter >> autoFixCase6: collectionOfIdleTimes [
 
 	| forced comment |
@@ -51,7 +53,7 @@ Decision: interruption.'.
 	collectionOfIdleTimes add: forced
 ]
 
-{ #category : #'presenter - data' }
+{ #category : 'presenter - data' }
 OCREParticipantTimeFixerPresenter >> calculateInterruptionTimesFor: anAssociation [
 
 	^ (anAssociation value
@@ -60,7 +62,7 @@ OCREParticipantTimeFixerPresenter >> calculateInterruptionTimesFor: anAssociatio
 		  asSeconds
 ]
 
-{ #category : #spec }
+{ #category : 'spec' }
 OCREParticipantTimeFixerPresenter >> defaultLayout [
 
 	^ SpBoxLayout newTopToBottom
@@ -71,19 +73,19 @@ OCREParticipantTimeFixerPresenter >> defaultLayout [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCREParticipantTimeFixerPresenter >> experimentResultsBrowser: anObject [
 
 	experimentResultsBrowser := anObject
 ]
 
-{ #category : #'presenter - data' }
+{ #category : 'presenter - data' }
 OCREParticipantTimeFixerPresenter >> findDeclaredIdleTimeFor: association [
 
 	^ association key
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantTimeFixerPresenter >> initializePresenters [
 
 	| colorBlock|
@@ -137,7 +139,7 @@ OCREParticipantTimeFixerPresenter >> initializePresenters [
 	table items: data
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 OCREParticipantTimeFixerPresenter >> initializeWindow: aWindowPresenter [
 
 	super initializeWindow: aWindowPresenter.
@@ -146,7 +148,7 @@ OCREParticipantTimeFixerPresenter >> initializeWindow: aWindowPresenter [
 		whenClosedDo: [ experimentResultsBrowser updateAllViews ]
 ]
 
-{ #category : #spec }
+{ #category : 'spec' }
 OCREParticipantTimeFixerPresenter >> menu [
 
 	^ self newMenu
@@ -175,7 +177,7 @@ OCREParticipantTimeFixerPresenter >> menu [
 		  yourself
 ]
 
-{ #category : #'presenter - data' }
+{ #category : 'presenter - data' }
 OCREParticipantTimeFixerPresenter >> retainedIdleTimeFor: anAssociation [
 
 	^ ((anAssociation value select: [ :item |
@@ -185,7 +187,7 @@ OCREParticipantTimeFixerPresenter >> retainedIdleTimeFor: anAssociation [
 		  asSeconds
 ]
 
-{ #category : #'accessing - model' }
+{ #category : 'accessing - model' }
 OCREParticipantTimeFixerPresenter >> setModelBeforeInitialization: associations [
 
 	data := associations

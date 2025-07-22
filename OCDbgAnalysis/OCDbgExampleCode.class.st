@@ -1,25 +1,27 @@
 Class {
-	#name : #OCDbgExampleCode,
-	#superclass : #Object,
+	#name : 'OCDbgExampleCode',
+	#superclass : 'Object',
 	#classInstVars : [
 		'exampleDataPath'
 	],
-	#category : #'OCDbgAnalysis-Events'
+	#category : 'OCDbgAnalysis-Events',
+	#package : 'OCDbgAnalysis',
+	#tag : 'Events'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCDbgExampleCode class >> exampleDataPath [
 
 	^ exampleDataPath
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 OCDbgExampleCode class >> exampleDataPath: anObject [
 
 	exampleDataPath := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgExampleCode class >> listEventsForATaskExample [
 
 	| startedTasks events taskUuid |
@@ -32,7 +34,7 @@ OCDbgExampleCode class >> listEventsForATaskExample [
 	^ OCDbgEvents selectTasksEvents: taskUuid inCollection: events
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : 'as yet unclassified' }
 OCDbgExampleCode class >> loadDataFromPath: aString [
 
 	^ OCDbgEvents loadDataFromPath: aString

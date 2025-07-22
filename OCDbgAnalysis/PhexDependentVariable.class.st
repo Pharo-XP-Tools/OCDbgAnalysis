@@ -3,17 +3,19 @@ I model a dependant variable with its data.
 I depend on a context, e.g., I can be a dependant variable measure in the context of the usage of a specific tool.
 "
 Class {
-	#name : #PhexDependentVariable,
-	#superclass : #Object,
+	#name : 'PhexDependentVariable',
+	#superclass : 'Object',
 	#instVars : [
 		'varName',
 		'data',
 		'dvPrinter'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable class >> actions: data [
 
 	^ self new
@@ -22,7 +24,7 @@ PhexDependentVariable class >> actions: data [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable class >> time: data [
 
 	^ self new
@@ -32,7 +34,7 @@ PhexDependentVariable class >> time: data [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable class >> usage: data [
 
 	^ self new
@@ -41,43 +43,43 @@ PhexDependentVariable class >> usage: data [
 		  yourself
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> controlData [
 	^data first
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> data [
 
 	^ data
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> data: anObject [
 
 	data := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> dvPrinter [
 
 	^ dvPrinter ifNil:[PhexMetricCalculator]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> dvPrinter: anObject [
 
 	dvPrinter := anObject
 ]
 
-{ #category : #printing }
+{ #category : 'printing' }
 PhexDependentVariable >> printOn: aStream [
 	aStream << 'Dependant variable:'.
 	aStream space.
 	aStream << varName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> printSummary [
 
 	|cResult tResult ratio|
@@ -99,18 +101,18 @@ PhexDependentVariable >> printSummary [
 		 ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> treatmentData [
 	^data second
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> varName [
 
 	^ varName
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexDependentVariable >> varName: anObject [
 
 	varName := anObject

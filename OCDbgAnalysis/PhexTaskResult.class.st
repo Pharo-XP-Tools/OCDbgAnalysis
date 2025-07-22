@@ -2,8 +2,8 @@
 I represent the collected and computed data about aPhex task
 "
 Class {
-	#name : #PhexTaskResult,
-	#superclass : #Object,
+	#name : 'PhexTaskResult',
+	#superclass : 'Object',
 	#instVars : [
 		'title',
 		'events',
@@ -17,83 +17,85 @@ Class {
 		'type',
 		'validity'
 	],
-	#category : #'OCDbgAnalysis-NewModel'
+	#category : 'OCDbgAnalysis-NewModel',
+	#package : 'OCDbgAnalysis',
+	#tag : 'NewModel'
 }
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhexTaskResult class >> from: aTaskStats [ 
 	^self new fromTaskStats: aTaskStats 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> answer [
 	^ answer
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 PhexTaskResult >> beControl [
 	type := #control
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 PhexTaskResult >> beTreatment [
 	type := #treatment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> calculateInterruptionTimes [
 
 	^(detectedInterruptions inject: 0 into: [:sum :next| sum + next computedIdleTime asSeconds]) asSeconds
 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> correctness [
 
 	^ correctness isCorrect
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> correctness: bool [
 
 	correctness := correctness isCorrect: bool
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> correctnessComment [
 
 	^correctness comment
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> correctnessComment: aString [
 
 	correctness comment: aString
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> correctnessTest [
 	^ correctness correctnessTest
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> countDebugActions [
 	^eventsHistory countDebugActions 
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> declaredInterruptionTime [
 
 	^ declaredInterruptionTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> declaredInterruptionTime: anObject [
 
 	declaredInterruptionTime := anObject
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> detectTimeInterruptions [
 
 	detectedInterruptions := eventsHistory collectTimeDiscrepancies
@@ -110,34 +112,34 @@ PhexTaskResult >> detectTimeInterruptions [
 			                         control ]
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> detectedInterruptions [
 	^detectedInterruptions
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> duration [
 	^self time
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> events [
 
 	^ events
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> events: anObject [
 
 	events := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> eventsHistory [
 	^ eventsHistory
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> findDeclaredInterruptionTime [
 
 	| declaration |
@@ -150,13 +152,13 @@ PhexTaskResult >> findDeclaredInterruptionTime [
 	declaredInterruptionTime := declaration answer
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexTaskResult >> forceValidity: aBoolean [
 
 	validity isValid: aBoolean
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhexTaskResult >> fromDSEvents: evts [
 
 	title := evts first task title.
@@ -168,7 +170,7 @@ PhexTaskResult >> fromDSEvents: evts [
 	self detectTimeInterruptions
 ]
 
-{ #category : #'instance creation' }
+{ #category : 'instance creation' }
 PhexTaskResult >> fromTaskStats: aTaskStats [
 
 	title := aTaskStats taskInfo title.
@@ -184,31 +186,31 @@ PhexTaskResult >> fromTaskStats: aTaskStats [
 	self detectTimeInterruptions
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> hasTrueInterruptions [
 
 	^ self trueInterruptions notEmpty
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> hasUncheckedInterruptions [
 
 	^ detectedInterruptions anySatisfy: [ :d | d decision isNil ]
 ]
 
-{ #category : #initialization }
+{ #category : 'initialization' }
 PhexTaskResult >> initialize [
 	super initialize.
 	validity := PhexTaskValidity onTaskResult: self
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexTaskResult >> isValid [
 
 	^ validity isValid
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> retainedIdleTime [
 
 	^ ((detectedInterruptions select: [ :e |
@@ -218,60 +220,60 @@ PhexTaskResult >> retainedIdleTime [
 		  asSeconds
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> survey [
 
 	^ survey
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> survey: anObject [
 
 	survey := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> time [
 	^ time - self retainedIdleTime
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> time: anObject [
 
 	time := anObject
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> title [
 
 	^ title
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> title: anObject [
 
 	title := anObject
 ]
 
-{ #category : #time }
+{ #category : 'time' }
 PhexTaskResult >> trueInterruptions [
 
 	^ detectedInterruptions select: [ :e |
 		  e decision notNil and: [ e decision ] ]
 ]
 
-{ #category : #accessing }
+{ #category : 'accessing' }
 PhexTaskResult >> type [
 	^ type
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexTaskResult >> validityComment [
 
 	^ validity comment
 ]
 
-{ #category : #testing }
+{ #category : 'testing' }
 PhexTaskResult >> validityComment: aString [
 
 	 validity comment: aString
